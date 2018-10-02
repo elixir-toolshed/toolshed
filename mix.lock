@@ -1,0 +1,5 @@
+%{
+  "elixir_make": {:hex, :elixir_make, "0.4.2", "332c649d08c18bc1ecc73b1befc68c647136de4f340b548844efc796405743bf", [:mix], [], "hexpm"},
+  "nerves_runtime": {:hex, :nerves_runtime, "0.7.0", "b547a9d495b8aa5a610b4e78d9c420a8ade00d46128993887231cb4b2e3b9b64", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:system_registry, "~> 0.5", [hex: :system_registry, repo: "hexpm", optional: false]}], "hexpm"},
+  "system_registry": {:hex, :system_registry, "0.8.0", "09240347628b001433d18279a2759ef7237ba7361239890d8c599cca9a2fbbc2", [:mix], [], "hexpm"},
+}
