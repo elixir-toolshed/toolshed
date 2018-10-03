@@ -20,7 +20,9 @@ defmodule MyHelpers.Misc do
   """
   @spec save_value(any(), Path.t()) :: :ok | {:error, File.posix()}
   def save_value(value, path, inspect_opts \\ []) do
-    opts = Keyword.merge([pretty: true, limit: :infinity, printable_limit: :infinity], inspect_opts)
+    opts =
+      Keyword.merge([pretty: true, limit: :infinity, printable_limit: :infinity], inspect_opts)
+
     contents = inspect(value, opts)
     File.write(path, contents)
   end

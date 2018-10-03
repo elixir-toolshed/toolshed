@@ -24,7 +24,7 @@ defmodule MyHelpers.Net do
   end
 
   require Record
-  Record.defrecord :hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl")
+  Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
   @spec nslookup(String.t()) :: :ok
   def nslookup(name) do
