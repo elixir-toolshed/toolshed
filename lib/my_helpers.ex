@@ -15,6 +15,8 @@ defmodule MyHelpers do
       use MyHelpers.Top
       use MyHelpers.Nerves
       use MyHelpers.Unix
+      use MyHelpers.Net
+      use MyHelpers.Misc
       IO.puts("MyHelpers imported. Run h(MyHelpers) for more info")
     end
   end

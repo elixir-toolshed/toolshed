@@ -19,7 +19,7 @@ defmodule MyHelpers.Unix do
   @doc """
   Print out a file
   """
-  @spec cat(String.t()) :: :"do not show this result in output"
+  @spec cat(Path.t()) :: :"do not show this result in output"
   def cat(path) do
     File.read!(path) |> IO.puts()
     IEx.dont_display_result()
@@ -30,7 +30,7 @@ defmodule MyHelpers.Unix do
 
   iex> grep ~r/video/, "/etc/mime.types"
   """
-  @spec grep(Regex.t(), String.t()) :: :"do not show this result in output"
+  @spec grep(Regex.t(), Path.t()) :: :"do not show this result in output"
   def grep(regex, path) do
     File.stream!(path)
     |> Stream.filter(&Regex.match?(regex, &1))
@@ -43,6 +43,7 @@ defmodule MyHelpers.Unix do
   @doc """
   Print out directories and files in tree form.
   """
+  @spec tree(Path.t()) :: :"do not show this result in output"
   def tree(path \\ ".") do
     IO.puts(path)
 
