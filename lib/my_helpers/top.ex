@@ -27,9 +27,13 @@ defmodule MyHelpers.Top do
 
   @spec top_reductions(any()) :: :"do not show this result in output"
   def top_reductions(n \\ @default_n), do: top(order: :reductions, n: n)
+  @spec top_mailbox(any()) :: :"do not show this result in output"
   def top_mailbox(n \\ @default_n), do: top(order: :mailbox, n: n)
+  @spec top_total_heap_size(any()) :: :"do not show this result in output"
   def top_total_heap_size(n \\ @default_n), do: top(order: :total_heap_size, n: n)
+  @spec top_heap_size(any()) :: :"do not show this result in output"
   def top_heap_size(n \\ @default_n), do: top(order: :heap_size, n: n)
+  @spec top_stack_size(any()) :: :"do not show this result in output"
   def top_stack_size(n \\ @default_n), do: top(order: :stack_size, n: n)
 
   @doc """

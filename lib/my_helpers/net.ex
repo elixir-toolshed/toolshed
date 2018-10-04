@@ -40,6 +40,7 @@ defmodule MyHelpers.Net do
   def nslookup(name) do
     IO.puts("Name:     #{name}")
     name_charlist = to_charlist(name)
+
     with {:ok, v4} <- :inet.gethostbyname(name_charlist, :inet) do
       print_addresses(v4)
     else
@@ -51,6 +52,7 @@ defmodule MyHelpers.Net do
     else
       {:error, :nxdomain} -> IO.puts("IPv6 lookup failed")
     end
+
     IEx.dont_display_result()
   end
 
@@ -73,15 +75,16 @@ defmodule MyHelpers.Net do
   @spec tping(String.t()) :: :"do not show this result in output"
   def tping(address) do
     with {:ok, hostent} <- :inet.gethostbyname(to_charlist(address)),
-      hostent(h_addr_list: ip_list) = hostent,
-      first_ip = hd(ip_list),
-      up = can_connect_to_address?(first_ip, 80) do
-        message = if up == :up, do: "up", else: "down"
-        IO.puts("Host #{address} (#{:inet.ntoa(first_ip)}) is #{message}")
-      else
-        _ -> IO.puts("Error resolving #{address}")
-      end
-      IEx.dont_display_result()
+         hostent(h_addr_list: ip_list) = hostent,
+         first_ip = hd(ip_list),
+         up = can_connect_to_address?(first_ip, 80) do
+      message = if up == :up, do: "up", else: "down"
+      IO.puts("Host #{address} (#{:inet.ntoa(first_ip)}) is #{message}")
+    else
+      _ -> IO.puts("Error resolving #{address}")
+    end
+
+    IEx.dont_display_result()
   end
 
   defp can_connect_to_address?(address, port) do
@@ -89,10 +92,54 @@ defmodule MyHelpers.Net do
       {:ok, pid} ->
         :gen_tcp.close(pid)
         :up
+
       {:error, :econnrefused} ->
         :up
+
       {:error, :ehostunreach} ->
         :down
     end
+  end
+
+  @doc """
+  Print out the network interfaces and their addresses.
+  """
+  @spec ifconfig() :: :"do not show this result in output"
+  def ifconfig() do
+    {:ok, if_list} = :inet.getifaddrs()
+    Enum.each(if_list, &print_if/1)
+    IEx.dont_display_result()
+  end
+
+  defp print_if({ifname, kvlist}) do
+    IO.puts("#{ifname}: flags=#{inspect(Keyword.get(kvlist, :flags))}")
+    print_if_info(kvlist)
+    IO.puts("")
+  end
+
+  defp print_if_info([]), do: :ok
+
+  defp print_if_info([{:hwaddr, addr} | rest]) do
+    :io.format('    hwaddr ~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b~n', addr)
+    print_if_info(rest)
+  end
+
+  defp print_if_info([{:addr, addr}, {:netmask, netmask}, {:broadaddr, broadaddr} | rest]) do
+    IO.puts(
+      "    inet #{:inet.ntoa(addr)}  netmask #{:inet.ntoa(netmask)}  broadcast #{
+        :inet.ntoa(broadaddr)
+      }"
+    )
+
+    print_if_info(rest)
+  end
+
+  defp print_if_info([{:addr, addr}, {:netmask, netmask} | rest]) do
+    IO.puts("    inet #{:inet.ntoa(addr)}  netmask #{:inet.ntoa(netmask)}")
+    print_if_info(rest)
+  end
+
+  defp print_if_info([_something_else | rest]) do
+    print_if_info(rest)
   end
 end
