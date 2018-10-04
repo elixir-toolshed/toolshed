@@ -17,6 +17,7 @@ defmodule MyHelpers do
       use MyHelpers.Unix
       use MyHelpers.Net
       use MyHelpers.Misc
+      use MyHelpers.HW
       IO.puts("MyHelpers imported. Run h(MyHelpers) for more info")
     end
   end
