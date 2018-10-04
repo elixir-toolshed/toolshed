@@ -3,6 +3,9 @@ defmodule MyHelpers.Net do
   Network related helpers
   """
 
+  require Record
+  Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
+
   defmacro __using__(_) do
     quote do
       import MyHelpers.Net
@@ -23,21 +26,73 @@ defmodule MyHelpers.Net do
     to_string(hostname_charlist)
   end
 
-  require Record
-  Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
+  @doc """
+  Lookup the specified hostname in the DNS and print out the addresses.
 
-  @spec nslookup(String.t()) :: :ok
+  ## Examples
+
+      iex> nslookup "google.com"
+      Name:     google.com
+      Address:  172.217.7.238
+      Address:  2607:f8b0:4004:804::200e
+  """
+  @spec nslookup(String.t()) :: :"do not show this result in output"
   def nslookup(name) do
     IO.puts("Name:     #{name}")
     name_charlist = to_charlist(name)
-    {:ok, v4} = :inet.gethostbyname(name_charlist, :inet)
-    print_addresses(v4)
-    {:ok, v6} = :inet.gethostbyname(name_charlist, :inet6)
-    print_addresses(v6)
+    with {:ok, v4} <- :inet.gethostbyname(name_charlist, :inet) do
+      print_addresses(v4)
+    else
+      {:error, :nxdomain} -> IO.puts("IPv4 lookup failed")
+    end
+
+    with {:ok, v6} <- :inet.gethostbyname(name_charlist, :inet6) do
+      print_addresses(v6)
+    else
+      {:error, :nxdomain} -> IO.puts("IPv6 lookup failed")
+    end
+    IEx.dont_display_result()
   end
 
   defp print_addresses(hostent) do
     hostent(h_addr_list: ip_list) = hostent
     Enum.each(ip_list, &IO.puts("Address:  #{:inet.ntoa(&1)}"))
+  end
+
+  @doc """
+  Check if a computer is up using TCP.
+
+  ## Examples
+
+      iex> tping "google.com"
+      Host google.com (172.217.7.238) is up
+
+      iex(18)> tping "192.168.1.1"
+      Host 192.168.1.1 (192.168.1.1) is up
+  """
+  @spec tping(String.t()) :: :"do not show this result in output"
+  def tping(address) do
+    with {:ok, hostent} <- :inet.gethostbyname(to_charlist(address)),
+      hostent(h_addr_list: ip_list) = hostent,
+      first_ip = hd(ip_list),
+      up = can_connect_to_address?(first_ip, 80) do
+        message = if up == :up, do: "up", else: "down"
+        IO.puts("Host #{address} (#{:inet.ntoa(first_ip)}) is #{message}")
+      else
+        _ -> IO.puts("Error resolving #{address}")
+      end
+      IEx.dont_display_result()
+  end
+
+  defp can_connect_to_address?(address, port) do
+    case :gen_tcp.connect(address, port, []) do
+      {:ok, pid} ->
+        :gen_tcp.close(pid)
+        :up
+      {:error, :econnrefused} ->
+        :up
+      {:error, :ehostunreach} ->
+        :down
+    end
   end
 end
