@@ -45,7 +45,7 @@ defmodule MyHelpers.Misc do
   end
 
   @doc """
-  Load an Erlgn term from the filesystem.
+  Load an Erlang term from the filesystem.
 
   ## Examples
     iex> save_term!({:some_interesting_atom, ["some", "list"]}, "/root/some_atom.term")
