@@ -35,7 +35,7 @@ if target != nil and target != "host" do
     defdelegate reboot(), to: Nerves.Runtime
 
     @doc """
-    Remote immediately without a graceful shutdown. This is for the impatient.
+    Reboot immediately without a graceful shutdown. This is for the impatient.
     """
     @spec reboot!() :: no_return()
     def reboot!() do
