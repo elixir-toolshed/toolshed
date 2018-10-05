@@ -1,4 +1,4 @@
-target = System.get_env("MIX_TARGET")
+target = Mix.Project.config()[:target]
 
 if target != nil and target != "host" do
   defmodule MyHelpers.Nerves do

@@ -1,5 +1,6 @@
 defmodule MyHelpers.MixProject do
   use Mix.Project
+  @target Mix.Project.config()[:target]
 
   def project do
     [
@@ -20,7 +21,7 @@ defmodule MyHelpers.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-    deps(System.get_env("MIX_TARGET"))
+    deps(@target)
   end
 
   defp deps(host) when host == "host" or host == nil do
