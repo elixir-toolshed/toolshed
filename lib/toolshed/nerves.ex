@@ -1,4 +1,6 @@
-target = Mix.Project.config()[:target]
+# When https://github.com/elixir-lang/elixir/issues/8063 is available, change
+# this to `Mix.Project.config()[:target]`
+target = System.get_env("MIX_TARGET")
 
 if target != nil and target != "host" do
   defmodule Toolshed.Nerves do
