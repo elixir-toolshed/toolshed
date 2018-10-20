@@ -40,7 +40,13 @@ defmodule Toolshed do
       use Toolshed.Net
       use Toolshed.Misc
       use Toolshed.HW
-      IO.puts("Toolshed imported. Run h(Toolshed) for more info")
+
+      IO.puts([
+        IO.ANSI.color(:rand.uniform(231) + 1),
+        "Toolshed",
+        IO.ANSI.reset(),
+        " imported. Run h(Toolshed) for more info"
+      ])
     end
   end
 
