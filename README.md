@@ -72,4 +72,8 @@ This really isn't a normal hex.pm library. Use it for the helpers. If you want
 some code, copy and paste it or incorporate it into a library. I'd like the
 flexibility to change the API to improve interactive use.
 
+### It would be better if you changed the colors.
 
+This also isn't a question, and you've now made me regret naming the project
+`toolshed`. Please file your grievances
+[here](https://github.com/fhunleth/toolshed/pull/5).
