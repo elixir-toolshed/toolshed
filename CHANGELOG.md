@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+* New features
+  * Add `exit` for exiting an IEx session
+
 ## v0.2.0
 
 * New features
