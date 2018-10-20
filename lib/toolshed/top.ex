@@ -41,16 +41,25 @@ defmodule Toolshed.Top do
 
   Options:
 
-  * `:order` - the sort order for the results (`:reductions`, `mailbox`, `total_heap_size`, `heap_size`, `stack_size`)
+  * `:order` - the sort order for the results (`:reductions`, `:delta_reductions`,
+    `:mailbox`, `:delta_mailbox`, `:total_heap_size`, `:delta_total_heap_size`, `:heap_size`,
+    `:delta_heap_size`, `:stack_size`, `:delta_stack_size`)
   * `:n`     - the max number of processes to list
   """
   def top(opts \\ []) do
-    order = Keyword.get(opts, :order, :reductions)
+    order = Keyword.get(opts, :order, :delta_reductions)
     n = Keyword.get(opts, :n, @default_n)
+    tid = toolshed_top_tid()
 
     Process.list()
     |> Enum.map(&process_info/1)
     |> Enum.filter(fn x -> x != %{} end)
+    |> Enum.map(fn info ->
+      previous_info = :ets.lookup(tid, info.pid)
+      d = add_deltas(info, previous_info)
+      :ets.insert(tid, {info.pid, info})
+      d
+    end)
     |> Enum.sort(sort(order))
     |> Enum.take(n)
     |> format_header
@@ -59,23 +68,47 @@ defmodule Toolshed.Top do
     IEx.dont_display_result()
   end
 
-  defp sort(:reductions), do: fn x, y -> x.reductions > y.reductions end
-  defp sort(:mailbox), do: fn x, y -> x.message_queue_len > y.message_queue_len end
-  defp sort(:total_heap_size), do: fn x, y -> x.total_heap_size > y.total_heap_size end
-  defp sort(:heap_size), do: fn x, y -> x.heap_size > y.heap_size end
-  defp sort(:stack_size), do: fn x, y -> x.stack_size > y.stack_size end
-  defp sort(_other), do: sort(:reductions)
+  defp toolshed_top_tid() do
+    case Process.get(:toolshed_top) do
+      nil ->
+        tid = :ets.new(:toolshed_top, [])
+        Process.put(:toolshed_top, tid)
+        tid
 
-  def process_info(pid) do
-    organize_info(pid, Process.info(pid), get_application(pid))
+      tid ->
+        tid
+    end
+  end
+
+  defp sort(:reductions), do: fn x, y -> x.reductions > y.reductions end
+  defp sort(:delta_reductions), do: fn x, y -> x.delta_reductions > y.delta_reductions end
+  defp sort(:mailbox), do: fn x, y -> x.message_queue_len > y.message_queue_len end
+
+  defp sort(:delta_mailbox),
+    do: fn x, y -> x.delta_message_queue_len > y.delta_message_queue_len end
+
+  defp sort(:total_heap_size), do: fn x, y -> x.total_heap_size > y.total_heap_size end
+
+  defp sort(:delta_total_heap_size),
+    do: fn x, y -> x.delta_total_heap_size > y.delta_total_heap_size end
+
+  defp sort(:heap_size), do: fn x, y -> x.heap_size > y.heap_size end
+  defp sort(:delta_heap_size), do: fn x, y -> x.delta_heap_size > y.delta_heap_size end
+  defp sort(:stack_size), do: fn x, y -> x.stack_size > y.stack_size end
+  defp sort(:delta_stack_size), do: fn x, y -> x.delta_stack_size > y.delta_stack_size end
+  defp sort(_other), do: sort(:delta_reductions)
+
+  defp process_info(pid) do
+    organize_info(pid, Process.info(pid))
   end
 
   # Ignore deceased processes
-  defp organize_info(_pid, nil, _app_info), do: %{}
+  defp organize_info(_pid, nil), do: %{}
 
-  defp organize_info(pid, info, application) do
+  defp organize_info(pid, info) do
     %{
-      application: application,
+      pid: pid,
+      application: get_application(pid),
       total_heap_size: Keyword.get(info, :total_heap_size),
       heap_size: Keyword.get(info, :heap_size),
       stack_size: Keyword.get(info, :stack_size),
@@ -83,6 +116,28 @@ defmodule Toolshed.Top do
       message_queue_len: Keyword.get(info, :message_queue_len),
       name: Keyword.get(info, :registered_name, pid)
     }
+  end
+
+  defp add_deltas(info, []) do
+    %{
+      delta_total_heap_size: info.total_heap_size,
+      delta_heap_size: info.heap_size,
+      delta_stack_size: info.stack_size,
+      delta_reductions: info.reductions,
+      delta_message_queue_len: info.message_queue_len
+    }
+    |> Map.merge(info)
+  end
+
+  defp add_deltas(info, [{_pid, previous_info}]) do
+    %{
+      delta_total_heap_size: info.total_heap_size - previous_info.total_heap_size,
+      delta_heap_size: info.heap_size - previous_info.heap_size,
+      delta_stack_size: info.stack_size - previous_info.stack_size,
+      delta_reductions: info.reductions - previous_info.reductions,
+      delta_message_queue_len: info.message_queue_len - previous_info.message_queue_len
+    }
+    |> Map.merge(info)
   end
 
   defp get_application(pid) do
@@ -94,8 +149,23 @@ defmodule Toolshed.Top do
 
   defp format_header(infos) do
     :io.format(
-      IO.ANSI.cyan() <> "~-16ts ~-24ts ~10ts ~10ts ~10ts ~10ts ~10ts~n" <> IO.ANSI.white(),
-      ["OTP Application", "Name/PID", "Reductions", "Mailbox", "Total", "Heap", "Stack"]
+      IO.ANSI.cyan() <>
+        "~-16ts ~-24ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n" <>
+        IO.ANSI.white(),
+      [
+        "OTP Application",
+        "Name or PID",
+        "Reds",
+        "Δ",
+        "Mbox",
+        "Δ",
+        "Total",
+        "Δ",
+        "Heap",
+        "Δ",
+        "Stack",
+        "Δ"
+      ]
     )
 
     infos
@@ -103,16 +173,25 @@ defmodule Toolshed.Top do
 
   defp format(info) do
     :io.format(
-      "~-16ts ~-24ts ~10B ~10B ~10B ~10B ~10B~n",
+      "~-16ts ~-24ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
       [
         String.slice(to_string(info.application), 0, 16),
         String.slice(inspect(info.name), 0, 24),
-        info.reductions,
-        info.message_queue_len,
-        info.total_heap_size,
-        info.heap_size,
-        info.stack_size
+        format_num(info.reductions),
+        format_num(info.delta_reductions),
+        format_num(info.message_queue_len),
+        format_num(info.delta_message_queue_len),
+        format_num(info.total_heap_size),
+        format_num(info.delta_total_heap_size),
+        format_num(info.heap_size),
+        format_num(info.delta_heap_size),
+        format_num(info.stack_size),
+        format_num(info.delta_stack_size)
       ]
     )
   end
+
+  defp format_num(x) when x < 10 * 1024, do: Integer.to_string(x)
+  defp format_num(x) when x < 10 * 1024 * 1024, do: Integer.to_string(div(x, 1024)) <> "K"
+  defp format_num(x), do: Integer.to_string(div(x, 1024 * 1024)) <> "M"
 end
