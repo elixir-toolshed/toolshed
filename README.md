@@ -14,6 +14,7 @@ Here's a sample of what you'll get:
 * `cmd` - run a command and print out the output
 * `top` - get a list of the top processes and their OTP applications based on
           CPU and memory
+* `exit` - exit an IEx session (useful over ssh)
 * `tree` - list directory contents as a tree
 * `save_term`/`load_term` - save and load Elixir terms to files
 * `tping` - check if a remote host is up (like ping, but uses TCP)

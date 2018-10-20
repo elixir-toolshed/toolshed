@@ -13,6 +13,7 @@ defmodule Toolshed do
     * `cmd/1`          - run a system command and print the output
     * `hex/1`          - print a number as hex
     * `top/2`          - list out the top processes
+    * `exit/0`         - exit out of an IEx session
     * `cat/1`          - print out a file
     * `grep/2`         - print out lines that match a regular expression
     * `tree/1`         - pretty print a directory tree

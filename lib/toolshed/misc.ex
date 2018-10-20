@@ -60,4 +60,11 @@ defmodule Toolshed.Misc do
     |> File.read!()
     |> :erlang.binary_to_term()
   end
+
+  @doc """
+  Exit the current IEx session
+  """
+  def exit() do
+    Process.exit(Process.group_leader(), :kill)
+  end
 end
