@@ -35,13 +35,25 @@ Rebuild and run in whatever way you prefer. At the IEx prompt, run:
 
 ```elixir
 iex> use Toolshed
-Toolshed imported. Run h(Toolshed) for more info
+Toolshed imported. Run h(Toolshed) for more info.
 :ok
 iex> cmd("echo hello world")
 hello world
 0
 iex> tping("google.com")
 Host google.com (172.217.15.110) is up
+iex> top
+OTP Application  Name or PID               Reds/Δ      Mbox/Δ     Total/Δ      Heap/Δ     Stack/Δ
+nerves_runtime   Nerves.Runtime.Kernel.UE   72M/10M     157/-32    384K/-4642  192K/73K      86/52
+system_registry  SystemRegistry.Global      41M/6134K     0/0      694K/192K   192K/0        35/-11
+system_registry  SystemRegistry.Processor   61M/6075K     0/0       73K/-1215   73K/0        10/0
+system_registry  SystemRegistry.Registrat 1623K/293K      1/1      211K/109K    73K/0        10/0
+system_registry  SystemRegistry.Processor  790K/197K     59/3     1011K/4461   502K/0        38/0
+undefined        #PID<0.1793.0>            221K/68K       0/0       21K/0      6772/0       504/0
+system_registry  SystemRegistry.Processor  382K/58K       0/0       16K/-1227  4185/-1354    22/0
+ssh              #PID<0.1786.0>            133K/52K       0/0      4184/1599   2586/1599     10/0
+nerves_init_gadg #PID<0.1432.0>            213K/39K       0/0      192K/101K    73K/0        10/0
+smartrent_hub_fw #PID<0.1580.0>            211K/38K       0/0      101K/0       73K/0        10/0
 ```
 
 When you get tired of typing `use Toolshed`, add it to your
