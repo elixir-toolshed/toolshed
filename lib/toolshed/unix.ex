@@ -10,12 +10,6 @@ defmodule Toolshed.Unix do
    * `reboot!/0` - reboots immediately
   """
 
-  defmacro __using__(_) do
-    quote do
-      import Toolshed.Unix
-    end
-  end
-
   @doc """
   Print out a file
   """

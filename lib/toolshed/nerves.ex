@@ -15,12 +15,6 @@ if target != nil and target != "host" do
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     """
 
-    defmacro __using__(_) do
-      quote do
-        import Toolshed.Nerves
-      end
-    end
-
     @doc """
     Print out kernel log messages
     """
@@ -63,8 +57,6 @@ if target != nil and target != "host" do
   end
 else
   defmodule Toolshed.Nerves do
-    defmacro __using__(_) do
-      # Skip if not running on Nerves
-    end
+    # Empty if not running on Nerves
   end
 end

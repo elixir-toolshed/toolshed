@@ -6,12 +6,6 @@ defmodule Toolshed.Net do
   require Record
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
-  defmacro __using__(_) do
-    quote do
-      import Toolshed.Net
-    end
-  end
-
   @doc """
   Return the hostname
 

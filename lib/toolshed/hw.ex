@@ -7,12 +7,6 @@ defmodule Toolshed.HW do
    * `lsusb/0`   - print out connected USB devices
   """
 
-  defmacro __using__(_) do
-    quote do
-      import Toolshed.HW
-    end
-  end
-
   @doc """
   Print out information on all of the connected USB devices.
   """

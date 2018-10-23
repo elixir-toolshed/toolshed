@@ -3,12 +3,6 @@ defmodule Toolshed.Misc do
   Miscellaneous helpers
   """
 
-  defmacro __using__(_) do
-    quote do
-      import Toolshed.Misc
-    end
-  end
-
   @doc """
   Save a value to a file as Elixir terms
 

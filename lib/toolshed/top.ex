@@ -5,26 +5,6 @@ defmodule Toolshed.Top do
   Find the top processes
   """
 
-  defmacro __using__(_) do
-    quote do
-      import Toolshed.Top,
-        only: [
-          top: 0,
-          top: 1,
-          top_reductions: 0,
-          top_reductions: 1,
-          top_mailbox: 0,
-          top_mailbox: 1,
-          top_total_heap_size: 0,
-          top_total_heap_size: 1,
-          top_heap_size: 0,
-          top_heap_size: 1,
-          top_stack_size: 0,
-          top_stack_size: 1
-        ]
-    end
-  end
-
   @spec top_reductions(any()) :: :"do not show this result in output"
   def top_reductions(n \\ @default_n), do: top(order: :reductions, n: n)
   @spec top_mailbox(any()) :: :"do not show this result in output"

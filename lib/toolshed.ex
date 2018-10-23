@@ -21,9 +21,9 @@ defmodule Toolshed do
     * `nslookup/1`     - query DNS to find an IP address
     * `tping/1`        - check if a host can be reached (like ping, but uses TCP)
     * `ifconfig/0`     - print info on network interfaces
-    * `dmesg/0`        - print kernel messages
-    * `reboot/0`       - reboots gracefully
-    * `reboot!/0`      - reboots immediately
+    * `dmesg/0`        - print kernel messages (Nerves-only)
+    * `reboot/0`       - reboots gracefully (Nerves-only)
+    * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
@@ -34,12 +34,12 @@ defmodule Toolshed do
   defmacro __using__(_) do
     quote do
       import Toolshed
-      use Toolshed.Top
-      use Toolshed.Nerves
-      use Toolshed.Unix
-      use Toolshed.Net
-      use Toolshed.Misc
-      use Toolshed.HW
+      import Toolshed.Top
+      import Toolshed.Nerves
+      import Toolshed.Unix
+      import Toolshed.Net
+      import Toolshed.Misc
+      import Toolshed.HW
 
       IO.puts([
         IO.ANSI.color(:rand.uniform(231) + 1),
