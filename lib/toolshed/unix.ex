@@ -5,9 +5,9 @@ defmodule Toolshed.Unix do
 
   Helpers include:
 
-   * `dmesg/0`   - print kernel messages
-   * `reboot/0`  - reboots gracefully
-   * `reboot!/0` - reboots immediately
+   * `cat/1`   - print out a file
+   * `grep/2`  - print out lines of a file that match a regular expression
+   * `tree/1`  - print out a directory tree
   """
 
   @doc """
