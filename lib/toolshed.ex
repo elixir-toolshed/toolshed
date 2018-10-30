@@ -29,6 +29,8 @@ defmodule Toolshed do
     * `save_term!/2`   - save a term as a binary
     * `load_term!/2`   - load a term that was saved by `save_term/2`
     * `lsusb/0`        - print info on USB devices
+    * `uptime/0`       - print out the current Erlang VM uptime
+
   """
 
   defmacro __using__(_) do
