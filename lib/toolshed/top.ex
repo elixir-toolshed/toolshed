@@ -33,7 +33,7 @@ defmodule Toolshed.Top do
 
     Process.list()
     |> Enum.map(&process_info/1)
-    |> Enum.filter(fn x -> x != %{} end)
+    |> Enum.filter(fn info -> info != %{} end)
     |> Enum.map(fn info ->
       previous_info = :ets.lookup(tid, info.pid)
       d = add_deltas(info, previous_info)
@@ -41,8 +41,9 @@ defmodule Toolshed.Top do
       d
     end)
     |> Enum.sort(sort(order))
+    |> print_summary()
     |> Enum.take(n)
-    |> format_header
+    |> format_header()
     |> Enum.each(&format/1)
 
     IEx.dont_display_result()
@@ -94,8 +95,41 @@ defmodule Toolshed.Top do
       stack_size: Keyword.get(info, :stack_size),
       reductions: Keyword.get(info, :reductions),
       message_queue_len: Keyword.get(info, :message_queue_len),
-      name: Keyword.get(info, :registered_name, pid)
+      name: process_name(pid, info)
     }
+  end
+
+  defp process_name(pid, info) do
+    registered_name(info) || initial_call_name(pid, info) || short_pid_to_string(pid)
+  end
+
+  defp registered_name(info) do
+    case Keyword.get(info, :registered_name) do
+      nil -> nil
+      name -> to_string(name)
+    end
+  end
+
+  defp initial_call_name(pid, info) do
+    case get_in(info, [:dictionary, :"$initial_call"]) do
+      {m, f, a} ->
+        IO.iodata_to_binary([
+          :erlang.pid_to_list(pid),
+          "=",
+          to_string(m),
+          ".",
+          to_string(f),
+          "/",
+          to_string(a)
+        ])
+
+      _ ->
+        nil
+    end
+  end
+
+  defp short_pid_to_string(pid) do
+    IO.iodata_to_binary(:erlang.pid_to_list(pid))
   end
 
   defp add_deltas(info, []) do
@@ -127,13 +161,20 @@ defmodule Toolshed.Top do
     end
   end
 
+  defp print_summary(infos) do
+    cnt = Enum.count(infos)
+
+    IO.puts("Total processes: #{cnt}\n")
+    infos
+  end
+
   defp format_header(infos) do
     :io.format(
       IO.ANSI.cyan() <>
-        "~-16ts ~-24ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n" <>
+        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n" <>
         IO.ANSI.white(),
       [
-        "OTP Application",
+        "Application",
         "Name or PID",
         "Reds",
         "Δ",
@@ -153,10 +194,10 @@ defmodule Toolshed.Top do
 
   defp format(info) do
     :io.format(
-      "~-16ts ~-24ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
+      "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
       [
-        String.slice(to_string(info.application), 0, 16),
-        String.slice(inspect(info.name), 0, 24),
+        String.slice(to_string(info.application), 0, 12),
+        String.slice(info.name, 0, 28),
         format_num(info.reductions),
         format_num(info.delta_reductions),
         format_num(info.message_queue_len),
