@@ -8,6 +8,8 @@ defmodule Toolshed.Unix do
    * `cat/1`   - print out a file
    * `grep/2`  - print out lines of a file that match a regular expression
    * `tree/1`  - print out a directory tree
+   * `uptime/0` - print the update of the Erlang VM
+
   """
 
   @doc """
@@ -49,6 +51,15 @@ defmodule Toolshed.Unix do
         :ok
     end
 
+    IEx.dont_display_result()
+  end
+
+  @doc """
+  Print out the current uptime.
+  """
+  @spec uptime() :: :"do not show this result in output"
+  def uptime() do
+    :c.uptime()
     IEx.dont_display_result()
   end
 
