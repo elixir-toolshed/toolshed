@@ -215,4 +215,30 @@ defmodule Toolshed.Top do
   defp format_num(x) when x < 10 * 1024, do: Integer.to_string(x)
   defp format_num(x) when x < 10 * 1024 * 1024, do: Integer.to_string(div(x, 1024)) <> "K"
   defp format_num(x), do: Integer.to_string(div(x, 1024 * 1024)) <> "M"
+
+
+  def cpu_top() do
+    # See http://erlang.org/doc/man/erlang.html#statistics-1 for the calculations
+
+    # Sample the scheduler
+    old_scheduler_wall_time = :erlang.system_flag(:scheduler_wall_time, true)
+    ts0 = :erlang.statistics(:scheduler_wall_time)
+    Process.sleep(250)
+    ts1 = :erlang.statistics(:scheduler_wall_time)
+    :erlang.system_flag(:scheduler_wall_time, old_scheduler_wall_time)
+
+    samples = Enum.zip(Enum.sort(ts0), Enum.sort(ts1))
+
+    scheduler_utilization = Enum.map(samples, fn {{i, a0, t0}, {i, a1, t1}} -> {i, (a1-a0)/(t1-t0)} end)
+
+    {a, t} = List.foldl(samples, {0, 0}, fn({{_, a0, t0}, {_, a1, t1}}, {ai, ti}) -> {ai + (a1-a0), ti+(t1-t0)} end)
+
+    total_scheduler_utilization = a / t
+    weighted_scheduler_utilization = total_scheduler_utilization *
+     (:erlang.system_info(:schedulers) + :erlang.system_info(:dirty_cpu_schedulers))
+     / :erlang.system_info(:logical_processors_available)
+
+    # Print the results
+
+  end
 end
