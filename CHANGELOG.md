@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.2
+
+* Bug fixes
+  * Fix ifconfig crash on sit interfaces
+  * Improve printout of unnamed pids with top
+
+* New features
+  * Add `uptime` helper
+
 ## v0.2.1
 
 * New features
