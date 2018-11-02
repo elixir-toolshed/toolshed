@@ -117,7 +117,7 @@ defmodule Toolshed.Net do
     string_address = addr
     |> Enum.map(&(:io_lib.format("~2.16.0b", [&1])))
     |> Enum.join(":")
-    :io.format('    hwaddr ~s', string_address)
+    :io.format('    hwaddr ~s~n', [string_address])
     print_if_info(rest)
   end
 
