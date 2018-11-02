@@ -114,7 +114,10 @@ defmodule Toolshed.Net do
   defp print_if_info([]), do: :ok
 
   defp print_if_info([{:hwaddr, addr} | rest]) do
-    :io.format('    hwaddr ~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b:~2.16.0b~n', addr)
+    string_address = addr
+    |> Enum.map(&(:io_lib.format("~2.16.0b", [&1])))
+    |> Enum.join(":")
+    :io.format('    hwaddr ~s', string_address)
     print_if_info(rest)
   end
 
