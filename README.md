@@ -61,6 +61,25 @@ When you get tired of typing `use Toolshed`, add it to your
 
 ## FAQ
 
+### I have some IEx helpers. Would you consider adding them?
+
+Yes! Absolutely. Please send a PR. At some point I may have to whittle down
+what's in the library, but for now, I'm open to adding almost anything.
+
+This includes:
+
+1. Pretty much anything that helps debugging or inspecting a running system
+2. Wrappers on OTP functions that are hard to remember or have output that's not
+   ideal for interactive use.
+3. Fun stuff - submit a text game if it's not too long if you'd like.
+
+I'd really like to stay away from adding anything that's not Elixir to this
+project. I.e., no port processes or NIFs. It would also be nice to keep Toolshed
+low on dependencies. Of course, maybe I'm just not thinking of something. Don't
+let that be a reason to not file an issue proposing the idea. If it doesn't seem
+to fit well, maybe a simplified version does and we add a link to the full
+featured one.
+
 ### A lot of these look like Unix commands? Why not run a proper shell?
 
 Yeah, I miss many Unix commands when I'm at the IEx prompt. Switching to a shell
