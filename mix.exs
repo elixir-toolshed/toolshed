@@ -1,6 +1,5 @@
 defmodule Toolshed.MixProject do
   use Mix.Project
-  @target Mix.Project.config()[:target]
 
   def project do
     [
@@ -22,19 +21,9 @@ defmodule Toolshed.MixProject do
 
   defp deps do
     [
+      {:nerves_runtime, "~> 0.8", optional: true},
       {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false}
-      | deps(@target)
-    ]
-  end
-
-  defp deps(host) when host == "host" or host == nil do
-    []
-  end
-
-  defp deps(_target) do
-    [
-      {:nerves_runtime, "~> 0.3"}
     ]
   end
 
