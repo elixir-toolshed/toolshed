@@ -1,8 +1,4 @@
-# When https://github.com/elixir-lang/elixir/issues/8063 is available, change
-# this to `Mix.Project.config()[:target]`
-target = System.get_env("MIX_TARGET")
-
-if target != nil and target != "host" do
+if Code.ensure_loaded?(:nerves_runtime) do
   defmodule Toolshed.Nerves do
     @moduledoc """
     Helpers that are useful on Nerves devices
@@ -54,9 +50,5 @@ if target != nil and target != "host" do
         {output, _} -> {:error, output}
       end
     end
-  end
-else
-  defmodule Toolshed.Nerves do
-    # Empty if not running on Nerves
   end
 end
