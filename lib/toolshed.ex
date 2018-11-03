@@ -34,10 +34,20 @@ defmodule Toolshed do
   """
 
   defmacro __using__(_) do
+    nerves =
+      if Code.ensure_loaded?(Toolshed.Nerves) do
+        quote do
+          import Toolshed.Nerves
+        end
+      else
+        quote do
+        end
+      end
+
     quote do
       import Toolshed
       import Toolshed.Top
-      import Toolshed.Nerves
+      unquote(nerves)
       import Toolshed.Unix
       import Toolshed.Net
       import Toolshed.Misc

@@ -1,6 +1,5 @@
 defmodule Toolshed.MixProject do
   use Mix.Project
-  @target Mix.Project.config()[:target]
 
   def project do
     [
@@ -12,7 +11,8 @@ defmodule Toolshed.MixProject do
       docs: [extras: ["README.md"]],
       description: description(),
       package: package(),
-      dialyzer: [plt_add_apps: [:iex]]
+      dialyzer: [plt_add_apps: [:iex]],
+      xref: [exclude: [Nerves.Runtime]]
     ]
   end
 
@@ -24,17 +24,6 @@ defmodule Toolshed.MixProject do
     [
       {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.3", only: [:dev, :test], runtime: false}
-      | deps(@target)
-    ]
-  end
-
-  defp deps(host) when host == "host" or host == nil do
-    []
-  end
-
-  defp deps(_target) do
-    [
-      {:nerves_runtime, "~> 0.3"}
     ]
   end
 
