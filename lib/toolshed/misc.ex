@@ -24,7 +24,7 @@ defmodule Toolshed.Misc do
   @doc """
   Save an Erlang term to the filesystem for easy loading later
 
-  This function is returns the `value` passed in to allow easy piping.
+  This function returns the `value` passed in to allow easy piping.
 
   ## Examples
   #

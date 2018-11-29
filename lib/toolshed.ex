@@ -8,7 +8,7 @@ defmodule Toolshed do
 
   Add this to your `.iex.exs` to load automatically.
 
-  The follow is a list of helpers:
+  The following is a list of helpers:
 
     * `cmd/1`          - run a system command and print the output
     * `hex/1`          - print a number as hex
