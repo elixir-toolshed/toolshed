@@ -23,7 +23,7 @@ defmodule Toolshed.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.3", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false}
       | deps(@target)
     ]
   end
