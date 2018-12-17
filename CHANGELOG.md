@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.3
+
+* Bug fixes
+  * Fix `cmd/1` to capture and print stderr as well. This fixes an issue where
+    stderr prints would go somewhere else and you couldn't see them. This
+    affected IEx sessions running over ssh.
+
 ## v0.2.2
 
 * Bug fixes
