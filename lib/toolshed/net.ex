@@ -4,6 +4,8 @@ defmodule Toolshed.Net do
   """
 
   require Record
+
+  @doc false
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
   @doc """

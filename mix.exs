@@ -8,7 +8,7 @@ defmodule Toolshed.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: [extras: ["README.md"]],
+      docs: [extras: ["README.md"], main: "readme"],
       description: description(),
       package: package(),
       dialyzer: [plt_add_apps: [:iex]]
@@ -28,7 +28,7 @@ defmodule Toolshed.MixProject do
   end
 
   defp description do
-    "A toolshed full of IEx helpers"
+    "A toolshed of IEx helpers"
   end
 
   defp package do
