@@ -1,23 +1,32 @@
 version: 2
+
+install_system_deps: &install_system_deps
+  run:
+    name: Install system dependencies
+    command: |
+      sudo apt update
+      sudo apt install -y libmnl-dev
+
 jobs:
   build:
     docker:
-      - image: circleci/elixir:1.7.3
+      - image: circleci/elixir:1.7.4
     working_directory: ~/repo
     steps:
       - checkout
+      - <<: *install_system_deps
       - restore_cache:
           keys:
-            - v1-dependency-cache-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ checksum "mix.lock" }}
       - run: mix local.hex --force
-      - run: mix deps.get --only test
+      - run: mix deps.get
       - run: mix format --check-formatted
-      - run: mix test
       - run: mix hex.build
+      - run: mix test
       - run: mix docs
       - run: mix dialyzer --halt-exit-status
       - save_cache:
-          key: v1-dependency-cache-{{ checksum "mix.lock" }}
+          key: v1-mix-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - deps
