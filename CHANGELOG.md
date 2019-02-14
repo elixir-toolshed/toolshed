@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.5
+
+* New features
+  * Add `lsof`
+
 ## v0.2.4
 
 * Bug fixes
