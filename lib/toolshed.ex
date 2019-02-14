@@ -28,6 +28,7 @@ defmodule Toolshed do
     * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
     * `load_term!/2`   - load a term that was saved by `save_term/2`
+    * `lsof/0`         - print out open file handles by OS process
     * `lsusb/0`        - print info on USB devices
     * `uptime/0`       - print out the current Erlang VM uptime
 
@@ -47,6 +48,7 @@ defmodule Toolshed do
     quote do
       import Toolshed
       import Toolshed.Top
+      import Toolshed.Lsof
       unquote(nerves)
       import Toolshed.Unix
       import Toolshed.Net
