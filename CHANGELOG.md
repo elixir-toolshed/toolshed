@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.6
+
+* New features
+  * Add `uname` for getting running firmware information on Nerves
+
 ## v0.2.5
 
 * New features
