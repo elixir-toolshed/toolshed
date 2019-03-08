@@ -6,9 +6,10 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     Helpers include:
 
     * `dmesg/0`        - print kernel messages
+    * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `reboot/0`       - reboots gracefully
     * `reboot!/0`      - reboots immediately
-    * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
+    * `uname/0`        - print information about the running system
     """
 
     @doc """
@@ -49,6 +50,28 @@ if Code.ensure_loaded?(Nerves.Runtime) do
         {_, 0} -> :ok
         {output, _} -> {:error, output}
       end
+    end
+
+    @doc """
+    Print out information about the running software
+
+    This is similar to the Linux `uname` to help people remember what to type.
+    """
+    @spec uname() :: :"do not show this result in output"
+    def uname() do
+      sysname = "Nerves"
+      nodename = Toolshed.Net.hostname()
+      release = Nerves.Runtime.KV.get_active("nerves_fw_product")
+
+      version =
+        "#{Nerves.Runtime.KV.get_active("nerves_fw_version")} (#{
+          Nerves.Runtime.KV.get_active("nerves_fw_uuid")
+        })"
+
+      arch = Nerves.Runtime.KV.get_active("nerves_fw_architecture")
+
+      IO.puts("#{sysname} #{nodename} #{release} #{version} #{arch}")
+      IEx.dont_display_result()
     end
   end
 end

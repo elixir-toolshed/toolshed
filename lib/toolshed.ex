@@ -31,6 +31,7 @@ defmodule Toolshed do
     * `lsof/0`         - print out open file handles by OS process
     * `lsusb/0`        - print info on USB devices
     * `uptime/0`       - print out the current Erlang VM uptime
+    * `uname/0`        - print information about the running system (Nerves-only)
 
   """
 
