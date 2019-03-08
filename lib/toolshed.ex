@@ -10,26 +10,26 @@ defmodule Toolshed do
 
   The following is a list of helpers:
 
-    * `cmd/1`          - run a system command and print the output
-    * `hex/1`          - print a number as hex
-    * `top/2`          - list out the top processes
-    * `exit/0`         - exit out of an IEx session
     * `cat/1`          - print out a file
-    * `grep/2`         - print out lines that match a regular expression
-    * `tree/1`         - pretty print a directory tree
-    * `hostname/0`     - print our hostname
-    * `nslookup/1`     - query DNS to find an IP address
-    * `tping/1`        - check if a host can be reached (like ping, but uses TCP)
-    * `ifconfig/0`     - print info on network interfaces
+    * `cmd/1`          - run a system command and print the output
     * `dmesg/0`        - print kernel messages (Nerves-only)
-    * `reboot/0`       - reboots gracefully (Nerves-only)
-    * `reboot!/0`      - reboots immediately  (Nerves-only)
+    * `exit/0`         - exit out of an IEx session
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
-    * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
-    * `save_term!/2`   - save a term as a binary
+    * `grep/2`         - print out lines that match a regular expression
+    * `hex/1`          - print a number as hex
+    * `hostname/0`     - print our hostname
+    * `ifconfig/0`     - print info on network interfaces
     * `load_term!/2`   - load a term that was saved by `save_term/2`
     * `lsof/0`         - print out open file handles by OS process
     * `lsusb/0`        - print info on USB devices
+    * `nslookup/1`     - query DNS to find an IP address
+    * `reboot/0`       - reboots gracefully (Nerves-only)
+    * `reboot!/0`      - reboots immediately  (Nerves-only)
+    * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
+    * `save_term!/2`   - save a term as a binary
+    * `top/2`          - list out the top processes
+    * `tping/1`        - check if a host can be reached (like ping, but uses TCP)
+    * `tree/1`         - pretty print a directory tree
     * `uptime/0`       - print out the current Erlang VM uptime
     * `uname/0`        - print information about the running system (Nerves-only)
 
