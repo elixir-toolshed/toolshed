@@ -21,6 +21,7 @@ defmodule Toolshed do
     * `ifconfig/0`     - print info on network interfaces
     * `load_term!/2`   - load a term that was saved by `save_term/2`
     * `lsof/0`         - print out open file handles by OS process
+    * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
     * `nslookup/1`     - query DNS to find an IP address
     * `reboot/0`       - reboots gracefully (Nerves-only)

@@ -7,6 +7,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
 
     * `dmesg/0`        - print kernel messages
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
+    * `lsmod/0`        - print out what kernel modules have been loaded
     * `reboot/0`       - reboots gracefully
     * `reboot!/0`      - reboots immediately
     * `uname/0`        - print information about the running system
@@ -72,6 +73,22 @@ if Code.ensure_loaded?(Nerves.Runtime) do
 
       IO.puts("#{sysname} #{nodename} #{release} #{version} #{arch}")
       IEx.dont_display_result()
+    end
+
+    @doc """
+    Print out the loaded kernel modules
+
+    Aside from printing out whether the kernel has been tainted, the
+    Linux utility of the same name just dump the contents of "/proc/modules"
+    like this one.
+
+    Some kernel modules may be built-in to the kernel image. To see
+    those, run `cat "/lib/modules/x.y.z/modules.builtin"` where `x.y.z` is
+    the kernel's version number.
+    """
+    @spec lsmod() :: :"do not show this result in output"
+    def lsmod() do
+      Toolshed.Unix.cat("/proc/modules")
     end
   end
 end
