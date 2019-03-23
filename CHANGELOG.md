@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.7
+
+* New features
+  * Add `lsmod` for returning loaded kernel modules on Nerves
+
 ## v0.2.6
 
 * New features
