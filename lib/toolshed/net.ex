@@ -60,40 +60,136 @@ defmodule Toolshed.Net do
   @doc """
   Check if a computer is up using TCP.
 
+  Options:
+
+  * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+
   ## Examples
 
-      iex> tping "google.com"
-      Host google.com (172.217.7.238) is up
+      iex> tping "nerves-project.org"
+      Response from nerves-project.org (185.199.108.153): time=4.155ms
 
-      iex(18)> tping "192.168.1.1"
-      Host 192.168.1.1 (192.168.1.1) is up
+      iex> tping "192.168.1.1"
+      Response from google.com (172.217.8.14): time=1.227ms
   """
   @spec tping(String.t()) :: :"do not show this result in output"
-  def tping(address) do
-    with {:ok, hostent} <- :inet.gethostbyname(to_charlist(address)),
-         hostent(h_addr_list: ip_list) = hostent,
-         first_ip = hd(ip_list),
-         up = can_connect_to_address?(first_ip, 80) do
-      message = if up == :up, do: "up", else: "down"
-      IO.puts("Host #{address} (#{:inet.ntoa(first_ip)}) is #{message}")
-    else
-      _ -> IO.puts("Error resolving #{address}")
+  def tping(address, options \\ []) do
+    case resolve_addr(address) do
+      {:ok, ip} ->
+        ping_ip(address, ip, connect_options(options))
+
+      {:error, message} ->
+        IO.puts(message)
     end
 
     IEx.dont_display_result()
   end
 
-  defp can_connect_to_address?(address, port) do
-    case :gen_tcp.connect(address, port, []) do
+  @doc """
+  Ping an IP address using TCP
+
+  This tries to connect to the remote host using TCP instead of sending an ICMP
+  echo request like normal ping. This made it possible to write in pure Elixir.
+
+  NOTE: Specifying an `:ifname` only sets the source IP address for the TCP
+  connection. This is only a hint to use the specified interface and not a
+  guarantee. For example, if you have two interfaces on the same LAN, the OS
+  routing tables may send traffic out one interface in preference to the one
+  that you want. On Linux, you can enable policy-based routing and add source
+  routes to guarantee that packets go out the desired interface.
+
+  Options:
+
+  * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+
+  ## Examples
+
+      iex> ping "nerves-project.org"
+      Press enter to stop
+      Response from nerves-project.org (185.199.108.153): time=4.155ms
+      Response from nerves-project.org (185.199.108.153): time=10.385ms
+      Response from nerves-project.org (185.199.108.153): time=12.458ms
+
+      iex> Toolshed.Net.ping "google.com", ifname: "wlp5s0"
+      Response from nerves-project.org (185.199.109.153): time=88.602ms
+  """
+  @spec ping(String.t(), keyword()) :: :"do not show this result in output"
+  def ping(address, options \\ []) do
+    IO.puts("Press enter to stop")
+
+    pid = spawn(fn -> repeat_ping(address, options) end)
+    _ = IO.gets("")
+    Process.exit(pid, :kill)
+
+    IEx.dont_display_result()
+  end
+
+  defp repeat_ping(address, options) do
+    tping(address, options)
+    Process.sleep(1000)
+    repeat_ping(address, options)
+  end
+
+  defp connect_options(ping_options) do
+    Enum.flat_map(ping_options, &ping_option_to_connect/1)
+  end
+
+  defp ping_option_to_connect({:ifname, ifname}) do
+    ifname_cl = to_charlist(ifname)
+
+    with {:ok, ifaddrs} <- :inet.getifaddrs(),
+         {_, params} <- Enum.find(ifaddrs, fn {k, _v} -> k == ifname_cl end),
+         addr when is_tuple(addr) <- Keyword.get(params, :addr) do
+      [{:ip, addr}]
+    else
+      _ ->
+        # HACK: Give an IP address that will give an address error so
+        # that if the interface appears that it will work.
+        [{:ip, {1, 2, 3, 4}}]
+    end
+  end
+
+  defp ping_option_to_connect({option, _}) do
+    raise "Unknown option #{inspect(option)}"
+  end
+
+  defp ping_ip(address, ip, connect_options) do
+    message =
+      case try_connect(ip, 80, connect_options) do
+        {:ok, micros} ->
+          "Response from #{address} (#{:inet.ntoa(ip)}): time=#{micros / 1000}ms"
+
+        {:error, reason} ->
+          "#{address} (#{:inet.ntoa(ip)}): #{inspect(reason)}"
+      end
+
+    IO.puts(message)
+  end
+
+  defp resolve_addr(address) do
+    with {:ok, hostent} <- :inet.gethostbyname(to_charlist(address)),
+         hostent(h_addr_list: ip_list) = hostent,
+         first_ip = hd(ip_list) do
+      {:ok, first_ip}
+    else
+      _ -> {:error, "Error resolving #{address}"}
+    end
+  end
+
+  defp try_connect(address, port, connect_options) do
+    start = System.monotonic_time(:microsecond)
+
+    case :gen_tcp.connect(address, port, connect_options) do
       {:ok, pid} ->
         :gen_tcp.close(pid)
-        :up
+        {:ok, System.monotonic_time(:microsecond) - start}
 
       {:error, :econnrefused} ->
-        :up
+        # If the connection is refused, the machine is up.
+        {:ok, System.monotonic_time(:microsecond) - start}
 
-      {:error, :ehostunreach} ->
-        :down
+      error ->
+        error
     end
   end
 

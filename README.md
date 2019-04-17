@@ -32,7 +32,7 @@ To try it out, add this project to your deps:
 ```elixir
 def deps do
   [
-    {:toolshed, "~> 0.1"}
+    {:toolshed, "~> 0.2"}
   ]
 end
 ```
@@ -43,11 +43,17 @@ Rebuild and run in whatever way you prefer. At the IEx prompt, run:
 iex> use Toolshed
 Toolshed imported. Run h(Toolshed) for more info.
 :ok
+
 iex> cmd("echo hello world")
 hello world
 0
-iex> tping("google.com")
-Host google.com (172.217.15.110) is up
+
+iex> Toolshed.Net.ping "nerves-project.org"
+Press enter to stop
+Response from nerves-project.org (185.199.108.153): time=4.155ms
+Response from nerves-project.org (185.199.108.153): time=10.385ms
+Response from nerves-project.org (185.199.108.153): time=12.458ms
+
 iex> top
 OTP Application  Name or PID               Reds/Δ      Mbox/Δ     Total/Δ      Heap/Δ     Stack/Δ
 nerves_runtime   Nerves.Runtime.Kernel.UE   72M/10M     157/-32    384K/-4642  192K/73K      86/52
