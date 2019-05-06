@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.8
+
+* New features
+  * Add `ping` to ping a remote IP address repeatedly and add some
+    support for setting the interface to use.
+
 ## v0.2.7
 
 * New features
