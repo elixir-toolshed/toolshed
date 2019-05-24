@@ -70,7 +70,7 @@ defmodule Toolshed.Net do
       Response from nerves-project.org (185.199.108.153): time=4.155ms
 
       iex> tping "192.168.1.1"
-      Response from google.com (172.217.8.14): time=1.227ms
+      Response from 192.168.1.1 (192.168.1.1): time=1.227ms
   """
   @spec tping(String.t()) :: :"do not show this result in output"
   def tping(address, options \\ []) do
@@ -111,7 +111,8 @@ defmodule Toolshed.Net do
       Response from nerves-project.org (185.199.108.153): time=12.458ms
 
       iex> Toolshed.Net.ping "google.com", ifname: "wlp5s0"
-      Response from nerves-project.org (185.199.109.153): time=88.602ms
+      Press enter to stop
+      Response from google.com (172.217.7.206): time=88.602ms
   """
   @spec ping(String.t(), keyword()) :: :"do not show this result in output"
   def ping(address, options \\ []) do
