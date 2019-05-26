@@ -24,7 +24,9 @@ defmodule Toolshed do
     * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
     * `nslookup/1`     - query DNS to find an IP address
+    * `pastebin/1`     - post text to a pastebin server (requires networking)
     * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
+    * `qr_encode/1`    - create a QR code (requires networking)
     * `reboot/0`       - reboots gracefully (Nerves-only)
     * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
@@ -34,6 +36,7 @@ defmodule Toolshed do
     * `tree/1`         - pretty print a directory tree
     * `uptime/0`       - print out the current Erlang VM uptime
     * `uname/0`        - print information about the running system (Nerves-only)
+    * `weather/0`      - get the local weather (requires networking)
 
   """
 
@@ -57,6 +60,7 @@ defmodule Toolshed do
       import Toolshed.Net
       import Toolshed.Misc
       import Toolshed.HW
+      import Toolshed.HTTP
 
       IO.puts([
         IO.ANSI.color(:rand.uniform(231) + 1),

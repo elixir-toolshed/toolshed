@@ -11,7 +11,7 @@ defmodule Toolshed.MixProject do
       docs: [extras: ["README.md"], main: "readme"],
       description: description(),
       package: package(),
-      dialyzer: [plt_add_apps: [:iex, :nerves_runtime]]
+      dialyzer: [plt_add_apps: [:iex, :nerves_runtime, :inets]]
     ]
   end
 
