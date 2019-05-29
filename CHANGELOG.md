@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.9
+
+* New features
+  * Add simple HTTP request shortcuts: `weather`, `qr_encode`, and `pastebin`
+
 ## v0.2.8
 
 * New features
