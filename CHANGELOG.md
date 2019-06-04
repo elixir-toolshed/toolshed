@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.10
+
+* New features
+  * Validate firmware using nerves_runtime v0.10.0's Nerves.Runtime.KV.put/2
+    function if available
+
 ## v0.2.9
 
 * New features
