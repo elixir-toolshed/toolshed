@@ -5,7 +5,7 @@ defmodule Toolshed.MixProject do
     [
       app: :toolshed,
       version: "0.2.9",
-      elixir: "~> 1.7",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       docs: [extras: ["README.md"], main: "readme"],
