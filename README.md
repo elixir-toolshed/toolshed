@@ -98,10 +98,6 @@ is easy on my laptop, but on Nerves devices, it's a pain. Getting a shell prompt
 on Nerves is possible, but it's limited due to Nerves not containing a full set
 of commands and it having to be run through Erlang's job control.
 
-### Not having file name tab completion is painful.
-
-That's not a question, but yes. If you have ideas on how to fix, please tell!
-
 ### You can do so much more with some of these helpers!!!
 
 Definitely. There's so much that I'd like to explore, but time gets in the way.
