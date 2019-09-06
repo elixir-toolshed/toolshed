@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.11
+
+* New features
+  * Add `date` command for quickly checking the current date and time in UTC
+
 ## v0.2.10
 
 * New features
