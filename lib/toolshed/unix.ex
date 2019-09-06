@@ -6,6 +6,7 @@ defmodule Toolshed.Unix do
   Helpers include:
 
    * `cat/1`   - print out a file
+   * `date/0`  - print out the current date and time
    * `grep/2`  - print out lines of a file that match a regular expression
    * `tree/1`  - print out a directory tree
    * `uptime/0` - print the update of the Erlang VM
@@ -61,6 +62,39 @@ defmodule Toolshed.Unix do
   def uptime() do
     :c.uptime()
     IEx.dont_display_result()
+  end
+
+  @doc """
+  Print out the date similar to the Unix date command
+  """
+  @spec date() :: String.t()
+  def date() do
+    dt = DateTime.utc_now()
+
+    "#{weekday_text(dt)} #{month_text(dt)} #{dt.day} #{time_text(dt)} UTC #{dt.year}"
+  end
+
+  defp weekday_text(dt) do
+    day_index = dt |> DateTime.to_date() |> Date.day_of_week()
+
+    elem(
+      {"", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"},
+      day_index
+    )
+  end
+
+  defp month_text(dt) do
+    elem(
+      {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"},
+      dt.month
+    )
+  end
+
+  defp time_text(dt) do
+    dt
+    |> DateTime.to_time()
+    |> Time.truncate(:second)
+    |> Time.to_string()
   end
 
   defp do_tree(_prefix, _dir, []), do: :ok
