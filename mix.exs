@@ -1,17 +1,20 @@
 defmodule Toolshed.MixProject do
   use Mix.Project
 
+  @version "0.2.10"
+  @source_url "https://github.com/fhunleth/toolshed"
+
   def project do
     [
       app: :toolshed,
-      version: "0.2.10",
+      version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: [extras: ["README.md"], main: "readme"],
-      description: description(),
+      dialyzer: dialyzer(),
+      docs: docs(),
       package: package(),
-      dialyzer: [plt_add_apps: [:iex, :nerves_runtime, :inets]]
+      description: description()
     ]
   end
 
@@ -23,7 +26,7 @@ defmodule Toolshed.MixProject do
     [
       {:nerves_runtime, "~> 0.8", optional: true},
       {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -34,7 +37,23 @@ defmodule Toolshed.MixProject do
   defp package do
     [
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/fhunleth/toolshed"}
+      links: %{"GitHub" => @source_url}
+    ]
+  end
+
+  defp dialyzer() do
+    [
+      flags: [:race_conditions, :unmatched_returns, :error_handling, :underspecs],
+      plt_add_apps: [:iex, :nerves_runtime, :inets]
+    ]
+  end
+
+  defp docs do
+    [
+      extras: ["README.md"],
+      main: "readme",
+      source_ref: "v#{@version}",
+      source_url: @source_url
     ]
   end
 end
