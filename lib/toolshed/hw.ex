@@ -5,6 +5,7 @@ defmodule Toolshed.HW do
   Helpers include:
 
    * `lsusb/0`   - print out connected USB devices
+   * `cpu/0`     - print out cpu utilization
   """
 
   @doc """
@@ -14,6 +15,28 @@ defmodule Toolshed.HW do
   def lsusb() do
     Enum.each(Path.wildcard("/sys/bus/usb/devices/*/uevent"), &print_usb/1)
     IEx.dont_display_result()
+  end
+
+  @doc """
+  Print out CPU utilization
+  """
+  def cpu do
+    with {:ok, values} <- get_info() do
+      ~w(load_1_min load_5_min load_15_min running_tasks last_pid)
+      |> Enum.zip(values)
+      |> Enum.map(fn {key, val} -> key <> ": " <> val end)
+      |> Enum.join(", ")
+    else
+      {:error, _} -> "Opps... OS not supported"
+    end
+  end
+
+  defp get_info do
+    with {:ok, res} <- File.read("/proc/loadavg") do
+      {:ok, String.split(res)}
+    else
+      _ -> {:error, :os_not_supported}
+    end
   end
 
   defp print_usb(uevent_path) do

@@ -24,6 +24,7 @@ defmodule Toolshed do
     * `lsof/0`         - print out open file handles by OS process
     * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
+    * `cpu/0`          - print out cpu utilization
     * `nslookup/1`     - query DNS to find an IP address
     * `pastebin/1`     - post text to a pastebin server (requires networking)
     * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
