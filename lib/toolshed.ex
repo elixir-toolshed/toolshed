@@ -24,6 +24,7 @@ defmodule Toolshed do
     * `lsof/0`         - print out open file handles by OS process
     * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
+    * `multicast_addresses/0 - print out all multicast addresses
     * `nslookup/1`     - query DNS to find an IP address
     * `pastebin/1`     - post text to a pastebin server (requires networking)
     * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
@@ -62,6 +63,7 @@ defmodule Toolshed do
       import Toolshed.Misc
       import Toolshed.HW
       import Toolshed.HTTP
+      import Toolshed.Multicast
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
