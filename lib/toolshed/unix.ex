@@ -13,65 +13,98 @@ defmodule Toolshed.Unix do
 
   """
 
+  alias Toolshed.Result
+
   @doc """
   Print out a file
   """
-  @spec cat(Path.t()) :: :"do not show this result in output"
+  @spec cat(Path.t()) :: Result.t()
   def cat(path) do
-    File.read!(path) |> IO.puts()
-    IEx.dont_display_result()
+    File.read!(path)
+    |> Result.new()
   end
 
   @doc """
   Run a regular expression on a file and print the matching lines.
 
-  iex> grep ~r/video/, "/etc/mime.types"
+  ```elixir
+  iex> cat("/etc/services") |> grep(~r/ntp/)
+  ntp             123/tcp     # Network Time Protocol
+  ```
   """
-  @spec grep(Regex.t(), Path.t()) :: :"do not show this result in output"
-  def grep(regex, path) do
-    File.stream!(path)
-    |> Stream.filter(&Regex.match?(regex, &1))
-    |> Stream.each(&IO.write/1)
-    |> Stream.run()
+  @spec grep(Result.t() | String.t(), Regex.t()) :: Result.t()
+  def grep(%Result{} = result, regex) do
+    result
+    |> Result.v()
+    |> to_string()
+    |> grep(regex)
+  end
 
-    IEx.dont_display_result()
+  def grep(s, regex) when is_binary(s) do
+    s
+    |> String.split("\n")
+    |> Enum.filter(&Regex.match?(regex, &1))
+    |> Enum.intersperse("\n")
+    |> Result.new()
   end
 
   @doc """
   Print out directories and files in tree form.
   """
-  @spec tree(Path.t()) :: :"do not show this result in output"
+  @spec tree(Path.t()) :: Result.t()
   def tree(path \\ ".") do
-    IO.puts(path)
-
     case file_info(path, path) do
       {:directory, _} ->
-        do_tree("", path, files(path))
+        [path, ?\n, do_tree("", path, files(path))]
 
       _ ->
-        :ok
+        path
     end
-
-    IEx.dont_display_result()
+    |> Result.new()
   end
 
   @doc """
   Print out the current uptime.
   """
-  @spec uptime() :: :"do not show this result in output"
+  @spec uptime() :: Result.t()
   def uptime() do
-    :c.uptime()
-    IEx.dont_display_result()
+    {uptime_millis, _} = :erlang.statistics(:wall_clock)
+
+    uptime_seconds = div(uptime_millis, 1000)
+
+    daystime = :calendar.seconds_to_daystime(uptime_seconds)
+
+    [
+      format(:days, daystime),
+      format(:hours, daystime),
+      format(:minutes, daystime),
+      format(:seconds, daystime)
+    ]
+    |> Result.new()
   end
+
+  defp format(:days, {days, _rest}) when days > 0, do: [to_string(days), " days, "]
+
+  defp format(:hours, {days, {hours, _minutes, _seconds}}) when days > 0 or hours > 0,
+    do: [to_string(hours), " hours, "]
+
+  defp format(:minutes, {days, {hours, minutes, _seconds}})
+       when days > 0 or hours > 0 or minutes > 0,
+       do: [to_string(minutes), " minutes and "]
+
+  defp format(:seconds, {_days, {_hours, _minutes, seconds}}),
+    do: [to_string(seconds), " seconds"]
+
+  defp format(_else, _data), do: []
 
   @doc """
   Print out the date similar to the Unix date command
   """
-  @spec date() :: String.t()
+  @spec date() :: Result.t()
   def date() do
     dt = DateTime.utc_now()
 
-    "#{weekday_text(dt)} #{month_text(dt)} #{dt.day} #{time_text(dt)} UTC #{dt.year}"
+    Result.new("#{weekday_text(dt)} #{month_text(dt)} #{dt.day} #{time_text(dt)} UTC #{dt.year}")
   end
 
   defp weekday_text(dt) do
@@ -97,23 +130,24 @@ defmodule Toolshed.Unix do
     |> Time.to_string()
   end
 
-  defp do_tree(_prefix, _dir, []), do: :ok
+  defp do_tree(_prefix, _dir, []), do: []
 
   defp do_tree(prefix, dir, [{:directory, filename} | rest]) do
-    puts_tree_branch(prefix, filename, rest)
-
     path = Path.join(dir, filename)
-    do_tree([prefix, tree_trunk(rest)], path, files(path))
-    do_tree(prefix, dir, rest)
+
+    [
+      puts_tree_branch(prefix, filename, rest),
+      do_tree([prefix, tree_trunk(rest)], path, files(path)),
+      do_tree(prefix, dir, rest)
+    ]
   end
 
   defp do_tree(prefix, dir, [{_type, filename} | rest]) do
-    puts_tree_branch(prefix, filename, rest)
-    do_tree(prefix, dir, rest)
+    [puts_tree_branch(prefix, filename, rest), do_tree(prefix, dir, rest)]
   end
 
   defp puts_tree_branch(prefix, filename, rest) do
-    IO.puts([prefix, tree_branch(rest), filename])
+    [prefix, tree_branch(rest), filename, ?\n]
   end
 
   defp tree_branch([]), do: "└── "
