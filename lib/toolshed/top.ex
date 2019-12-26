@@ -5,6 +5,8 @@ defmodule Toolshed.Top do
   Find the top processes
   """
 
+  alias Toolshed.Result
+
   @spec top_reductions(any()) :: :"do not show this result in output"
   def top_reductions(n \\ @default_n), do: top(order: :reductions, n: n)
   @spec top_mailbox(any()) :: :"do not show this result in output"
@@ -26,27 +28,28 @@ defmodule Toolshed.Top do
     `:delta_heap_size`, `:stack_size`, `:delta_stack_size`)
   * `:n`     - the max number of processes to list
   """
+  @spec top(keyword()) :: Result.t()
   def top(opts \\ []) do
     order = Keyword.get(opts, :order, :delta_reductions)
     n = Keyword.get(opts, :n, @default_n)
     tid = toolshed_top_tid()
 
-    Process.list()
-    |> Enum.map(&process_info/1)
-    |> Enum.filter(fn info -> info != %{} end)
-    |> Enum.map(fn info ->
-      previous_info = :ets.lookup(tid, info.pid)
-      d = add_deltas(info, previous_info)
-      :ets.insert(tid, {info.pid, info})
-      d
-    end)
-    |> Enum.sort(sort(order))
-    |> print_summary()
-    |> Enum.take(n)
-    |> format_header()
-    |> Enum.each(&format/1)
+    all_infos =
+      Process.list()
+      |> Enum.map(&process_info/1)
+      |> Enum.filter(fn info -> info != %{} end)
+      |> Enum.map(fn info ->
+        previous_info = :ets.lookup(tid, info.pid)
+        d = add_deltas(info, previous_info)
+        :ets.insert(tid, {info.pid, info})
+        d
+      end)
+      |> Enum.sort(sort(order))
 
-    IEx.dont_display_result()
+    infos = Enum.take(all_infos, n)
+
+    [print_summary(all_infos), format_header(), Enum.map(infos, &format/1)]
+    |> Result.new()
   end
 
   defp toolshed_top_tid() do
@@ -164,36 +167,35 @@ defmodule Toolshed.Top do
   defp print_summary(infos) do
     cnt = Enum.count(infos)
 
-    IO.puts("Total processes: #{cnt}\n")
-    infos
+    "Total processes: #{cnt}\n\n"
   end
 
-  defp format_header(infos) do
-    :io.format(
-      IO.ANSI.cyan() <>
-        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n" <>
-        IO.ANSI.white(),
-      [
-        "Application",
-        "Name or PID",
-        "Reds",
-        "Δ",
-        "Mbox",
-        "Δ",
-        "Total",
-        "Δ",
-        "Heap",
-        "Δ",
-        "Stack",
-        "Δ"
-      ]
-    )
-
-    infos
+  defp format_header() do
+    [
+      IO.ANSI.cyan(),
+      :io_lib.format(
+        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
+        [
+          "Application",
+          "Name or PID",
+          "Reds",
+          "Δ",
+          "Mbox",
+          "Δ",
+          "Total",
+          "Δ",
+          "Heap",
+          "Δ",
+          "Stack",
+          "Δ"
+        ]
+      ),
+      IO.ANSI.white()
+    ]
   end
 
   defp format(info) do
-    :io.format(
+    :io_lib.format(
       "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
       [
         String.slice(to_string(info.application), 0, 12),
