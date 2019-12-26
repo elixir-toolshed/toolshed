@@ -5,6 +5,8 @@ defmodule Toolshed.Net do
 
   require Record
 
+  alias Toolshed.Result
+
   @doc false
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
@@ -16,10 +18,10 @@ defmodule Toolshed.Net do
       iex> hostname
       "nerves-1234"
   """
-  @spec hostname() :: String.t()
+  @spec hostname() :: Result.t()
   def hostname() do
     {:ok, hostname_charlist} = :inet.gethostname()
-    to_string(hostname_charlist)
+    Result.new(to_string(hostname_charlist))
   end
 
   @doc """
@@ -32,28 +34,31 @@ defmodule Toolshed.Net do
       Address:  172.217.7.238
       Address:  2607:f8b0:4004:804::200e
   """
-  @spec nslookup(String.t()) :: :"do not show this result in output"
+  @spec nslookup(String.t()) :: Result.t()
   def nslookup(name) do
-    IO.puts("Name:     #{name}")
     name_charlist = to_charlist(name)
 
-    case :inet.gethostbyname(name_charlist, :inet) do
-      {:ok, v4} -> print_addresses(v4)
-      {:error, :nxdomain} -> IO.puts("IPv4 lookup failed")
-    end
-
-    case :inet.gethostbyname(name_charlist, :inet6) do
-      {:ok, v6} -> print_addresses(v6)
-      {:error, :nxdomain} -> IO.puts("IPv6 lookup failed")
-    end
-
-    IEx.dont_display_result()
+    [
+      "Name:     ",
+      name,
+      "\n",
+      format_addresses(name_charlist, :inet),
+      format_addresses(name_charlist, :inet6)
+    ]
+    |> Result.new()
   end
 
-  defp print_addresses(hostent) do
-    hostent(h_addr_list: ip_list) = hostent
-    Enum.each(ip_list, &IO.puts("Address:  #{:inet.ntoa(&1)}"))
+  defp format_addresses(name_charlist, family) do
+    with {:ok, hostent} <- :inet.gethostbyname(name_charlist, family) do
+      hostent(h_addr_list: ip_list) = hostent
+      Enum.map(ip_list, fn ip -> ["Address:  ", :inet.ntoa(ip), "\n"] end)
+    else
+      {:error, :nxdomain} -> [family_name(family), " lookup failed\n"]
+    end
   end
+
+  defp family_name(:inet), do: "IPv4"
+  defp family_name(:inet6), do: "IPv6"
 
   @doc """
   Print out the network interfaces and their addresses.
