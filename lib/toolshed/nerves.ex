@@ -14,6 +14,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     """
 
     alias Nerves.Runtime.KV
+    alias Toolshed.Result
 
     @doc """
     Print out kernel log messages
@@ -64,18 +65,18 @@ if Code.ensure_loaded?(Nerves.Runtime) do
 
     This is similar to the Linux `uname` to help people remember what to type.
     """
-    @spec uname() :: :"do not show this result in output"
+    @spec uname() :: Result.t()
     def uname() do
-      sysname = "Nerves"
-      nodename = Toolshed.Net.hostname()
+      system_name = "Nerves"
+      node_name = Toolshed.Net.hostname()
       release = KV.get_active("nerves_fw_product")
 
-      version = "#{KV.get_active("nerves_fw_version")} (#{KV.get_active("nerves_fw_uuid")})"
+      version = [KV.get_active("nerves_fw_version"), " (", KV.get_active("nerves_fw_uuid"), ")"]
 
       arch = KV.get_active("nerves_fw_architecture")
 
-      IO.puts("#{sysname} #{nodename} #{release} #{version} #{arch}")
-      IEx.dont_display_result()
+      [system_name, " ", node_name, " ", release, " ", version, " ", arch, "\n"]
+      |> Result.new()
     end
 
     @doc """
@@ -89,7 +90,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     those, run `cat "/lib/modules/x.y.z/modules.builtin"` where `x.y.z` is
     the kernel's version number.
     """
-    @spec lsmod() :: :"do not show this result in output"
+    @spec lsmod() :: Result.t()
     def lsmod() do
       Toolshed.Unix.cat("/proc/modules")
     end

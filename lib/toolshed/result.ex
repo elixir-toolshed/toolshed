@@ -37,7 +37,6 @@ defmodule Toolshed.Result do
   """
   def v(%__MODULE__{result: v}), do: v
 
-
   defimpl Inspect do
     @moduledoc false
     def inspect(result, _opts) do

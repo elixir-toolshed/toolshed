@@ -170,5 +170,4 @@ defmodule Toolshed.Unix do
     |> Time.truncate(:second)
     |> Time.to_string()
   end
-
 end
