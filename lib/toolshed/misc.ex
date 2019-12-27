@@ -57,6 +57,9 @@ defmodule Toolshed.Misc do
 
   @doc """
   Exit the current IEx session
+
+  This is useful for exiting ssh sessions to the IEx prompt. You can also run `~.<enter>` to exit, but that's
+  hard to find if you don't already know it.
   """
   def exit() do
     Process.exit(Process.group_leader(), :kill)

@@ -3,20 +3,21 @@ defmodule Toolshed.HTTP do
   Helpers that make HTTP requests
   """
 
+  alias Toolshed.Result
+
   @doc """
   Display the local weather
 
   See http://wttr.in/:help for more information.
   """
-  @spec weather() :: :"do not show this result in output"
+  @spec weather() :: Result.t()
   def weather() do
     # :inets isn't listed in the dependencies so that it can be optional.
     _ = Application.ensure_all_started(:inets)
 
     {:ok, {_status, _headers, body}} = :httpc.request('http://wttr.in/?An0')
 
-    body |> :binary.list_to_bin() |> IO.puts()
-    IEx.dont_display_result()
+    body |> :binary.list_to_bin() |> Result.new()
   end
 
   @doc """
@@ -24,7 +25,7 @@ defmodule Toolshed.HTTP do
 
   See https://github.com/chubin/qrenco.de for more information.
   """
-  @spec qr_encode(String.t()) :: :"do not show this result in output"
+  @spec qr_encode(String.t()) :: Result.t()
   def qr_encode(message) do
     # :inets isn't listed in the dependencies so that it can be optional.
     _ = Application.ensure_all_started(:inets)
@@ -41,8 +42,7 @@ defmodule Toolshed.HTTP do
         []
       )
 
-    body |> :binary.list_to_bin() |> IO.puts()
-    IEx.dont_display_result()
+    body |> :binary.list_to_bin() |> Result.new()
   end
 
   @doc """
