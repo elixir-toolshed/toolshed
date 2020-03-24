@@ -110,7 +110,7 @@ defmodule Toolshed.Net do
       Response from nerves-project.org (185.199.108.153): time=10.385ms
       Response from nerves-project.org (185.199.108.153): time=12.458ms
 
-      iex> Toolshed.Net.ping "google.com", ifname: "wlp5s0"
+      iex> ping "google.com", ifname: "wlp5s0"
       Press enter to stop
       Response from google.com (172.217.7.206): time=88.602ms
   """
