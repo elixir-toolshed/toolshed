@@ -44,8 +44,8 @@ jobs:
       - run: mix deps.get
       - run: mix format --check-formatted
       - run: mix compile
-      - run: mix docs
-      - run: mix hex.build
+      - run: MIX_ENV=docs mix docs
+      - run: MIX_ENV=docs mix hex.build
       - run: mix test
       - run: mix dialyzer --halt-exit-status
       - save_cache:

@@ -25,7 +25,7 @@ defmodule Toolshed.MixProject do
   defp deps do
     [
       {:nerves_runtime, "~> 0.8", optional: true},
-      {:ex_doc, "~> 0.19", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.19", only: :docs, runtime: false},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
     ]
   end
