@@ -63,11 +63,20 @@ defmodule Toolshed do
       import Toolshed.HW
       import Toolshed.HTTP
 
+      # If module docs have been stripped, then don't tell the user that they can
+      # see them.
+      help_text =
+        case Code.fetch_docs(Toolshed) do
+          {:error, _anything} -> ""
+          _ -> " Run h(Toolshed) for more info."
+        end
+
       IO.puts([
         IO.ANSI.color(:rand.uniform(231) + 1),
         "Toolshed",
         IO.ANSI.reset(),
-        " imported. Run h(Toolshed) for more info"
+        " imported.",
+        help_text
       ])
     end
   end
