@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.2.12
+
+* Bug fixes
+  * If help has been stripped, then don't tell the user that it's available.
+
+* New features
+  * Add `multicast_addresses` command for listing multicast addresses being
+    listened to on each network interface. This is helpful if you're debugging
+    lost multicast subscriptions or just seeing what applications are listening
+    on.
+
 ## v0.2.11
 
 * New features
