@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.13
+
+* Bug fixes
+  * Improve error message when `:inets` isn't available so that it says how to
+    add it to your `mix.exs`.
+
 ## v0.2.12
 
 * Bug fixes
