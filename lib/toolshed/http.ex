@@ -10,8 +10,7 @@ defmodule Toolshed.HTTP do
   """
   @spec weather() :: :"do not show this result in output"
   def weather() do
-    # :inets isn't listed in the dependencies so that it can be optional.
-    _ = Application.ensure_all_started(:inets)
+    check_inets()
 
     {:ok, {_status, _headers, body}} = :httpc.request('http://wttr.in/?An0')
 
@@ -26,8 +25,7 @@ defmodule Toolshed.HTTP do
   """
   @spec qr_encode(String.t()) :: :"do not show this result in output"
   def qr_encode(message) do
-    # :inets isn't listed in the dependencies so that it can be optional.
-    _ = Application.ensure_all_started(:inets)
+    check_inets()
 
     encoded = message |> URI.encode() |> to_charlist()
     form_data = [?x, ?= | encoded]
@@ -79,6 +77,20 @@ defmodule Toolshed.HTTP do
     after
       1000 ->
         {:error, :timeout}
+    end
+  end
+
+  defp check_inets() do
+    case Application.ensure_all_started(:inets) do
+      {:ok, _} ->
+        :ok
+
+      {:error, _} ->
+        raise RuntimeError, """
+        :inets can't be started.
+        This probably means that it isn't in the OTP release.
+        To fix, edit your mix.exs and add :inets to the :extra_applications list.
+        """
     end
   end
 end
