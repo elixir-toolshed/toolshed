@@ -33,6 +33,7 @@ defmodule Toolshed do
     * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
+    * `sockets/0`      - print out what sockets are currently in use and some stats
     * `top/2`          - list out the top processes
     * `tping/2`        - check if a host can be reached (like ping, but uses TCP)
     * `tree/1`         - pretty print a directory tree
@@ -112,4 +113,7 @@ defmodule Toolshed do
   def hex(value) do
     inspect(value, base: :hex)
   end
+
+  @spec sockets :: :"do not show this result in output"
+  defdelegate sockets(), to: Toolshed.Sockets
 end
