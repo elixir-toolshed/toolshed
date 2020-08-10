@@ -12,7 +12,7 @@ defmodule Toolshed.HTTP do
   def weather() do
     check_inets()
 
-    {:ok, {_status, _headers, body}} = :httpc.request('http://wttr.in/?An0')
+    {:ok, {_status, _headers, body}} = :httpc.request('http://v2.wttr.in/?An0')
 
     body |> :binary.list_to_bin() |> IO.puts()
     IEx.dont_display_result()
