@@ -6,6 +6,8 @@ defmodule Toolshed.Unix do
   Helpers include:
 
    * `cat/1`   - print out a file
+   * `df/0`    - print out disk storage info.
+   * `df/1`    - print out disk storage info with df's args.
    * `date/0`  - print out the current date and time
    * `grep/2`  - print out lines of a file that match a regular expression
    * `tree/1`  - print out a directory tree
@@ -72,6 +74,18 @@ defmodule Toolshed.Unix do
     dt = DateTime.utc_now()
 
     "#{weekday_text(dt)} #{month_text(dt)} #{dt.day} #{time_text(dt)} UTC #{dt.year}"
+  end
+
+  @doc """
+  Print out disk storage info with df's args.
+  ## Examples
+  #
+      iex> df "--help"
+  """
+  @spec df(binary()) :: :"do not show this result in output"
+  def df(args \\ "") when is_binary(args) do
+    Toolshed.cmd("df " <> args)
+    IEx.dont_display_result()
   end
 
   defp weekday_text(dt) do

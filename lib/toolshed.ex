@@ -14,6 +14,7 @@ defmodule Toolshed do
     * `cmd/1`          - run a system command and print the output
     * `date/0`         - print out the current date and time
     * `dmesg/0`        - print kernel messages (Nerves-only)
+    * `df/1`           - Print out disk storage info with df's args.
     * `exit/0`         - exit out of an IEx session
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `grep/2`         - print out lines that match a regular expression
