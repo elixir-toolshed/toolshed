@@ -26,11 +26,11 @@ defaults: &defaults
   working_directory: ~/repo
 
 jobs:
-  build_elixir_1_10_otp_22:
+  build_elixir_1_11_otp_23:
     docker:
-      - image: erlang:22.3
+      - image: erlang:23.1
         environment:
-          ELIXIR_VERSION: 1.10.2-otp-22
+          ELIXIR_VERSION: 1.11.0-otp-23
           LC_ALL: C.UTF-8
     <<: *defaults
     steps:
@@ -54,9 +54,25 @@ jobs:
             - _build
             - deps
 
+  build_elixir_1_10_otp_23:
+    docker:
+      - image: erlang:23.1
+        environment:
+          ELIXIR_VERSION: 1.10.4-otp-23
+          LC_ALL: C.UTF-8
+    <<: *defaults
+    steps:
+      - checkout
+      - <<: *install_system_deps
+      - <<: *install_elixir
+      - <<: *install_hex_rebar
+      - run: mix deps.get
+      - run: mix compile
+      - run: mix test
+
   build_elixir_1_9_otp_22:
     docker:
-      - image: erlang:22.2.8
+      - image: erlang:22.2
         environment:
           ELIXIR_VERSION: 1.9.4-otp-22
           LC_ALL: C.UTF-8
@@ -102,28 +118,12 @@ jobs:
       - run: mix compile
       - run: mix test
 
-  build_elixir_1_6_otp_20:
-    docker:
-      - image: erlang:20.3.8
-        environment:
-          ELIXIR_VERSION: 1.6.6-otp-20
-          LC_ALL: C.UTF-8
-    <<: *defaults
-    steps:
-      - checkout
-      - <<: *install_system_deps
-      - <<: *install_elixir
-      - <<: *install_hex_rebar
-      - run: mix deps.get
-      - run: mix compile
-      - run: mix test
-
 workflows:
   version: 2
   build_test:
     jobs:
-      - build_elixir_1_10_otp_22
+      - build_elixir_1_11_otp_23
+      - build_elixir_1_10_otp_23
       - build_elixir_1_9_otp_22
       - build_elixir_1_8_otp_22
       - build_elixir_1_7_otp_21
-      - build_elixir_1_6_otp_20
