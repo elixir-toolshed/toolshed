@@ -14,7 +14,8 @@ defmodule Toolshed.MixProject do
       dialyzer: dialyzer(),
       docs: docs(),
       package: package(),
-      description: description()
+      description: description(),
+      xref: [exclude: [:httpc, IEx]]
     ]
   end
 
