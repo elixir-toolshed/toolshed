@@ -15,7 +15,12 @@ defmodule Toolshed.MixProject do
       docs: docs(),
       package: package(),
       description: description(),
-      xref: [exclude: [:httpc, IEx]]
+      xref: [exclude: [:httpc, IEx]],
+      preferred_cli_env: %{
+        docs: :docs,
+        "hex.publish": :docs,
+        "hex.build": :docs
+      }
     ]
   end
 
