@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.14
+
+* Bug fixes
+  * Fix warnings when building with Elixir 1.11.
+
 ## v0.2.13
 
 * Bug fixes
