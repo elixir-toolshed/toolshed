@@ -1,0 +1,80 @@
+defmodule Toolshed.AutocompleteTest do
+  use ExUnit.Case
+  alias Toolshed.Autocomplete
+
+  defp sf(string) do
+    string |> to_charlist() |> Enum.reverse() |> Autocomplete.string_fragment()
+  end
+
+  test "parsing string fragments" do
+    assert sf('') == ''
+    assert sf('abc') == ''
+    assert sf('"') == ''
+    assert sf('"abc') == 'abc'
+    assert sf('"escaped \\" quote') == 'escaped \\" quote'
+    assert sf('File.read("abc') == 'abc'
+    assert sf('File.read("ABCabc123.___') == 'ABCabc123.___'
+    assert sf('File.read("some_file", var') == ''
+    assert sf('File.read("some_file", "string') == 'string'
+  end
+
+  describe "find_possible_paths/1" do
+    test "existing absolute paths" do
+      # /usr is a directory in / on OSX and Linux
+      assert {"/usr", true} in Autocomplete.find_possible_paths("/")
+
+      # partial entry
+      assert {"/usr", true} in Autocomplete.find_possible_paths("/u")
+      assert {"/usr", true} in Autocomplete.find_possible_paths("/us")
+      assert {"/usr", true} in Autocomplete.find_possible_paths("/usr")
+      assert {"/usr/bin", true} in Autocomplete.find_possible_paths("/usr/")
+      assert {"/usr/bin", true} in Autocomplete.find_possible_paths("/usr/b")
+      assert {"/usr/bin", true} in Autocomplete.find_possible_paths("/usr/bi")
+      assert {"/usr/bin", true} in Autocomplete.find_possible_paths("/usr/bin")
+    end
+
+    test "bad absolute paths" do
+      assert [] == Autocomplete.find_possible_paths("/nonexistent_dir")
+    end
+
+    test "dot" do
+      paths = Autocomplete.find_possible_paths(".")
+
+      assert {"./lib", true} in paths
+      assert {"./test", true} in paths
+      assert {"./mix.exs", false} in paths
+      assert {"./README.md", false} in paths
+    end
+
+    test "relative paths" do
+      assert {"./lib", true} in Autocomplete.find_possible_paths("./")
+      assert {"./lib", true} in Autocomplete.find_possible_paths("./l")
+      assert {"./lib", true} in Autocomplete.find_possible_paths("./li")
+      assert {"./lib", true} in Autocomplete.find_possible_paths("./lib")
+      assert {"./lib/toolshed.ex", false} in Autocomplete.find_possible_paths("./lib/")
+      assert {"./lib/toolshed.ex", false} in Autocomplete.find_possible_paths("./lib/t")
+      assert {"./lib/toolshed", true} in Autocomplete.find_possible_paths("./lib/t")
+
+      assert [] == Autocomplete.find_possible_paths("./lib/ttt")
+    end
+  end
+
+  describe "expand_path/2" do
+    test "expands to no options" do
+      assert {:no, [], []} == Autocomplete.expand_path("zzz", [])
+    end
+
+    test "expands to one option" do
+      # file expands to final double quote
+      assert {:yes, '23"', []} == Autocomplete.expand_path("1", [{"123", false}])
+
+      # directory expands to include slash
+      assert {:yes, '23/', []} == Autocomplete.expand_path("1", [{"123", true}])
+    end
+
+    test "expands to hint and options" do
+      assert {:yes, 'bc', ['abcd', 'abce', 'abcf']} ==
+               Autocomplete.expand_path("a", [{"abcd", false}, {"abce", true}, {"abcf", false}])
+    end
+  end
+end
