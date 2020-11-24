@@ -3,13 +3,13 @@
 [![CircleCI](https://circleci.com/gh/fhunleth/toolshed.svg?style=svg)](https://circleci.com/gh/fhunleth/toolshed)
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
 
-This package adds a number of commands to the IEx prompt to make working at the
-console more enjoyable. It's an experiment in aggregating code snippets from
-projects into one place. Some utilities merely wrap Erlang functions that are
-hard to remember and some actually do quite a bit of work. Please make my
-helpers your helpers too and send some back.
+Toolshed aims to improve the Elixir shell experience by adding a number of
+helpers and path autocompletion. This is really helpful when a normal Unix shell
+prompt is unavailable or inconvenient. Toolshed was originally written for
+[Nerves](https://nerves-project.org), but doesn't require it and the
+Nerves-specific helpers are compiled out for normal Elixir projects.
 
-Here's a sample of what you'll get:
+Here's a sample list of helpers:
 
 * `cmd` - run a command and print out the output
 * `top` - get a list of the top processes and their OTP applications based on
@@ -98,10 +98,6 @@ Yeah, I miss many Unix commands when I'm at the IEx prompt. Switching to a shell
 is easy on my laptop, but on Nerves devices, it's a pain. Getting a shell prompt
 on Nerves is possible, but it's limited due to Nerves not containing a full set
 of commands and it having to be run through Erlang's job control.
-
-### Not having file name tab completion is painful.
-
-That's not a question, but yes. If you have ideas on how to fix, please tell!
 
 ### You can do so much more with some of these helpers!!!
 
