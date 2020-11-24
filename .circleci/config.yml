@@ -1,12 +1,9 @@
 version: 2
 
-install_elixir: &install_elixir
-  run:
-    name: Install Elixir
-    command: |
-      wget https://repo.hex.pm/builds/elixir/v$ELIXIR_VERSION.zip
-      unzip -d /usr/local/elixir v$ELIXIR_VERSION.zip
-      echo 'export PATH=/usr/local/elixir/bin:$PATH' >> $BASH_ENV
+defaults: &defaults
+  working_directory: ~/repo
+  environment:
+    LC_ALL: C.UTF-8
 
 install_hex_rebar: &install_hex_rebar
   run:
@@ -19,24 +16,16 @@ install_system_deps: &install_system_deps
   run:
     name: Install system dependencies
     command: |
-      apt update
-      apt install -y libmnl-dev unzip
-
-defaults: &defaults
-  working_directory: ~/repo
+        apk add build-base libmnl-dev
 
 jobs:
   build_elixir_1_11_otp_23:
     docker:
-      - image: erlang:23.1
-        environment:
-          ELIXIR_VERSION: 1.11.0-otp-23
-          LC_ALL: C.UTF-8
+      - image: hexpm/elixir:1.11.2-erlang-23.1.2-alpine-3.12.1
     <<: *defaults
     steps:
       - checkout
       - <<: *install_system_deps
-      - <<: *install_elixir
       - <<: *install_hex_rebar
       - restore_cache:
           keys:
@@ -56,15 +45,11 @@ jobs:
 
   build_elixir_1_10_otp_23:
     docker:
-      - image: erlang:23.1
-        environment:
-          ELIXIR_VERSION: 1.10.4-otp-23
-          LC_ALL: C.UTF-8
+      - image: hexpm/elixir:1.10.4-erlang-23.1.2-alpine-3.12.1
     <<: *defaults
     steps:
       - checkout
       - <<: *install_system_deps
-      - <<: *install_elixir
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
@@ -72,15 +57,11 @@ jobs:
 
   build_elixir_1_9_otp_22:
     docker:
-      - image: erlang:22.2
-        environment:
-          ELIXIR_VERSION: 1.9.4-otp-22
-          LC_ALL: C.UTF-8
+      - image: hexpm/elixir:1.9.4-erlang-22.3.4.9-alpine-3.12.0
     <<: *defaults
     steps:
       - checkout
       - <<: *install_system_deps
-      - <<: *install_elixir
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
@@ -88,15 +69,11 @@ jobs:
 
   build_elixir_1_8_otp_22:
     docker:
-      - image: erlang:22.0
-        environment:
-          ELIXIR_VERSION: 1.8.2-otp-22
-          LC_ALL: C.UTF-8
+      - image: hexpm/elixir:1.8.2-erlang-22.3.4.9-alpine-3.12.0
     <<: *defaults
     steps:
       - checkout
       - <<: *install_system_deps
-      - <<: *install_elixir
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
@@ -104,15 +81,11 @@ jobs:
 
   build_elixir_1_7_otp_21:
     docker:
-      - image: erlang:21.3
-        environment:
-          ELIXIR_VERSION: 1.7.4-otp-21
-          LC_ALL: C.UTF-8
+      - image: hexpm/elixir:1.7.4-erlang-21.3.8.15-alpine-3.12.0
     <<: *defaults
     steps:
       - checkout
       - <<: *install_system_deps
-      - <<: *install_elixir
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
