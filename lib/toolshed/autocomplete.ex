@@ -74,22 +74,29 @@ defmodule Toolshed.Autocomplete do
     end
   end
 
+  defp ls_prefix(".") do
+    [".", ".." | Path.wildcard(".*", match_dot: true)]
+  end
+
+  defp ls_prefix("..") do
+    [".."]
+  end
+
+  defp ls_prefix("./" <> rest) do
+    Path.wildcard(rest <> "*", match_dot: true) |> Enum.map(fn p -> "./" <> p end)
+  end
+
+  defp ls_prefix(fragment) do
+    Path.wildcard(fragment <> "*", match_dot: true)
+  end
+
   # Returns possible paths as [{path, dir?}]
   @doc false
   @spec find_possible_paths(String.t()) :: [{Path.t(), boolean}]
   def find_possible_paths(path_fragment) do
-    dir = Path.dirname(path_fragment)
-
-    case File.ls(dir) do
-      {:ok, files} ->
-        files
-        |> Enum.map(&Path.join(dir, &1))
-        |> Enum.filter(&String.starts_with?(&1, path_fragment))
-        |> Enum.map(fn path -> {path, File.dir?(path)} end)
-
-      _ ->
-        []
-    end
+    path_fragment
+    |> ls_prefix()
+    |> Enum.map(fn path -> {path, File.dir?(path)} end)
   end
 
   # Look through a list of possible paths for the specified

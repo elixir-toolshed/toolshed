@@ -40,13 +40,16 @@ defmodule Toolshed.AutocompleteTest do
     test "dot" do
       paths = Autocomplete.find_possible_paths(".")
 
-      assert {"./lib", true} in paths
-      assert {"./test", true} in paths
-      assert {"./mix.exs", false} in paths
-      assert {"./README.md", false} in paths
+      assert {".", true} in paths
+      assert {"..", true} in paths
+      assert {".formatter.exs", false} in paths
     end
 
-    test "relative paths" do
+    test "dot dot" do
+      assert [{"..", true}] == Autocomplete.find_possible_paths("..")
+    end
+
+    test "relative paths with the dot" do
       assert {"./lib", true} in Autocomplete.find_possible_paths("./")
       assert {"./lib", true} in Autocomplete.find_possible_paths("./l")
       assert {"./lib", true} in Autocomplete.find_possible_paths("./li")
@@ -56,6 +59,13 @@ defmodule Toolshed.AutocompleteTest do
       assert {"./lib/toolshed", true} in Autocomplete.find_possible_paths("./lib/t")
 
       assert [] == Autocomplete.find_possible_paths("./lib/ttt")
+    end
+
+    test "relative paths without the dot" do
+      assert {"lib", true} in Autocomplete.find_possible_paths("l")
+      assert {"lib", true} in Autocomplete.find_possible_paths("li")
+      assert {"lib", true} in Autocomplete.find_possible_paths("lib")
+      assert {"lib/toolshed", true} in Autocomplete.find_possible_paths("lib/")
     end
   end
 
