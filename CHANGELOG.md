@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.15
+
+* New features
+  * Add path autocompletion. Try it out by running `use Toolshed` at the IEx
+    prompt. Then type `File.read("/e<tab>")` for files in `/etc` or `ls
+    "li<tab>"` if you have a `lib` directory under your current directory.
+
 ## v0.2.14
 
 * Bug fixes
