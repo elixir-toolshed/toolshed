@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.16
+
+* Bug fixes
+  * Fix path completion issues when wildcard characters are in the string to be
+    completed.
+
 ## v0.2.15
 
 * New features
