@@ -67,6 +67,16 @@ defmodule Toolshed.AutocompleteTest do
       assert {"lib", true} in Autocomplete.find_possible_paths("lib")
       assert {"lib/toolshed", true} in Autocomplete.find_possible_paths("lib/")
     end
+
+    test "ignores strings with wildcard chars" do
+      # Path.wildcard/2 is used in the implementation and we don't
+      # want to trigger full subdirectory traversals on path completion.
+      assert [] == Autocomplete.find_possible_paths("*")
+      assert [] == Autocomplete.find_possible_paths("/etc/*")
+      assert [] == Autocomplete.find_possible_paths("?i")
+      assert [] == Autocomplete.find_possible_paths("l[a-z]b")
+      assert [] == Autocomplete.find_possible_paths("{lib,test}")
+    end
   end
 
   describe "expand_path/2" do

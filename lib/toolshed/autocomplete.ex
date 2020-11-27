@@ -90,13 +90,22 @@ defmodule Toolshed.Autocomplete do
     Path.wildcard(fragment <> "*", match_dot: true)
   end
 
+  defp safe_fragment?(fragment) do
+    # Protect against wildcard characters in the strings passed to Path.wildcard/2
+    not String.contains?(fragment, ["*", "?", "[", "]", "{", "}"])
+  end
+
   # Returns possible paths as [{path, dir?}]
   @doc false
   @spec find_possible_paths(String.t()) :: [{Path.t(), boolean}]
   def find_possible_paths(path_fragment) do
-    path_fragment
-    |> ls_prefix()
-    |> Enum.map(fn path -> {path, File.dir?(path)} end)
+    if safe_fragment?(path_fragment) do
+      path_fragment
+      |> ls_prefix()
+      |> Enum.map(fn path -> {path, File.dir?(path)} end)
+    else
+      []
+    end
   end
 
   # Look through a list of possible paths for the specified
