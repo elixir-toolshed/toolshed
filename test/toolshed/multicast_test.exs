@@ -1,4 +1,4 @@
-defmodule MulticastTest do
+defmodule Toolshed.MulticastTest do
   use ExUnit.Case
 
   test "parses proc files" do
