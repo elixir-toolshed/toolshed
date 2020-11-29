@@ -6,16 +6,29 @@ defmodule Toolshed.AutocompleteTest do
     string |> to_charlist() |> Enum.reverse() |> Autocomplete.string_fragment()
   end
 
-  test "parsing string fragments" do
-    assert sf('') == ''
-    assert sf('abc') == ''
-    assert sf('"') == ''
-    assert sf('"abc') == 'abc'
-    assert sf('"escaped \\" quote') == 'escaped \\" quote'
-    assert sf('File.read("abc') == 'abc'
-    assert sf('File.read("ABCabc123.___') == 'ABCabc123.___'
-    assert sf('File.read("some_file", var') == ''
-    assert sf('File.read("some_file", "string') == 'string'
+  describe "triggers on string fragments" do
+    test "ignores empty strings" do
+      assert sf('') == ''
+      assert sf('"') == ''
+    end
+
+    test "ignores things that aren't strings" do
+      assert sf('abc') == ''
+    end
+
+    test "triggers on possible strings" do
+      assert sf('"abc') == 'abc'
+      assert sf('"escaped \\" quote') == 'escaped \\" quote'
+      assert sf('File.read("abc') == 'abc'
+      assert sf('File.read("ABCabc123.___') == 'ABCabc123.___'
+      assert sf('File.read("some_file", var') == ''
+      assert sf('File.read("some_file", "string') == 'string'
+    end
+
+    test "ignores string interpolation" do
+      assert sf('"\#{') == ''
+      assert sf('"\#{Fi') == ''
+    end
   end
 
   describe "find_possible_paths/1" do

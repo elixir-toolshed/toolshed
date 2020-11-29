@@ -56,6 +56,9 @@ defmodule Toolshed.Autocomplete do
     string_fragment(:possible_string, rest, [?\\, ?" | acc])
   end
 
+  # Don't trigger in a string interpolation
+  defp string_fragment(:possible_string, [?{, ?# | _rest], _acc), do: []
+
   defp string_fragment(:possible_string, [?" | rest], acc) do
     string_fragment(:assume_not_string, rest, acc)
   end
