@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.17
+
+* Bug fixes
+  * Don't trigger autocompletion when in a string interpolation.
+
 ## v0.2.16
 
 * Bug fixes
