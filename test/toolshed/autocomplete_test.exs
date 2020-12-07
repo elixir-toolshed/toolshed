@@ -82,8 +82,7 @@ defmodule Toolshed.AutocompleteTest do
     end
 
     test "ignores strings with wildcard chars" do
-      # Path.wildcard/2 is used in the implementation and we don't
-      # want to trigger full subdirectory traversals on path completion.
+      # NOTE: the implementation no longer uses Path.wildcard/2
       assert [] == Autocomplete.find_possible_paths("*")
       assert [] == Autocomplete.find_possible_paths("/etc/*")
       assert [] == Autocomplete.find_possible_paths("?i")

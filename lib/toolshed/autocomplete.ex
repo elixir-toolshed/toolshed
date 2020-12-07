@@ -78,37 +78,44 @@ defmodule Toolshed.Autocomplete do
   end
 
   defp ls_prefix(".") do
-    [".", ".." | Path.wildcard(".*", match_dot: true)]
+    [
+      ".",
+      ".."
+      | ls_prefix("./.")
+        |> Enum.map(fn "./" <> name -> name end)
+    ]
   end
 
   defp ls_prefix("..") do
     [".."]
   end
 
-  defp ls_prefix("./" <> rest) do
-    Path.wildcard(rest <> "*", match_dot: true) |> Enum.map(fn p -> "./" <> p end)
-  end
-
   defp ls_prefix(fragment) do
-    Path.wildcard(fragment <> "*", match_dot: true)
+    dir = Path.dirname(fragment)
+    prefix = prefix_from_dir(dir, fragment)
+
+    case File.ls(dir) do
+      {:ok, list} ->
+        list
+        |> Enum.map(&Path.join(prefix, &1))
+        |> Enum.filter(&String.starts_with?(&1, fragment))
+
+      _ ->
+        []
+    end
   end
 
-  defp safe_fragment?(fragment) do
-    # Protect against wildcard characters in the strings passed to Path.wildcard/2
-    not String.contains?(fragment, ["*", "?", "[", "]", "{", "}"])
-  end
+  # Handle relative path to the current directory
+  defp prefix_from_dir(".", <<c, _::binary>>) when c != ?., do: ""
+  defp prefix_from_dir(dir, _fragment), do: dir
 
   # Returns possible paths as [{path, dir?}]
   @doc false
   @spec find_possible_paths(String.t()) :: [{Path.t(), boolean}]
   def find_possible_paths(path_fragment) do
-    if safe_fragment?(path_fragment) do
-      path_fragment
-      |> ls_prefix()
-      |> Enum.map(fn path -> {path, File.dir?(path)} end)
-    else
-      []
-    end
+    path_fragment
+    |> ls_prefix()
+    |> Enum.map(fn path -> {path, File.dir?(path)} end)
   end
 
   # Look through a list of possible paths for the specified
