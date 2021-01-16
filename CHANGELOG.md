@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+* New features
+  * Add `httpget` command for performing HTTP GET requests and printing
+    the response to stdout or saving it to the filesystem.
+
 ## v0.2.17
 
 * Bug fixes
