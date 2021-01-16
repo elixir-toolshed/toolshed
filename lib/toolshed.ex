@@ -18,6 +18,7 @@ defmodule Toolshed do
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `grep/2`         - print out lines that match a regular expression
     * `hex/1`          - print a number as hex
+    * `httpget/2`      - print or download the results of a HTTP GET request
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
     * `load_term!/2`   - load a term that was saved by `save_term/2`
