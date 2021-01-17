@@ -71,11 +71,11 @@ defmodule Toolshed.HTTP do
   Perform a HTTP GET request for the specified URL
 
   By default, the results are printed or you can optionally choose to download
-  it to a specific locatiion on the file system.
+  it to a specific location on the file system.
 
   Options:
 
-  * `:dest` - Location to write the response to. Defaults to printing to the terminal.
+  * `:dest` - File path to write the response to. Defaults to printing to the terminal.
   * `:verbose` - Display request and response headers. Disabled by default.
   """
   def httpget(url, options \\ []) do
