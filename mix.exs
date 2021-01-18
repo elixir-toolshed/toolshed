@@ -1,7 +1,7 @@
 defmodule Toolshed.MixProject do
   use Mix.Project
 
-  @version "0.2.17"
+  @version "0.2.18"
   @source_url "https://github.com/fhunleth/toolshed"
 
   def project do

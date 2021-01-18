@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## v0.2.18
 
 * New features
-  * Add `httpget` command for performing HTTP GET requests and printing
-    the response to stdout or saving it to the filesystem.
+  * Add `httpget` command for performing HTTP GET requests and printing the
+    response to stdout or saving it to the filesystem. Thanks to Jon Thacker for
+    this feature.
 
 ## v0.2.17
 
