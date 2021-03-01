@@ -117,3 +117,7 @@ flexibility to change the API to improve interactive use.
 This also isn't a question, and you've now made me regret naming the project
 `toolshed`. Please file your grievances
 [here](https://github.com/fhunleth/toolshed/pull/5).
+
+### Contribution to the Project
+
+If there is a feature which is missing, a bug  which should be fixed or any view you have and want to  contribute  towards kindly go [here](https://github.com/elixir-toolshed/toolshed/blob/main/CONTRIBUTION_GUIDE.md) for more details.
