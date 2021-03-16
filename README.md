@@ -1,6 +1,6 @@
 # Toolshed
 
-[![CircleCI](https://circleci.com/gh/fhunleth/toolshed.svg?style=svg)](https://circleci.com/gh/fhunleth/toolshed)
+[![CircleCI](https://circleci.com/gh/elixir-toolshed/toolshed.svg?style=svg)](https://circleci.com/gh/elixir-toolshed/toolshed)
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
 
 Toolshed aims to improve the Elixir shell experience by adding a number of
@@ -116,4 +116,4 @@ flexibility to change the API to improve interactive use.
 
 This also isn't a question, and you've now made me regret naming the project
 `toolshed`. Please file your grievances
-[here](https://github.com/fhunleth/toolshed/pull/5).
+[here](https://github.com/elixir-toolshed/toolshed/pull/5).
