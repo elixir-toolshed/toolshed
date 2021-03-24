@@ -93,7 +93,7 @@ defmodule Toolshed do
   @spec cmd(String.t() | charlist()) :: integer()
   def cmd(str) when is_binary(str) do
     {_collectable, exit_code} =
-      System.cmd("sh", ["-c", str], stderr_to_stdout: true, into: IO.stream(:stdio, :line))
+      System.cmd("sh", ["-c", str], stderr_to_stdout: true, into: IO.binstream(:stdio, :line))
 
     exit_code
   end
