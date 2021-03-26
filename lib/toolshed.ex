@@ -27,7 +27,6 @@ defmodule Toolshed do
     * `lsusb/0`        - print info on USB devices
     * `multicast_addresses/0` - print out all multicast addresses
     * `nslookup/1`     - query DNS to find an IP address
-    * `pastebin/1`     - post text to a pastebin server (requires networking)
     * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
     * `qr_encode/1`    - create a QR code (requires networking)
     * `reboot/0`       - reboots gracefully (Nerves-only)

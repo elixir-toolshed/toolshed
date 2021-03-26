@@ -44,30 +44,6 @@ defmodule Toolshed.HTTP do
   end
 
   @doc """
-  Post text to a paste service
-
-  This is a convenient way of sharing text data with others. It currently
-  posts to "exbin.call-cc.be". Keep in mind that the text is posted in the
-  clear and the server may retain it indefinitely.
-
-  On success, this function returns a URL to the posted text.
-  """
-  @spec pastebin(String.t()) :: String.t() | {:error, term()}
-  def pastebin(contents) do
-    {:ok, socket} = :gen_tcp.connect('exbin.call-cc.be', 9999, [])
-    :ok = :gen_tcp.send(socket, contents)
-    :ok = :gen_tcp.shutdown(socket, :write)
-
-    case read_until_closed(socket) do
-      {:ok, result} ->
-        IO.iodata_to_binary(result) |> String.trim()
-
-      {:error, _message} = error ->
-        error
-    end
-  end
-
-  @doc """
   Perform a HTTP GET request for the specified URL
 
   By default, the results are printed or you can optionally choose to download
@@ -152,19 +128,6 @@ defmodule Toolshed.HTTP do
 
       other ->
         IO.puts("other message: #{inspect(other)}")
-    end
-  end
-
-  defp read_until_closed(socket, result \\ []) do
-    receive do
-      {:tcp, ^socket, bytes} ->
-        read_until_closed(socket, [result, bytes])
-
-      {:tcp_closed, ^socket} ->
-        {:ok, result}
-    after
-      1000 ->
-        {:error, :timeout}
     end
   end
 
