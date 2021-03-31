@@ -4,13 +4,13 @@ defmodule ToolshedTest do
 
   test "cmd/1 normal printable chars" do
     assert capture_io(fn ->
-             Toolshed.cmd("echo \"hello, world\"")
-           end) == "hello, world\n"
+             Toolshed.cmd("printf \"hello, world\"")
+           end) == "hello, world"
   end
 
   test "cmd/1 non printable chars" do
     assert capture_io(fn ->
-             Toolshed.cmd("echo -e -n '\\x0'")
+             Toolshed.cmd("printf '\\x0'")
            end) == <<0>>
   end
 end
