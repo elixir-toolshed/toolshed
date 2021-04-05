@@ -4,7 +4,14 @@ defmodule Toolshed.UnixTest do
   alias Toolshed.Unix
 
   test "date/0 returns current date in unix format" do
-    assert Unix.date() == unix_date_output()
+    # There's a race condition on the time that's returned between the
+    # two date functions if we catch the seconds changing.
+
+    expected1 = unix_date_output()
+    actual = Unix.date()
+    expected2 = unix_date_output()
+
+    assert actual == expected1 or actual == expected2
   end
 
   defp unix_date_output do
