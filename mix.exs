@@ -1,7 +1,7 @@
 defmodule Toolshed.MixProject do
   use Mix.Project
 
-  @version "0.2.18"
+  @version "0.2.19"
   @source_url "https://github.com/elixir-toolshed/toolshed"
 
   def project do

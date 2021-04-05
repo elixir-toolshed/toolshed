@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.19
+
+* Bug fixes
+  * `cmd/1` won't crash if the command being run returns non-UTF8 data
+  * `cat/1` no longer adds an extra newline at the end of its input
+
+* Removed commands
+  * Removed the rarely used `pastebin` command
+
 ## v0.2.18
 
 * New features
