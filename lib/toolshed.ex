@@ -64,7 +64,7 @@ defmodule Toolshed do
       import Toolshed.HW
       import Toolshed.HTTP
       import Toolshed.Multicast
-
+      import Toolshed.Date, only: [date: 0]
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
       help_text =
