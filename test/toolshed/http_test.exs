@@ -10,4 +10,8 @@ defmodule Toolshed.HTTPTest do
              )
            end) =~ "Toolshed aims to improve the Elixir shell"
   end
+
+  test "weather/0 " do
+    assert capture_io(fn -> HTTP.weather() end) =~ "Weather report for"
+  end
 end
