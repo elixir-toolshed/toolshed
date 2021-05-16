@@ -27,9 +27,7 @@ defmodule Toolshed.HW do
     vidpid = to_vidpid(info["PRODUCT"])
 
     IO.puts(
-      "Bus #{info["BUSNUM"]} Device #{info["DEVNUM"]}: ID #{vidpid} #{info["manufacturer"]} #{
-        info["product"]
-      }"
+      "Bus #{info["BUSNUM"]} Device #{info["DEVNUM"]}: ID #{vidpid} #{info["manufacturer"]} #{info["product"]}"
     )
   end
 

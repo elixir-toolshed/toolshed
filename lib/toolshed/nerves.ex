@@ -71,9 +71,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
       release = Nerves.Runtime.KV.get_active("nerves_fw_product")
 
       version =
-        "#{Nerves.Runtime.KV.get_active("nerves_fw_version")} (#{
-          Nerves.Runtime.KV.get_active("nerves_fw_uuid")
-        })"
+        "#{Nerves.Runtime.KV.get_active("nerves_fw_version")} (#{Nerves.Runtime.KV.get_active("nerves_fw_uuid")})"
 
       arch = Nerves.Runtime.KV.get_active("nerves_fw_architecture")
 

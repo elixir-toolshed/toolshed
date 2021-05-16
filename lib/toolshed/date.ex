@@ -40,8 +40,6 @@ defmodule Toolshed.Date do
   defp format_date(date), do: " #{date}"
 
   defp date_in_unix_format(date_time) do
-    "#{weekday_text(date_time)} #{month_text(date_time)} #{format_date(date_time.day)} #{
-      time_text(date_time)
-    } UTC #{date_time.year}"
+    "#{weekday_text(date_time)} #{month_text(date_time)} #{format_date(date_time.day)} #{time_text(date_time)} UTC #{date_time.year}"
   end
 end

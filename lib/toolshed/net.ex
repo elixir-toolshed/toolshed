@@ -224,9 +224,7 @@ defmodule Toolshed.Net do
 
   defp print_if_info([{:addr, addr}, {:netmask, netmask}, {:broadaddr, broadaddr} | rest]) do
     IO.puts(
-      "    inet #{:inet.ntoa(addr)}  netmask #{:inet.ntoa(netmask)}  broadcast #{
-        :inet.ntoa(broadaddr)
-      }"
+      "    inet #{:inet.ntoa(addr)}  netmask #{:inet.ntoa(netmask)}  broadcast #{:inet.ntoa(broadaddr)}"
     )
 
     print_if_info(rest)
