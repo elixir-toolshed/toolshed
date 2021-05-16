@@ -22,6 +22,8 @@ defmodule Toolshed do
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
     * `load_term!/2`   - load a term that was saved by `save_term/2`
+    * `log_attach/1`   - send log messages to the current group leader
+    * `log_detach/0`   - stop sending log messages to the current group leader
     * `lsof/0`         - print out open file handles by OS process
     * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
@@ -65,6 +67,8 @@ defmodule Toolshed do
       import Toolshed.HTTP
       import Toolshed.Multicast
       import Toolshed.Date, only: [date: 0]
+      import Toolshed.Log, only: [log_attach: 0, log_attach: 1, log_detach: 0]
+
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
       help_text =
