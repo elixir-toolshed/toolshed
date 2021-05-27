@@ -20,7 +20,10 @@ defmodule Toolshed.MixProject do
         docs: :docs,
         "hex.publish": :docs,
         "hex.build": :docs
-      }
+      },
+      compilers: [:elixir_make | Mix.compilers()],
+      make_error_message:
+        "nerves_runtime requires libmnl. It can be installed by running apt install libmnl-dev"
     ]
   end
 
