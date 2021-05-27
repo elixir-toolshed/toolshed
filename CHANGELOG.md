@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.20
+
+* New features
+  * Add `log_attach` and `log_detach` convenience functions for directing log
+    messages to the current IEx session. These provide a simple way for seeing
+    log messages when you either aren't on the same console as the console logger or
+    you don't want to enable the console logger since it messes up the prompt.
+
 ## v0.2.19
 
 * Bug fixes
