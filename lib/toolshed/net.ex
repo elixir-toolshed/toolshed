@@ -168,12 +168,20 @@ defmodule Toolshed.Net do
   end
 
   defp resolve_addr(address) do
-    with {:ok, hostent} <- :inet.gethostbyname(to_charlist(address)),
-         hostent(h_addr_list: ip_list) = hostent,
-         first_ip = hd(ip_list) do
-      {:ok, first_ip}
-    else
-      _ -> {:error, "Error resolving #{address}"}
+    case gethostbyname(address, :inet) || gethostbyname(address, :inet6) do
+      nil -> {:error, "Error resolving #{address}"}
+      ip -> {:ok, ip}
+    end
+  end
+
+  defp gethostbyname(address, family) do
+    case :inet.gethostbyname(to_charlist(address), family) do
+      {:ok, hostent} ->
+        hostent(h_addr_list: ip_list) = hostent
+        hd(ip_list)
+
+      _ ->
+        nil
     end
   end
 
