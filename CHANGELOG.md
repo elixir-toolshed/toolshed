@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.21
+
+* New features
+  * The ping command now supports IPv6 addresses. Thanks to Alex McLain for this
+    improvement.
+  * The top command automatically refreshes now.
+
 ## v0.2.20
 
 * New features
