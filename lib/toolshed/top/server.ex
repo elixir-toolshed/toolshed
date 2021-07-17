@@ -29,12 +29,14 @@ defmodule Toolshed.Top.Server do
 
   @impl GenServer
   def handle_info(:refresh_top, state) do
-    Report.erase_report(state.options)
-    |> IO.write()
+    report =
+      Processes.info(state.processes)
+      |> Report.generate(state.options)
 
-    Processes.info(state.processes)
-    |> Report.generate(state.options)
-    |> IO.write()
+    IO.write([
+      Report.back_to_the_top(state.options),
+      report
+    ])
 
     {:noreply, state}
   end

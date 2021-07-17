@@ -2,10 +2,10 @@ defmodule Toolshed.Top.ReportTest do
   use ExUnit.Case
   alias Toolshed.Top.Report
 
-  test "erase_report/1 erases" do
-    report = Report.erase_report(%{n: 5}) |> IO.iodata_to_binary()
-    # there should be 7 new lines
-    assert report == "\e[7A\e[2K\n\e[2K\n\e[2K\n\e[2K\n\e[2K\n\e[2K\n\e[2K\n\e[7A"
+  test "back/1 erases" do
+    data = Report.back_to_the_top(%{rows: 13}) |> IO.chardata_to_string()
+
+    assert data == IO.ANSI.cursor_up(10) <> "\r"
   end
 
   test "generate/2 " do
@@ -27,7 +27,20 @@ defmodule Toolshed.Top.ReportTest do
       }
     ]
 
-    assert Report.generate(processes, %{n: 2, order: 2}) |> Enum.join() |> String.replace(" ", "") ==
-             "Totalprocesses:1\n\e[36mApplicationNameorPIDReds/ΔMbox/ΔTotal/ΔHeap/ΔStack/Δ\n\e[37mkernellogger_proxy121/1210/0376/376376/37612/12\n"
+    # Create a report, but trim trailing whitespace to avoid issues with editors
+    # trimming it in this test.
+    report =
+      Report.generate(processes, %{rows: 10, columns: 120, order: :reductions})
+      |> IO.chardata_to_string()
+      |> String.split("\n")
+      |> Enum.map(&String.trim_trailing/1)
+      |> Enum.join("\n")
+
+    assert report ==
+             """
+             Total processes: 1
+             \e[2K\e[36mApplication  Name or PID                   Reds/Δ      Mbox/Δ     Total/Δ      Heap/Δ     Stack/Δ
+             \e[37m\e[2Kkernel       logger_proxy                   121/121       0/0       376/376     376/376      12/12
+             """
   end
 end

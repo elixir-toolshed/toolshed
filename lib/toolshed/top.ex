@@ -3,7 +3,10 @@ defmodule Toolshed.Top do
   Find the top processes
   """
 
-  @default_n 10
+  @default_rows 23
+  @default_columns 80
+
+  alias Toolshed.Top.Server
 
   @doc """
   Interactively show the top Elixir processes
@@ -16,24 +19,33 @@ defmodule Toolshed.Top do
   * `:order` - the sort order for the results (`:reductions`, `:delta_reductions`,
     `:mailbox`, `:delta_mailbox`, `:total_heap_size`, `:delta_total_heap_size`, `:heap_size`,
     `:delta_heap_size`, `:stack_size`, `:delta_stack_size`)
-  * `:n`     - the max number of processes to list
   """
   @spec top(keyword()) :: :ok
   def top(opts \\ []) do
-    options = process_options(opts)
+    options = %{
+      order: Keyword.get(opts, :order, :delta_reductions),
+      rows: rows(),
+      columns: columns()
+    }
 
     IO.puts("Press enter to stop\n")
 
-    {:ok, pid} = Toolshed.Top.Server.start_link(options)
+    {:ok, pid} = Server.start_link(options)
     _ = IO.gets("")
-    Toolshed.Top.Server.stop(pid)
+    Server.stop(pid)
   end
 
-  # TODO - validate options
-  defp process_options(opts) do
-    order = Keyword.get(opts, :order, :delta_reductions)
-    n = Keyword.get(opts, :n, @default_n)
+  defp rows() do
+    case :io.rows() do
+      {:ok, rows} -> rows
+      _ -> @default_rows
+    end
+  end
 
-    %{order: order, n: n}
+  defp columns() do
+    case :io.columns() do
+      {:ok, columns} -> columns
+      _ -> @default_columns
+    end
   end
 end

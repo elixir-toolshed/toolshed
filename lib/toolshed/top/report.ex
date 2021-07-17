@@ -7,22 +7,15 @@ defmodule Toolshed.Top.Report do
   * `:order` - the sort order for the results (`:reductions`, `:delta_reductions`,
     `:mailbox`, `:delta_mailbox`, `:total_heap_size`, `:delta_total_heap_size`, `:heap_size`,
     `:delta_heap_size`, `:stack_size`, `:delta_stack_size`)
-  * `:n`     - the max number of processes to list
-  """
-  @type options() :: %{n: pos_integer(), order: atom()}
+  * `:rows`     - the number of rows to use
+  * `:columns`  - the number of columns to use
 
-  @doc """
-  Return an ANSI escape sequence that erases a report
   """
-  @spec erase_report(options()) :: iolist()
-  def erase_report(options) do
-    lines_to_erase = options.n + 2
+  @type options() :: %{rows: pos_integer(), columns: pos_integer(), order: atom()}
 
-    [
-      IO.ANSI.cursor_up(lines_to_erase),
-      for(_ <- 1..lines_to_erase, do: [IO.ANSI.clear_line(), "\n"]),
-      IO.ANSI.cursor_up(lines_to_erase)
-    ]
+  @spec back_to_the_top(options()) :: iolist()
+  def back_to_the_top(options) do
+    [IO.ANSI.cursor_up(options.rows - 3), "\r"]
   end
 
   @doc """
@@ -30,8 +23,9 @@ defmodule Toolshed.Top.Report do
   """
   @spec generate(list(), options()) :: iolist()
   def generate(info, options) do
-    content =
-      info |> Enum.sort(sort(options.order)) |> Enum.take(options.n) |> Enum.map(&format/1)
+    n = options.rows - 5
+
+    content = info |> Enum.sort(sort(options.order)) |> Enum.take(n) |> Enum.map(&format/1)
 
     [format_summary(info), format_header(), content]
   end
@@ -61,30 +55,34 @@ defmodule Toolshed.Top.Report do
   end
 
   defp format_header() do
-    :io_lib.format(
-      IO.ANSI.cyan() <>
-        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n" <>
-        IO.ANSI.white(),
-      [
-        "Application",
-        "Name or PID",
-        "Reds",
-        "Δ",
-        "Mbox",
-        "Δ",
-        "Total",
-        "Δ",
-        "Heap",
-        "Δ",
-        "Stack",
-        "Δ"
-      ]
-    )
+    [
+      IO.ANSI.clear_line(),
+      IO.ANSI.cyan(),
+      :io_lib.format(
+        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
+        [
+          "Application",
+          "Name or PID",
+          "Reds",
+          "Δ",
+          "Mbox",
+          "Δ",
+          "Total",
+          "Δ",
+          "Heap",
+          "Δ",
+          "Stack",
+          "Δ"
+        ]
+      ),
+      IO.ANSI.white()
+    ]
   end
 
   defp format(info) do
     :io_lib.format(
-      "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
+      IO.ANSI.clear_line() <>
+        "~-12ts ~-28ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts ~5ts/~-5ts~n",
       [
         String.slice(to_string(info.application), 0, 12),
         String.slice(info.name, 0, 28),
