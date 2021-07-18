@@ -46,17 +46,19 @@ defmodule Toolshed.Top.Processes do
   defp registered_name(info) do
     case Keyword.get(info, :registered_name) do
       nil -> nil
-      name -> to_string(name)
+      name -> name |> to_string() |> friendly_module_name()
     end
   end
 
   defp initial_call_name(pid, info) do
     case get_in(info, [:dictionary, :"$initial_call"]) do
       {m, f, a} ->
+        module = m |> to_string() |> friendly_module_name()
+
         IO.iodata_to_binary([
           :erlang.pid_to_list(pid),
           "=",
-          to_string(m),
+          module,
           ".",
           to_string(f),
           "/",
@@ -67,6 +69,9 @@ defmodule Toolshed.Top.Processes do
         nil
     end
   end
+
+  defp friendly_module_name("Elixir." <> rest), do: rest
+  defp friendly_module_name(other), do: other
 
   defp get_application(pid) do
     case :application.get_application(pid) do
