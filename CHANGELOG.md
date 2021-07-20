@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.22
+
+* Bug fixes
+  * top: fix flashing that was happening when top was automatically updating
+
 ## v0.2.21
 
 * New features
