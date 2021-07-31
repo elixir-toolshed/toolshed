@@ -5,6 +5,10 @@ defmodule Toolshed.Net do
 
   require Record
 
+  @otp_version :erlang.system_info(:otp_release)
+               |> to_string()
+               |> String.to_integer()
+
   @doc false
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
@@ -58,11 +62,12 @@ defmodule Toolshed.Net do
   end
 
   @doc """
-  Check if a computer is up using TCP.
+  Check if a computer is up using ICMP.
 
   Options:
 
-  * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+  * `:ifname`  - Specify a network interface to use. (e.g., "eth0")
+  * `:timeout` - Specify the time in seconds to wait for a host to respond.
 
   ## Examples
 
@@ -74,24 +79,15 @@ defmodule Toolshed.Net do
   """
   @spec tping(String.t()) :: :"do not show this result in output"
   def tping(address, options \\ []) do
-    case resolve_addr(address) do
-      {:ok, ip} ->
-        ping_ip(address, ip, connect_options(options))
-
-      {:error, message} ->
-        IO.puts(message)
-    end
+    single_ping(address, options, 1)
 
     IEx.dont_display_result()
   end
 
   @doc """
-  Ping an IP address using TCP
+  Ping an IP address using ICMP.
 
-  This tries to connect to the remote host using TCP instead of sending an ICMP
-  echo request like normal ping. This made it possible to write in pure Elixir.
-
-  NOTE: Specifying an `:ifname` only sets the source IP address for the TCP
+  NOTE: Specifying an `:ifname` only sets the source IP address for the
   connection. This is only a hint to use the specified interface and not a
   guarantee. For example, if you have two interfaces on the same LAN, the OS
   routing tables may send traffic out one interface in preference to the one
@@ -100,7 +96,8 @@ defmodule Toolshed.Net do
 
   Options:
 
-  * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+  * `:ifname`  - Specify a network interface to use. (e.g., "eth0")
+  * `:timeout` - Specify the time in seconds to wait for a host to respond.
 
   ## Examples
 
@@ -125,10 +122,20 @@ defmodule Toolshed.Net do
     IEx.dont_display_result()
   end
 
-  defp repeat_ping(address, options) do
-    tping(address, options)
+  defp single_ping(address, options, sequence_number) do
+    case resolve_addr(address) do
+      {:ok, ip} ->
+        ping_ip(address, ip, connect_options(options), sequence_number)
+
+      {:error, message} ->
+        IO.puts(message)
+    end
+  end
+
+  defp repeat_ping(address, options, sequence_number \\ 1) do
+    single_ping(address, options, sequence_number)
     Process.sleep(1000)
-    repeat_ping(address, options)
+    repeat_ping(address, options, sequence_number + 1)
   end
 
   defp connect_options(ping_options) do
@@ -150,13 +157,17 @@ defmodule Toolshed.Net do
     end
   end
 
+  defp ping_option_to_connect({:timeout, timeout}) do
+    [{:timeout, round(timeout * 1000)}]
+  end
+
   defp ping_option_to_connect({option, _}) do
     raise "Unknown option #{inspect(option)}"
   end
 
-  defp ping_ip(address, ip, connect_options) do
+  defp ping_ip(address, ip, connect_options, sequence_number) do
     message =
-      case try_connect(ip, 80, connect_options) do
+      case try_connect(ip, connect_options, sequence_number) do
         {:ok, micros} ->
           "Response from #{address} (#{:inet.ntoa(ip)}): time=#{micros / 1000}ms"
 
@@ -185,21 +196,128 @@ defmodule Toolshed.Net do
     end
   end
 
-  defp try_connect(address, port, connect_options) do
-    start = System.monotonic_time(:microsecond)
+  defp try_connect(address, connect_options, sequence_number) do
+    interface_address = Keyword.get(connect_options, :ip, :any)
+    timeout = Keyword.get(connect_options, :timeout, 10_000)
 
-    case :gen_tcp.connect(address, port, connect_options) do
-      {:ok, pid} ->
-        :gen_tcp.close(pid)
-        {:ok, System.monotonic_time(:microsecond) - start}
+    {family, protocol, request_packet_type, reply_packet_type} =
+      case tuple_size(address) do
+        4 -> {:inet, :icmp, 0x08, 0x00}
+        8 -> {:inet6, {:raw, 58}, 0x80, 0x81}
+      end
 
-      {:error, :econnrefused} ->
-        # If the connection is refused, the machine is up.
-        {:ok, System.monotonic_time(:microsecond) - start}
+    packet = <<
+      # Type (Echo request)
+      request_packet_type::size(8),
+      # Code
+      0x00::size(8),
+      # Checksum
+      0x0000::big-integer-size(16),
+      # Identifier
+      0x0001::big-integer-size(16),
+      # Sequence Number
+      sequence_number::big-integer-size(16),
+      # Payload
+      "abcdefghijklmnopqrstuvwxyz012345"::binary
+    >>
 
-      error ->
-        error
+    with {:ok, socket} <- :socket.open(family, :dgram, protocol),
+         :ok <- bind(socket, interface_address),
+         start <- System.monotonic_time(:microsecond),
+         :ok <- :socket.sendto(socket, packet, %{family: family, port: 0, addr: address}),
+         {:ok, {_, reply_bytes}} <- :socket.recvfrom(socket, [], timeout),
+         :ok <- check_ping_reply_byte_size(reply_bytes),
+         :ok <- check_ping_reply_type(reply_bytes, reply_packet_type),
+         {:ok, reply} <- parse_ping_reply(reply_bytes, reply_packet_type),
+         :ok <- check_ping_reply_sequence_number(reply, sequence_number) do
+      elapsed_time = System.monotonic_time(:microsecond) - start
+      {:ok, elapsed_time}
+    else
+      error -> error
     end
+  end
+
+  # OTP 24 changed the return value from `:socket.bind`. This needs to be
+  # accounted for at compile time or else dialyzer will raise an error for
+  # the branch that will never match the code required for backwards
+  # compatibility.
+  if @otp_version >= 24 do
+    defp bind(socket, interface_address) do
+      addr = make_bind_addr(interface_address)
+
+      case :socket.bind(socket, addr) do
+        :ok -> :ok
+        error -> error
+      end
+    end
+  else
+    defp bind(socket, interface_address) do
+      addr = make_bind_addr(interface_address)
+
+      case :socket.bind(socket, addr) do
+        {:ok, _port} -> :ok
+        error -> error
+      end
+    end
+  end
+
+  defp make_bind_addr(:any), do: :any
+
+  defp make_bind_addr(interface_address) do
+    family =
+      case tuple_size(interface_address) do
+        4 -> :inet
+        8 -> :inet6
+      end
+
+    %{
+      addr: interface_address,
+      family: family,
+      port: 0
+    }
+  end
+
+  defp check_ping_reply_byte_size(reply_bytes) do
+    case byte_size(reply_bytes) do
+      40 -> :ok
+      _ -> {:error, :unexpected_reply}
+    end
+  end
+
+  defp check_ping_reply_type(reply_bytes, reply_packet_type) do
+    case String.at(reply_bytes, 0) do
+      <<^reply_packet_type>> -> :ok
+      packet_type -> {:error, {:unexpected_reply_type, packet_type}}
+    end
+  end
+
+  defp check_ping_reply_sequence_number(reply, expected_sequence_number) do
+    case reply.sequence_number do
+      ^expected_sequence_number -> :ok
+      _ -> {:error, :unexpected_reply_sequence_nubmer}
+    end
+  end
+
+  defp parse_ping_reply(reply_bytes, reply_packet_type) do
+    <<
+      # Type (Echo reply)
+      ^reply_packet_type::size(8),
+      # Code
+      0x00::size(8),
+      checksum::big-integer-size(16),
+      identifier::big-integer-size(16),
+      sequence_number::big-integer-size(16),
+      payload::binary
+    >> = reply_bytes
+
+    {:ok,
+     %{
+       type: reply_packet_type,
+       checksum: checksum,
+       identifier: identifier,
+       sequence_number: sequence_number,
+       payload: payload
+     }}
   end
 
   @doc """
