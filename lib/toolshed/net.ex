@@ -3,6 +3,8 @@ defmodule Toolshed.Net do
   Network related helpers
   """
 
+  use Bitwise
+
   require Record
 
   @otp_version :erlang.system_info(:otp_release)
@@ -221,6 +223,8 @@ defmodule Toolshed.Net do
       "abcdefghijklmnopqrstuvwxyz012345"::binary
     >>
 
+    packet = apply_icmp_checksum(packet)
+
     with {:ok, socket} <- :socket.open(family, :dgram, protocol),
          :ok <- bind(socket, interface_address),
          start <- System.monotonic_time(:microsecond),
@@ -235,6 +239,39 @@ defmodule Toolshed.Net do
     else
       error -> error
     end
+  end
+
+  defp apply_icmp_checksum(packet) do
+    # Internet Control Message Protocol
+    #   https://datatracker.ietf.org/doc/html/rfc792
+    #
+    # Computing the Internet Checksum
+    #   https://datatracker.ietf.org/doc/html/rfc1071
+
+    checksum = calculate_icmp_checksum(packet)
+
+    <<
+      head::size(16),
+      _blank_checksum::big-integer-size(16),
+      rest::binary
+    >> = packet
+
+    <<
+      head::size(16),
+      checksum::big-integer-size(16),
+      rest::binary
+    >>
+  end
+
+  defp calculate_icmp_checksum(packet) do
+    intermediate_checksum =
+      packet
+      |> :binary.bin_to_list()
+      |> Enum.chunk_every(2)
+      |> Enum.reduce(0, fn [byte_1, byte_2], acc -> byte_1 * 256 + byte_2 + acc end)
+
+    Bitwise.bnot(rem(intermediate_checksum, 0x10000) + div(intermediate_checksum, 0x10000)) &&&
+      0xFFFF
   end
 
   # OTP 24 changed the return value from `:socket.bind`. This needs to be
