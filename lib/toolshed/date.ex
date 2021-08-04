@@ -1,6 +1,6 @@
 defmodule Toolshed.Date do
   @moduledoc """
-  This module  replicate `date` unix command and its options.
+  This module provides the `date` command
   """
 
   @doc """
