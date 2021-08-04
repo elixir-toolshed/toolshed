@@ -18,6 +18,7 @@ defmodule Toolshed do
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `grep/2`         - print out lines that match a regular expression
     * `hex/1`          - print a number as hex
+    * `history/0`      - print out the IEx shell history
     * `httpget/2`      - print or download the results of a HTTP GET request
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
@@ -67,6 +68,7 @@ defmodule Toolshed do
       import Toolshed.HTTP
       import Toolshed.Multicast
       import Toolshed.Date, only: [date: 0]
+      import Toolshed.History, only: [history: 0, history: 1]
       import Toolshed.Log, only: [log_attach: 0, log_attach: 1, log_detach: 0]
 
       # If module docs have been stripped, then don't tell the user that they can
