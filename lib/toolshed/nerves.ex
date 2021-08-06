@@ -47,16 +47,14 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     """
     @spec fw_validate() :: :ok | {:error, String.t()}
     def fw_validate() do
-      try do
-        Nerves.Runtime.KV.put("nerves_fw_validated", "1")
-      catch
-        :error, :undef ->
-          # Fall back to the old Nerves way
-          case System.cmd("fw_setenv", ["nerves_fw_validated", "1"]) do
-            {_, 0} -> :ok
-            {output, _} -> {:error, output}
-          end
-      end
+      Nerves.Runtime.validate_firmware()
+    catch
+      :error, :undef ->
+        # Fall back to the old Nerves way
+        case System.cmd("fw_setenv", ["nerves_fw_validated", "1"]) do
+          {_, 0} -> :ok
+          {output, _} -> {:error, output}
+        end
     end
 
     @doc """
