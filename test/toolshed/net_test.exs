@@ -12,12 +12,11 @@ defmodule Toolshed.NetTest do
 
     # This guards against an issue with IPv6 being unavailable in CI,
     # but also means CI won't run this test.
-    unless System.get_env("CI") == "true" do
-      test "can ping an IPv6 address" do
-        assert capture_io(fn ->
-                 Net.tping("::1")
-               end) =~ "Response from ::1 (::1): time="
-      end
+    @tag :has_ipv6
+    test "can ping an IPv6 address" do
+      assert capture_io(fn ->
+               Net.tping("::1")
+             end) =~ "Response from ::1 (::1): time="
     end
 
     test "can ping by hostname" do
