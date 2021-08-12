@@ -36,7 +36,7 @@ jobs:
       - run: mix compile --warnings-as-errors
       - run: mix docs
       - run: mix hex.build
-      - run: mix test
+      - run: mix test --exclude has_ipv6
       - run: mix dialyzer
       - save_cache:
           key: v1-mix-cache-{{ checksum "mix.lock" }}
@@ -54,7 +54,7 @@ jobs:
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
-      - run: mix test
+      - run: mix test --exclude has_ipv6
 
   build_elixir_1_10_otp_23:
     docker:
@@ -66,7 +66,7 @@ jobs:
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
-      - run: mix test
+      - run: mix test --exclude has_ipv6
 
   build_elixir_1_9_otp_22:
     docker:
@@ -78,7 +78,7 @@ jobs:
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
-      - run: mix test
+      - run: mix test --exclude has_ipv6
 
   build_elixir_1_8_otp_22:
     docker:
@@ -90,7 +90,7 @@ jobs:
       - <<: *install_hex_rebar
       - run: mix deps.get
       - run: mix compile
-      - run: mix test
+      - run: mix test --exclude has_ipv6
 
 workflows:
   version: 2
