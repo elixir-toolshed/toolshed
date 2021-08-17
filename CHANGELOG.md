@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.23
+
+* New features
+  * Added the `history` command. See what you typed.
+
+* Bug fixes
+  * `fw_validate` calls `Nerves.Runtime.validate_firmware` rather than
+    validating firmware itself.
+
 ## v0.2.22
 
 * Bug fixes
