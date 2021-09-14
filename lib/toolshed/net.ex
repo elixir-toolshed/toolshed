@@ -76,7 +76,8 @@ defmodule Toolshed.Net do
   def tping(address, options \\ []) do
     case resolve_addr(address) do
       {:ok, ip} ->
-        ping_ip(address, ip, connect_options(options))
+        port = Keyword.get(options, :port, 80)
+        ping_ip(address, ip, port, connect_options(options))
 
       {:error, message} ->
         IO.puts(message)
@@ -101,6 +102,7 @@ defmodule Toolshed.Net do
   Options:
 
   * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+  * `:port` - Which TCP port to try (defaults to 80)
 
   ## Examples
 
@@ -150,13 +152,11 @@ defmodule Toolshed.Net do
     end
   end
 
-  defp ping_option_to_connect({option, _}) do
-    raise "Unknown option #{inspect(option)}"
-  end
+  defp ping_option_to_connect({_option, _}), do: []
 
-  defp ping_ip(address, ip, connect_options) do
+  defp ping_ip(address, ip, port, connect_options) do
     message =
-      case try_connect(ip, 80, connect_options) do
+      case try_connect(ip, port, connect_options) do
         {:ok, micros} ->
           "Response from #{address} (#{:inet.ntoa(ip)}): time=#{micros / 1000}ms"
 
