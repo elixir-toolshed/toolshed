@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.24
+
+* Improvements
+  * Add `:port` option to `ping`. Ping also prints out the port number so it's
+    more obvious that 1. TCP "pings" are being used and 2. which port was used.
+
 ## v0.2.23
 
 * New features
