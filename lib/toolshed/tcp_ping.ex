@@ -14,14 +14,15 @@ defmodule Toolshed.TCPPing do
   Options:
 
   * `:ifname` - Specify a network interface to use. (e.g., "eth0")
+  * `:port` - Which TCP port to try (defaults to 80)
 
   ## Examples
 
       iex> tping "nerves-project.org"
-      Response from nerves-project.org (185.199.108.153): time=4.155ms
+      Response from nerves-project.org (185.199.108.153:80): time=4.155ms
 
       iex> tping "192.168.1.1"
-      Response from 192.168.1.1 (192.168.1.1): time=1.227ms
+      Response from 192.168.1.1 (192.168.1.1:80): time=1.227ms
   """
   @spec tping(String.t()) :: :"do not show this result in output"
   def tping(address, options \\ []) do
@@ -59,13 +60,13 @@ defmodule Toolshed.TCPPing do
 
       iex> ping "nerves-project.org"
       Press enter to stop
-      Response from nerves-project.org (185.199.108.153): time=4.155ms
-      Response from nerves-project.org (185.199.108.153): time=10.385ms
-      Response from nerves-project.org (185.199.108.153): time=12.458ms
+      Response from nerves-project.org (185.199.108.153:80): time=4.155ms
+      Response from nerves-project.org (185.199.108.153:80): time=10.385ms
+      Response from nerves-project.org (185.199.108.153:80): time=12.458ms
 
       iex> ping "google.com", ifname: "wlp5s0"
       Press enter to stop
-      Response from google.com (172.217.7.206): time=88.602ms
+      Response from google.com (172.217.7.206:80): time=88.602ms
   """
   @spec ping(String.t(), keyword()) :: :"do not show this result in output"
   def ping(address, options \\ []) do
@@ -109,14 +110,17 @@ defmodule Toolshed.TCPPing do
     message =
       case try_connect(ip, port, connect_options) do
         {:ok, micros} ->
-          "Response from #{address} (#{:inet.ntoa(ip)}): time=#{micros / 1000}ms"
+          "Response from #{address} (#{pretty_ip_port(ip, port)}): time=#{micros / 1000}ms"
 
         {:error, reason} ->
-          "#{address} (#{:inet.ntoa(ip)}): #{inspect(reason)}"
+          "#{address} (#{pretty_ip_port(ip, port)}): #{inspect(reason)}"
       end
 
     IO.puts(message)
   end
+
+  defp pretty_ip_port({_, _, _, _} = ip, port), do: "#{:inet.ntoa(ip)}:#{port}"
+  defp pretty_ip_port(ip, port), do: "[#{:inet.ntoa(ip)}]:#{port}"
 
   defp resolve_addr(address) do
     case gethostbyname(address, :inet) || gethostbyname(address, :inet6) do
