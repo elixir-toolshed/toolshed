@@ -4,8 +4,8 @@
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
 
 Toolshed aims to improve the Elixir shell experience by adding a number of
-helpers and path autocompletion. This is really helpful when a normal Unix shell
-prompt is unavailable or inconvenient. Toolshed was originally written for
+helpers. This is really helpful when a normal Unix shell prompt is unavailable
+or inconvenient. Toolshed was originally written for
 [Nerves](https://nerves-project.org), but doesn't require it and the
 Nerves-specific helpers are compiled out for normal Elixir projects.
 
