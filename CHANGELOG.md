@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.25
+
+* Improvements
+  * Remove path completion when using Elixir 1.13. Path completion was improved
+    and merged into Elixir, so you no longer need Toolshed to use it. The
+    function call to use it is now a no-op on Elixir 1.13. On previous Elixir
+    versions, it will add path completion so there's no need to change any code.
+
 ## v0.2.24
 
 * Improvements
