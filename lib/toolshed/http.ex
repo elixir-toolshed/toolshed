@@ -10,9 +10,11 @@ defmodule Toolshed.HTTP do
   """
   @spec weather() :: :"do not show this result in output"
   def weather() do
-    check_inets()
+    check_app(:inets)
+    check_app(:ssl)
 
-    {:ok, {_status, _headers, body}} = :httpc.request('http://v2.wttr.in/?An0')
+    {:ok, {_status, _headers, body}} =
+      :httpc.request(:get, {'https://v2.wttr.in/?An0', []}, [ssl: [verify: :verify_none]], [])
 
     body |> :binary.list_to_bin() |> IO.puts()
     IEx.dont_display_result()
@@ -25,7 +27,7 @@ defmodule Toolshed.HTTP do
   """
   @spec qr_encode(String.t()) :: :"do not show this result in output"
   def qr_encode(message) do
-    check_inets()
+    check_app(:inets)
 
     encoded = message |> URI.encode() |> to_charlist()
     form_data = [?x, ?= | encoded]
@@ -57,7 +59,7 @@ defmodule Toolshed.HTTP do
   @spec httpget(String.t(), dest: Path.t(), verbose: boolean()) ::
           :"do not show this result in output"
   def httpget(url, options \\ []) do
-    check_inets()
+    check_app(:inets)
 
     url = url_defaults(url)
     dest = Keyword.get(options, :dest, nil)
@@ -131,16 +133,16 @@ defmodule Toolshed.HTTP do
     end
   end
 
-  defp check_inets() do
-    case Application.ensure_all_started(:inets) do
+  defp check_app(app) do
+    case Application.ensure_all_started(app) do
       {:ok, _} ->
         :ok
 
       {:error, _} ->
         raise RuntimeError, """
-        :inets can't be started.
+        #{inspect(app)} can't be started.
         This probably means that it isn't in the OTP release.
-        To fix, edit your mix.exs and add :inets to the :extra_applications list.
+        To fix, edit your mix.exs and add #{inspect(app)} to the :extra_applications list.
         """
     end
   end
