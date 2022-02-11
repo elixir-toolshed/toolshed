@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.26
+
+* Improvements
+  * Update `weather` to give a helpful error if the `:ssl` application isn't
+    included in the release.
+
 ## v0.2.25
 
 * Improvements
