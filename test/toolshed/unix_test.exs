@@ -14,7 +14,7 @@ defmodule Toolshed.UnixTest do
 
   test "grep/2 returns lines of file with given pattern" do
     assert capture_io(fn -> Unix.grep(~r/Content/, "test/support/test_file.doc") end) ==
-             "Content of this will be read for test purposes"
+             "\e[31mContent\e[0m of this will be read for test purposes"
 
     assert capture_io(fn -> Unix.grep(~r/not available/, "test/support/test_file.doc") end) ==
              ""
