@@ -37,7 +37,7 @@ defmodule Toolshed.MixProject do
   end
 
   defp description do
-    "Use Toolshed for path completion and more helpers for IEx"
+    "Use Toolshed for more IEx helpers"
   end
 
   defp package do
