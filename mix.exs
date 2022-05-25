@@ -49,7 +49,7 @@ defmodule Toolshed.MixProject do
 
   defp dialyzer() do
     [
-      flags: [:race_conditions, :unmatched_returns, :error_handling, :underspecs],
+      flags: [:missing_return, :extra_return, :unmatched_returns, :error_handling, :underspecs],
       plt_add_apps: [:iex, :nerves_runtime, :inets]
     ]
   end

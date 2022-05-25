@@ -1,7 +1,7 @@
 defmodule Toolshed.Top.Processes do
   @moduledoc false
 
-  @spec new() :: atom()
+  @spec new() :: :ets.table()
   def new() do
     :ets.new(:toolshed_top, [])
   end
