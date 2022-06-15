@@ -21,7 +21,7 @@ defmodule Toolshed.Lsof do
 
   defp lsof_process(path) do
     with {:ok, cmdline} <- File.read(Path.join(path, "cmdline")),
-         [cmd | _args] = String.split(cmdline, <<0>>) do
+         [cmd | _args] <- String.split(cmdline, <<0>>) do
       path_ls(Path.join(path, "fd"))
       |> Enum.each(fn fd_path -> lsof_fd(fd_path, cmd) end)
     end

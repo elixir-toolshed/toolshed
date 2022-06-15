@@ -24,7 +24,7 @@ defmodule Toolshed.TCPPing do
       iex> tping "192.168.1.1"
       Response from 192.168.1.1 (192.168.1.1:80): time=1.227ms
   """
-  @spec tping(String.t()) :: :"do not show this result in output"
+  @spec tping(String.t(), keyword()) :: :"do not show this result in output"
   def tping(address, options \\ []) do
     case resolve_addr(address) do
       {:ok, ip} ->

@@ -37,15 +37,13 @@ defmodule Toolshed.Net do
     IO.puts("Name:     #{name}")
     name_charlist = to_charlist(name)
 
-    with {:ok, v4} <- :inet.gethostbyname(name_charlist, :inet) do
-      print_addresses(v4)
-    else
+    case :inet.gethostbyname(name_charlist, :inet) do
+      {:ok, v4} -> print_addresses(v4)
       {:error, :nxdomain} -> IO.puts("IPv4 lookup failed")
     end
 
-    with {:ok, v6} <- :inet.gethostbyname(name_charlist, :inet6) do
-      print_addresses(v6)
-    else
+    case :inet.gethostbyname(name_charlist, :inet6) do
+      {:ok, v6} -> print_addresses(v6)
       {:error, :nxdomain} -> IO.puts("IPv6 lookup failed")
     end
 
@@ -78,8 +76,7 @@ defmodule Toolshed.Net do
   defp print_if_info([{:hwaddr, addr} | rest]) do
     string_address =
       addr
-      |> Enum.map(&:io_lib.format("~2.16.0b", [&1]))
-      |> Enum.join(":")
+      |> Enum.map_join(":", &:io_lib.format("~2.16.0b", [&1]))
 
     :io.format('    hwaddr ~s~n', [string_address])
     print_if_info(rest)

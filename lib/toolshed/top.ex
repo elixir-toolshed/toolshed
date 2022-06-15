@@ -3,10 +3,10 @@ defmodule Toolshed.Top do
   Find the top processes
   """
 
+  alias Toolshed.Top.Server
+
   @default_rows 23
   @default_columns 80
-
-  alias Toolshed.Top.Server
 
   @doc """
   Interactively show the top Elixir processes

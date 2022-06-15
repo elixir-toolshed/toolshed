@@ -12,7 +12,7 @@ defmodule Toolshed.DateTest do
     assert actual == expected1 or actual == expected2
   end
 
-  defp unix_date_output do
+  defp unix_date_output() do
     {date_time, 0} = System.cmd("date", ["-u"], env: %{"LC_ALL" => "C"})
     String.trim(date_time)
   end

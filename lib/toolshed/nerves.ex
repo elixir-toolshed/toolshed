@@ -13,6 +13,8 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     * `uname/0`        - print information about the running system
     """
 
+    alias Nerves.Runtime.KV
+
     @doc """
     Print out kernel log messages
     """
@@ -66,12 +68,11 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     def uname() do
       sysname = "Nerves"
       nodename = Toolshed.Net.hostname()
-      release = Nerves.Runtime.KV.get_active("nerves_fw_product")
+      release = KV.get_active("nerves_fw_product")
 
-      version =
-        "#{Nerves.Runtime.KV.get_active("nerves_fw_version")} (#{Nerves.Runtime.KV.get_active("nerves_fw_uuid")})"
+      version = "#{KV.get_active("nerves_fw_version")} (#{KV.get_active("nerves_fw_uuid")})"
 
-      arch = Nerves.Runtime.KV.get_active("nerves_fw_architecture")
+      arch = KV.get_active("nerves_fw_architecture")
 
       IO.puts("#{sysname} #{nodename} #{release} #{version} #{arch}")
       IEx.dont_display_result()

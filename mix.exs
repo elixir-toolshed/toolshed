@@ -19,7 +19,8 @@ defmodule Toolshed.MixProject do
       preferred_cli_env: %{
         docs: :docs,
         "hex.publish": :docs,
-        "hex.build": :docs
+        "hex.build": :docs,
+        credo: :test
       }
     ]
   end
@@ -31,6 +32,7 @@ defmodule Toolshed.MixProject do
   defp deps do
     [
       {:nerves_runtime, "~> 0.8", optional: true},
+      {:credo, "~> 1.2", only: :test, runtime: false},
       {:ex_doc, "~> 0.19", only: :docs, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false}
     ]

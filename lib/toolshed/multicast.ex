@@ -96,8 +96,7 @@ defmodule Toolshed.Multicast do
         record = {:inet, index, ifname, to_pretty_ipv4(address)}
         parse_igmp_lines(index, ifname, rest, [record | result])
 
-      other ->
-        IO.inspect(other)
+      _other ->
         parse_igmp_lines(index, ifname, rest, result)
     end
   end

@@ -33,8 +33,7 @@ defmodule Toolshed.Top.ReportTest do
       Report.generate(processes, %{rows: 10, columns: 120, order: :reductions})
       |> IO.chardata_to_string()
       |> String.split("\n")
-      |> Enum.map(&String.trim_trailing/1)
-      |> Enum.join("\n")
+      |> Enum.map_join("\n", &String.trim_trailing/1)
 
     assert report ==
              """

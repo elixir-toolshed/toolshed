@@ -12,7 +12,7 @@ defmodule Toolshed.Misc do
       iex> SystemRegistry.match(:_) |> save_value("/root/sr.txt")
       :ok
   """
-  @spec save_value(any(), Path.t()) :: :ok | {:error, File.posix()}
+  @spec save_value(any(), Path.t(), keyword()) :: :ok | {:error, File.posix()}
   def save_value(value, path, inspect_opts \\ []) do
     opts =
       Keyword.merge([pretty: true, limit: :infinity, printable_limit: :infinity], inspect_opts)
@@ -32,7 +32,7 @@ defmodule Toolshed.Misc do
       # Reboot board
       iex> :sys.replace_state(&load_term!("/root/my_server.term"))
   """
-  @spec save_term!(term, Path.t()) :: term
+  @spec save_term!(term, Path.t()) :: term()
   def save_term!(value, path) do
     term = :erlang.term_to_binary(value)
     :ok = File.write!(path, term)
@@ -49,6 +49,7 @@ defmodule Toolshed.Misc do
       iex> load_term!("/root/some_atom.term")
       {:some_interesting_atom, ["some", "list"]}
   """
+  @spec load_term!(Path.t()) :: term()
   def load_term!(path) do
     path
     |> File.read!()
@@ -58,6 +59,7 @@ defmodule Toolshed.Misc do
   @doc """
   Exit the current IEx session
   """
+  @spec exit() :: true
   def exit() do
     Process.exit(Process.group_leader(), :kill)
   end

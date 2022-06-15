@@ -3,9 +3,10 @@ defmodule Toolshed.LogTest do
 
   import ExUnit.CaptureIO
   import ExUnit.CaptureLog
-  require Logger
 
   alias Toolshed.Log
+
+  require Logger
 
   @default_options [format: "unittest[$level] $message\n", colors: [enabled: false]]
 
