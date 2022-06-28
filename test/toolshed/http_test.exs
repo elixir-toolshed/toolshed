@@ -10,4 +10,12 @@ defmodule Toolshed.HTTPTest do
              )
            end) =~ "Toolshed aims to improve the Elixir shell"
   end
+
+  test "weather/0 returns correct value" do
+    assert Toolshed.HTTP.weather() == :"do not show this result in output"
+  end
+
+  test "qr_encode/1 returns correct value" do
+    assert Toolshed.HTTP.qr_encode("Nerves") == :"do not show this result in output"
+  end
 end
