@@ -43,4 +43,8 @@ defmodule Toolshed.MulticastTest do
 
     assert Toolshed.Multicast.process_proc(dev_mcast, igmp, igmp6) == result
   end
+
+  test "multicast_addresses/0 returns correct value" do
+    assert Toolshed.Multicast.multicast_addresses() == :ok
+  end
 end
