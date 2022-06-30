@@ -91,7 +91,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     """
     @spec lsmod() :: :"do not show this result in output"
     def lsmod() do
-      Toolshed.Unix.cat("/proc/modules")
+      Toolshed.Cat.cat("/proc/modules")
     end
   end
 end

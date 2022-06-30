@@ -99,10 +99,10 @@ defmodule Toolshed do
     inspect(value, base: :hex)
   end
 
-  defdelegate cat(path), to: Toolshed.Unix
+  defdelegate cat(path), to: Toolshed.Cat
   defdelegate date(), to: Toolshed.Date
   defdelegate exit(), to: Toolshed.Misc
-  defdelegate grep(regex, path), to: Toolshed.Unix
+  defdelegate grep(regex, path), to: Toolshed.Grep
   defdelegate history(), to: Toolshed.History
   defdelegate hostname(), to: Toolshed.Hostname
   defdelegate httpget(url, options), to: Toolshed.HTTP
@@ -120,8 +120,8 @@ defmodule Toolshed do
   defdelegate save_value(value, path, inspect_opts), to: Toolshed.Misc
   defdelegate top(), to: Toolshed.Top
   defdelegate tping(address, options), to: Toolshed.TCPPing
-  defdelegate tree(), to: Toolshed.Unix
-  defdelegate uptime(), to: Toolshed.Unix
+  defdelegate tree(), to: Toolshed.Tree
+  defdelegate uptime(), to: Toolshed.Uptime
   defdelegate weather(), to: Toolshed.Weather
 
   # Nerves-specific functions
