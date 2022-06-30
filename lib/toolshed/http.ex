@@ -3,22 +3,7 @@ defmodule Toolshed.HTTP do
   Helpers that make HTTP requests
   """
 
-  @doc """
-  Display the local weather
-
-  See http://wttr.in/:help for more information.
-  """
-  @spec weather() :: :"do not show this result in output"
-  def weather() do
-    check_app(:inets)
-    check_app(:ssl)
-
-    {:ok, {_status, _headers, body}} =
-      :httpc.request(:get, {'https://v2.wttr.in/?An0', []}, [ssl: [verify: :verify_none]], [])
-
-    body |> :binary.list_to_bin() |> IO.puts()
-    IEx.dont_display_result()
-  end
+  import Toolshed.Utils, only: [check_app: 1]
 
   @doc """
   Generate an ASCII art QR code
@@ -130,20 +115,6 @@ defmodule Toolshed.HTTP do
 
       other ->
         IO.puts("other message: #{inspect(other)}")
-    end
-  end
-
-  defp check_app(app) do
-    case Application.ensure_all_started(app) do
-      {:ok, _} ->
-        :ok
-
-      {:error, _} ->
-        raise RuntimeError, """
-        #{inspect(app)} can't be started.
-        This probably means that it isn't in the OTP release.
-        To fix, edit your mix.exs and add #{inspect(app)} to the :extra_applications list.
-        """
     end
   end
 end

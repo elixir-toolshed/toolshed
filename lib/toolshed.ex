@@ -71,6 +71,7 @@ defmodule Toolshed do
       import Toolshed.History, only: [history: 0, history: 1]
       import Toolshed.Log, only: [log_attach: 0, log_attach: 1, log_detach: 0]
       import Toolshed.TCPPing, only: [tping: 1, tping: 2, ping: 1, ping: 2]
+      import Toolshed.Weather
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
