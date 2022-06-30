@@ -17,22 +17,28 @@ defmodule Toolshed.Weather do
     check_app(:inets)
     check_app(:ssl)
 
-    {:ok, {_status, _headers, body}} =
-      :httpc.request(:get, {@weather_url, []}, [ssl: [verify: :verify_none]], [])
-
-    body |> :binary.list_to_bin() |> IO.puts()
+    get_weather() |> IO.puts()
     IEx.dont_display_result()
-  rescue
-    # unexpected response
-    _ in MatchError ->
-      raise RuntimeError, """
-      Something went wrong when making an HTTP request.
-      """
+  end
+
+  @doc false
+  @spec get_weather() :: binary
+  def get_weather() do
+    case :httpc.request(:get, {@weather_url, []}, [ssl: [verify: :verify_none]], []) do
+      {:ok, {_status, _headers, body}} ->
+        body |> :binary.list_to_bin()
+
+      {:error, reason} ->
+        """
+        Something went wrong when making an HTTP request.
+        #{inspect(reason)}
+        """
+    end
   catch
-    # :httpc server crashed
-    :exit, _ ->
-      raise RuntimeError, """
+    :exit, reason ->
+      """
       Something went wrong when making an HTTP request.
+      #{inspect(reason)}
       """
   end
 end

@@ -1,6 +1,5 @@
 defmodule Toolshed.WeatherTest do
   use ExUnit.Case
-  import ExUnit.CaptureIO
   import Toolshed.Weather
 
   test "weather/0 ensures :inets and :ssl are started" do
