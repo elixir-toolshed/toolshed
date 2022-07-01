@@ -67,7 +67,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     @spec uname() :: :"do not show this result in output"
     def uname() do
       sysname = "Nerves"
-      nodename = Toolshed.Net.hostname()
+      nodename = Toolshed.Hostname.hostname()
       release = KV.get_active("nerves_fw_product")
 
       version = "#{KV.get_active("nerves_fw_version")} (#{KV.get_active("nerves_fw_uuid")})"
