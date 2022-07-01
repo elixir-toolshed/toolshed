@@ -129,6 +129,7 @@ defmodule Toolshed do
     defdelegate dmesg(), to: Toolshed.Nerves
     defdelegate fw_validate(), to: Toolshed.Nerves
     defdelegate lsmod(), to: Toolshed.Nerves
+    @spec reboot!() :: no_return()
     defdelegate reboot!(), to: Toolshed.Nerves
     defdelegate reboot(), to: Toolshed.Nerves
     defdelegate uname(), to: Toolshed.Nerves
