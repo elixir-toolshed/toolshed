@@ -46,20 +46,8 @@ defmodule Toolshed do
   """
 
   defmacro __using__(_) do
-    nerves =
-      if Code.ensure_loaded?(Toolshed.Nerves) do
-        quote do
-          import Toolshed.Nerves
-        end
-      else
-        quote do
-        end
-      end
-
     quote do
       import Toolshed
-
-      unquote(nerves)
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
@@ -113,9 +101,7 @@ defmodule Toolshed do
 
   defdelegate cat(path), to: Toolshed.Unix
   defdelegate date(), to: Toolshed.Date
-  defdelegate dmesg(), to: Toolshed.Nerves
   defdelegate exit(), to: Toolshed.Misc
-  defdelegate fw_validate(), to: Toolshed.Nerves
   defdelegate grep(regex, path), to: Toolshed.Unix
   defdelegate history(), to: Toolshed.History
   defdelegate hostname(), to: Toolshed.Net
@@ -124,21 +110,27 @@ defmodule Toolshed do
   defdelegate load_term!(path), to: Toolshed.Misc
   defdelegate log_attach(options), to: Toolshed.Log
   defdelegate log_detach(), to: Toolshed.Log
-  defdelegate lsmod(), to: Toolshed.Nerves
   defdelegate lsof(), to: Toolshed.Lsof
   defdelegate lsusb(), to: Toolshed.HW
   defdelegate multicast_addresses(), to: Toolshed.Multicast
   defdelegate nslookup(name), to: Toolshed.Net
   defdelegate ping(address, options), to: Toolshed.TCPPing
   defdelegate qr_encode(message), to: Toolshed.HTTP
-  defdelegate reboot!(), to: Toolshed.Nerves
-  defdelegate reboot(), to: Toolshed.Nerves
   defdelegate save_term!(term, path), to: Toolshed.Misc
   defdelegate save_value(value, path, inspect_opts), to: Toolshed.Misc
   defdelegate top(), to: Toolshed.Top
   defdelegate tping(address, options), to: Toolshed.TCPPing
   defdelegate tree(), to: Toolshed.Unix
-  defdelegate uname(), to: Toolshed.Nerves
   defdelegate uptime(), to: Toolshed.Unix
   defdelegate weather(), to: Toolshed.Weather
+
+  # Nerves-specific functions
+  if Code.ensure_loaded?(Nerves.Runtime) do
+    defdelegate dmesg(), to: Toolshed.Nerves
+    defdelegate fw_validate(), to: Toolshed.Nerves
+    defdelegate lsmod(), to: Toolshed.Nerves
+    defdelegate reboot!(), to: Toolshed.Nerves
+    defdelegate reboot(), to: Toolshed.Nerves
+    defdelegate uname(), to: Toolshed.Nerves
+  end
 end
