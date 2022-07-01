@@ -104,16 +104,16 @@ defmodule Toolshed do
   defdelegate exit(), to: Toolshed.Misc
   defdelegate grep(regex, path), to: Toolshed.Unix
   defdelegate history(), to: Toolshed.History
-  defdelegate hostname(), to: Toolshed.Net
+  defdelegate hostname(), to: Toolshed.Hostname
   defdelegate httpget(url, options), to: Toolshed.HTTP
-  defdelegate ifconfig(), to: Toolshed.Net
+  defdelegate ifconfig(), to: Toolshed.Ifconfig
   defdelegate load_term!(path), to: Toolshed.Misc
   defdelegate log_attach(options), to: Toolshed.Log
   defdelegate log_detach(), to: Toolshed.Log
   defdelegate lsof(), to: Toolshed.Lsof
   defdelegate lsusb(), to: Toolshed.Lsusb
   defdelegate multicast_addresses(), to: Toolshed.Multicast
-  defdelegate nslookup(name), to: Toolshed.Net
+  defdelegate nslookup(name), to: Toolshed.Nslookup
   defdelegate ping(address, options), to: Toolshed.TCPPing
   defdelegate qr_encode(message), to: Toolshed.HTTP
   defdelegate save_term!(term, path), to: Toolshed.Misc
