@@ -1,10 +1,6 @@
-defmodule Toolshed.HW do
+defmodule Toolshed.Lsusb do
   @moduledoc """
-  Helpers that are useful for querying hardware information. These are Linux/Nerves-specific.
-
-  Helpers include:
-
-   * `lsusb/0`   - print out connected USB devices
+  This module provides the `lsusb` command
   """
 
   @doc """

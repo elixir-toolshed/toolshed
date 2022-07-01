@@ -111,7 +111,7 @@ defmodule Toolshed do
   defdelegate log_attach(options), to: Toolshed.Log
   defdelegate log_detach(), to: Toolshed.Log
   defdelegate lsof(), to: Toolshed.Lsof
-  defdelegate lsusb(), to: Toolshed.HW
+  defdelegate lsusb(), to: Toolshed.Lsusb
   defdelegate multicast_addresses(), to: Toolshed.Multicast
   defdelegate nslookup(name), to: Toolshed.Net
   defdelegate ping(address, options), to: Toolshed.TCPPing
