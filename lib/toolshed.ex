@@ -22,7 +22,7 @@ defmodule Toolshed do
     * `httpget/2`      - print or download the results of a HTTP GET request
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
-    * `load_term!/2`   - load a term that was saved by `save_term/2`
+    * `load_term!/1`   - load a term that was saved by `save_term/2`
     * `log_attach/1`   - send log messages to the current group leader
     * `log_detach/0`   - stop sending log messages to the current group leader
     * `lsof/0`         - print out open file handles by OS process
@@ -34,7 +34,7 @@ defmodule Toolshed do
     * `qr_encode/1`    - create a QR code (requires networking)
     * `reboot/0`       - reboots gracefully (Nerves-only)
     * `reboot!/0`      - reboots immediately  (Nerves-only)
-    * `save_value/2`   - save a value to a file as Elixir terms (uses inspect)
+    * `save_value/3`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
     * `top/2`          - list out the top processes
     * `tping/2`        - check if a host can be reached (like ping, but uses TCP)
@@ -58,20 +58,8 @@ defmodule Toolshed do
 
     quote do
       import Toolshed
-      import Toolshed.Top
-      import Toolshed.Lsof
+
       unquote(nerves)
-      import Toolshed.Unix
-      import Toolshed.Net
-      import Toolshed.Misc
-      import Toolshed.HW
-      import Toolshed.HTTP
-      import Toolshed.Multicast
-      import Toolshed.Date, only: [date: 0]
-      import Toolshed.History, only: [history: 0, history: 1]
-      import Toolshed.Log, only: [log_attach: 0, log_attach: 1, log_detach: 0]
-      import Toolshed.TCPPing, only: [tping: 1, tping: 2, ping: 1, ping: 2]
-      import Toolshed.Weather
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
@@ -122,4 +110,35 @@ defmodule Toolshed do
   def hex(value) do
     inspect(value, base: :hex)
   end
+
+  defdelegate cat(path), to: Toolshed.Unix
+  defdelegate date(), to: Toolshed.Date
+  defdelegate dmesg(), to: Toolshed.Nerves
+  defdelegate exit(), to: Toolshed.Misc
+  defdelegate fw_validate(), to: Toolshed.Nerves
+  defdelegate grep(regex, path), to: Toolshed.Unix
+  defdelegate history(), to: Toolshed.History
+  defdelegate hostname(), to: Toolshed.Net
+  defdelegate httpget(url, options), to: Toolshed.HTTP
+  defdelegate ifconfig(), to: Toolshed.Net
+  defdelegate load_term!(path), to: Toolshed.Misc
+  defdelegate log_attach(options), to: Toolshed.Log
+  defdelegate log_detach(), to: Toolshed.Log
+  defdelegate lsmod(), to: Toolshed.Nerves
+  defdelegate lsof(), to: Toolshed.Lsof
+  defdelegate lsusb(), to: Toolshed.HW
+  defdelegate multicast_addresses(), to: Toolshed.Multicast
+  defdelegate nslookup(name), to: Toolshed.Net
+  defdelegate ping(address, options), to: Toolshed.TCPPing
+  defdelegate qr_encode(message), to: Toolshed.HTTP
+  defdelegate reboot!(), to: Toolshed.Nerves
+  defdelegate reboot(), to: Toolshed.Nerves
+  defdelegate save_term!(term, path), to: Toolshed.Misc
+  defdelegate save_value(value, path, inspect_opts), to: Toolshed.Misc
+  defdelegate top(), to: Toolshed.Top
+  defdelegate tping(address, options), to: Toolshed.TCPPing
+  defdelegate tree(), to: Toolshed.Unix
+  defdelegate uname(), to: Toolshed.Nerves
+  defdelegate uptime(), to: Toolshed.Unix
+  defdelegate weather(), to: Toolshed.Weather
 end

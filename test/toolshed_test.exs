@@ -2,6 +2,48 @@ defmodule ToolshedTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 
+  @expected_public_functions [
+    cat: 1,
+    cmd: 1,
+    date: 0,
+    dmesg: 0,
+    exit: 0,
+    fw_validate: 0,
+    grep: 2,
+    hex: 1,
+    history: 0,
+    hostname: 0,
+    httpget: 2,
+    ifconfig: 0,
+    load_term!: 1,
+    log_attach: 1,
+    log_detach: 0,
+    lsmod: 0,
+    lsof: 0,
+    lsusb: 0,
+    multicast_addresses: 0,
+    nslookup: 1,
+    ping: 2,
+    qr_encode: 1,
+    reboot: 0,
+    reboot!: 0,
+    save_term!: 2,
+    save_value: 3,
+    top: 0,
+    tping: 2,
+    tree: 0,
+    uname: 0,
+    uptime: 0,
+    weather: 0
+  ]
+  test "public functions" do
+    actual_public_functions = Toolshed.__info__(:functions)
+
+    for f <- @expected_public_functions do
+      assert f in actual_public_functions
+    end
+  end
+
   test "cmd/1 normal printable chars" do
     assert capture_io(fn ->
              Toolshed.cmd("printf \"hello, world\"")
