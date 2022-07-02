@@ -1,11 +1,11 @@
-defmodule Toolshed.TCPPingTest do
+defmodule Toolshed.TpingTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
-  alias Toolshed.TCPPing
+  import Toolshed.Tping
 
   test "can ping an IPv4 address" do
     assert capture_io(fn ->
-             TCPPing.tping("127.0.0.1")
+             tping("127.0.0.1")
            end) =~ "Response from 127.0.0.1 (127.0.0.1:80): time="
   end
 
@@ -14,19 +14,19 @@ defmodule Toolshed.TCPPingTest do
   @tag :has_ipv6
   test "can ping an IPv6 address" do
     assert capture_io(fn ->
-             TCPPing.tping("::1")
+             tping("::1")
            end) =~ "Response from ::1 ([::1]:80): time="
   end
 
   test "can ping by hostname" do
     assert capture_io(fn ->
-             TCPPing.tping("localhost")
+             tping("localhost")
            end) =~ "Response from localhost (127.0.0.1:80): time="
   end
 
   test "prints an error if host can't be resolved" do
     assert capture_io(fn ->
-             TCPPing.tping("this.host.does.not.exist")
+             tping("this.host.does.not.exist")
            end) =~ "Error resolving this.host.does.not.exist"
   end
 end
