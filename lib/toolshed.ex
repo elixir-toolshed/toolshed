@@ -101,7 +101,6 @@ defmodule Toolshed do
 
   defdelegate cat(path), to: Toolshed.Cat
   defdelegate date(), to: Toolshed.Date
-  defdelegate exit(), to: Toolshed.Misc
   defdelegate grep(regex, path), to: Toolshed.Grep
   defdelegate history(), to: Toolshed.History
   defdelegate hostname(), to: Toolshed.Hostname
@@ -127,6 +126,7 @@ defmodule Toolshed do
   # Nerves-specific functions
   if Code.ensure_loaded?(Nerves.Runtime) do
     defdelegate dmesg(), to: Toolshed.Nerves
+    defdelegate exit(), to: Toolshed.Nerves
     defdelegate fw_validate(), to: Toolshed.Nerves
     defdelegate lsmod(), to: Toolshed.Nerves
     @spec reboot!() :: no_return()
