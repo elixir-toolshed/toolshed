@@ -104,10 +104,10 @@ defmodule Toolshed do
   defdelegate grep(regex, path), to: Toolshed.Grep
   defdelegate history(), to: Toolshed.History
   defdelegate hostname(), to: Toolshed.Hostname
-  defdelegate httpget(url, options), to: Toolshed.HTTP
+  defdelegate httpget(url, options \\ []), to: Toolshed.HTTP
   defdelegate ifconfig(), to: Toolshed.Ifconfig
   defdelegate load_term!(path), to: Toolshed.Misc
-  defdelegate log_attach(options), to: Toolshed.Log
+  defdelegate log_attach(options \\ []), to: Toolshed.Log
   defdelegate log_detach(), to: Toolshed.Log
   defdelegate lsof(), to: Toolshed.Lsof
   defdelegate lsusb(), to: Toolshed.Lsusb
@@ -116,7 +116,7 @@ defmodule Toolshed do
   defdelegate ping(address, options \\ []), to: Toolshed.Ping
   defdelegate qr_encode(message), to: Toolshed.HTTP
   defdelegate save_term!(term, path), to: Toolshed.Misc
-  defdelegate save_value(value, path, inspect_opts), to: Toolshed.Misc
+  defdelegate save_value(value, path, inspect_opts \\ []), to: Toolshed.Misc
   defdelegate top(), to: Toolshed.Top
   defdelegate tping(address, options \\ []), to: Toolshed.Tping
   defdelegate tree(), to: Toolshed.Tree
