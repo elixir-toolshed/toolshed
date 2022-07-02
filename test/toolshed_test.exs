@@ -5,6 +5,7 @@ defmodule ToolshedTest do
   @core_helpers [
     cat: 1,
     cmd: 1,
+    convert_bits: 1,
     date: 0,
     grep: 2,
     hex: 1,
@@ -14,6 +15,7 @@ defmodule ToolshedTest do
     httpget: 1,
     httpget: 2,
     ifconfig: 0,
+    inspect_bits: 1,
     load_term!: 1,
     log_attach: 0,
     log_attach: 1,
