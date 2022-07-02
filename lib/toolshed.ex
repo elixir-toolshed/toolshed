@@ -113,12 +113,12 @@ defmodule Toolshed do
   defdelegate lsusb(), to: Toolshed.Lsusb
   defdelegate multicast_addresses(), to: Toolshed.Multicast
   defdelegate nslookup(name), to: Toolshed.Nslookup
-  defdelegate ping(address, options), to: Toolshed.TCPPing
+  defdelegate ping(address, options \\ []), to: Toolshed.Ping
   defdelegate qr_encode(message), to: Toolshed.HTTP
   defdelegate save_term!(term, path), to: Toolshed.Misc
   defdelegate save_value(value, path, inspect_opts), to: Toolshed.Misc
   defdelegate top(), to: Toolshed.Top
-  defdelegate tping(address, options), to: Toolshed.TCPPing
+  defdelegate tping(address, options \\ []), to: Toolshed.Tping
   defdelegate tree(), to: Toolshed.Tree
   defdelegate uptime(), to: Toolshed.Uptime
   defdelegate weather(), to: Toolshed.Weather
