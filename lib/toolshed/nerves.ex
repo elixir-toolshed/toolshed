@@ -6,6 +6,7 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     Helpers include:
 
     * `dmesg/0`        - print kernel messages
+    * `exit/0`         - exit the current IEx session
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `lsmod/0`        - print out what kernel modules have been loaded
     * `reboot/0`       - reboots gracefully
@@ -92,6 +93,14 @@ if Code.ensure_loaded?(Nerves.Runtime) do
     @spec lsmod() :: :"do not show this result in output"
     def lsmod() do
       Toolshed.Cat.cat("/proc/modules")
+    end
+
+    @doc """
+    Exit the current IEx session
+    """
+    @spec exit() :: true
+    def exit() do
+      Process.exit(Process.group_leader(), :kill)
     end
   end
 end

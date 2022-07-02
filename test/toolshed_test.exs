@@ -6,7 +6,6 @@ defmodule ToolshedTest do
     cat: 1,
     cmd: 1,
     date: 0,
-    exit: 0,
     grep: 2,
     hex: 1,
     history: 0,
@@ -33,6 +32,7 @@ defmodule ToolshedTest do
 
   @nerves_specific_functions [
     dmesg: 0,
+    exit: 0,
     fw_validate: 0,
     lsmod: 0,
     reboot: 0,
