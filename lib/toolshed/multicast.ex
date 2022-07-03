@@ -1,31 +1,5 @@
 defmodule Toolshed.Multicast do
-  @moduledoc """
-  Multicast utilities
-  """
-
-  @doc """
-  List all active multicast addresses
-
-  This lists out multicast addresses by network interface
-  similar to `ip maddr show`. It currently only works on
-  Linux.
-  """
-  @spec multicast_addresses() :: :ok
-  def multicast_addresses() do
-    dev_mcast = read_or_empty("/proc/net/dev_mcast")
-    igmp = read_or_empty("/proc/net/igmp")
-    igmp6 = read_or_empty("/proc/net/igmp6")
-
-    process_proc(dev_mcast, igmp, igmp6)
-    |> IO.puts()
-  end
-
-  defp read_or_empty(path) do
-    case File.read(path) do
-      {:ok, contents} -> contents
-      _other -> ""
-    end
-  end
+  @moduledoc false
 
   @doc """
   Helper for processing the multicast subscription information files

@@ -4,8 +4,6 @@ defmodule Toolshed.LogTest do
   import ExUnit.CaptureIO
   import ExUnit.CaptureLog
 
-  alias Toolshed.Log
-
   require Logger
 
   @default_options [format: "unittest[$level] $message\n", colors: [enabled: false]]
@@ -17,9 +15,9 @@ defmodule Toolshed.LogTest do
   test "logging events while attached and detached" do
     output =
       capture_io_and_not_log(fn ->
-        Log.log_attach(@default_options)
+        Toolshed.log_attach(@default_options)
         Logger.info("hello1")
-        Log.log_detach()
+        Toolshed.log_detach()
         Logger.error("shouldn't log")
       end)
 
@@ -27,19 +25,19 @@ defmodule Toolshed.LogTest do
   end
 
   test "detaching returns an error when not attached" do
-    assert {:error, :not_attached} = Log.log_detach()
+    assert {:error, :not_attached} = Toolshed.log_detach()
   end
 
   test "attaching twice returns an error" do
-    assert {:ok, _pid} = Log.log_attach()
-    assert {:error, :detach_first} == Log.log_attach()
-    assert :ok == Log.log_detach()
+    assert {:ok, _pid} = Toolshed.log_attach()
+    assert {:error, :detach_first} == Toolshed.log_attach()
+    assert :ok == Toolshed.log_detach()
   end
 
   test "filtering by log level" do
     output =
       capture_io_and_not_log(fn ->
-        {:ok, _pid} = Log.log_attach(@default_options ++ [level: :error])
+        {:ok, _pid} = Toolshed.log_attach(@default_options ++ [level: :error])
         Logger.error("hello1")
         Logger.info("shouldn't log")
       end)
@@ -62,7 +60,7 @@ defmodule Toolshed.LogTest do
     original_count = backend_count()
 
     # Attach -> this should cause there to be a new backend
-    {:ok, _pid} = Log.log_attach(@default_options)
+    {:ok, _pid} = Toolshed.log_attach(@default_options)
     assert backend_count() == original_count + 1
 
     # Set the group leader back and exit the new one we made

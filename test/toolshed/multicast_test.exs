@@ -45,6 +45,6 @@ defmodule Toolshed.MulticastTest do
   end
 
   test "multicast_addresses/0 returns correct value" do
-    assert Toolshed.Multicast.multicast_addresses() == :ok
+    assert Toolshed.multicast_addresses() == :ok
   end
 end

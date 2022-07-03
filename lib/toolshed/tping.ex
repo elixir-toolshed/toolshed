@@ -1,44 +1,12 @@
 defmodule Toolshed.Tping do
-  @moduledoc """
-  This module provides the `tping` command
-  """
+  @moduledoc false
 
   require Record
 
   @doc false
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
-  @doc """
-  Check if a computer is up using TCP.
-
-  Options:
-
-  * `:ifname` - Specify a network interface to use. (e.g., "eth0")
-  * `:port` - Which TCP port to try (defaults to 80)
-
-  ## Examples
-
-      iex> tping "nerves-project.org"
-      Response from nerves-project.org (185.199.108.153:80): time=4.155ms
-
-      iex> tping "192.168.1.1"
-      Response from 192.168.1.1 (192.168.1.1:80): time=1.227ms
-  """
-  @spec tping(String.t(), keyword()) :: :"do not show this result in output"
-  def tping(address, options \\ []) do
-    case resolve_addr(address) do
-      {:ok, ip} ->
-        port = Keyword.get(options, :port, 80)
-        ping_ip(address, ip, port, connect_options(options))
-
-      {:error, message} ->
-        IO.puts(message)
-    end
-
-    IEx.dont_display_result()
-  end
-
-  defp connect_options(ping_options) do
+  def connect_options(ping_options) do
     Enum.flat_map(ping_options, &ping_option_to_connect/1)
   end
 
@@ -59,7 +27,7 @@ defmodule Toolshed.Tping do
 
   defp ping_option_to_connect({_option, _}), do: []
 
-  defp ping_ip(address, ip, port, connect_options) do
+  def ping_ip(address, ip, port, connect_options) do
     message =
       case try_connect(ip, port, connect_options) do
         {:ok, micros} ->
@@ -75,7 +43,7 @@ defmodule Toolshed.Tping do
   defp pretty_ip_port({_, _, _, _} = ip, port), do: "#{:inet.ntoa(ip)}:#{port}"
   defp pretty_ip_port(ip, port), do: "[#{:inet.ntoa(ip)}]:#{port}"
 
-  defp resolve_addr(address) do
+  def resolve_addr(address) do
     case gethostbyname(address, :inet) || gethostbyname(address, :inet6) do
       nil -> {:error, "Error resolving #{address}"}
       ip -> {:ok, ip}

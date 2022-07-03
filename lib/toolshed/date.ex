@@ -1,15 +1,5 @@
 defmodule Toolshed.Date do
-  @moduledoc """
-  This module provides the `date` command
-  """
-
-  @doc """
-  Return the date and time in UTC
-  """
-  @spec date() :: String.t()
-  def date() do
-    date_in_unix_format(DateTime.utc_now())
-  end
+  @moduledoc false
 
   defp weekday_text(date_time) do
     date_time
@@ -39,7 +29,7 @@ defmodule Toolshed.Date do
   defp format_date(date) when date > 9, do: date
   defp format_date(date), do: " #{date}"
 
-  defp date_in_unix_format(date_time) do
+  def date_in_unix_format(date_time) do
     "#{weekday_text(date_time)} #{month_text(date_time)} #{format_date(date_time.day)} #{time_text(date_time)} UTC #{date_time.year}"
   end
 end

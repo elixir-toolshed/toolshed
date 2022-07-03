@@ -6,7 +6,7 @@ defmodule Toolshed.DateTest do
     # two date functions if we catch the seconds changing.
 
     expected1 = unix_date_output()
-    actual = Toolshed.Date.date()
+    actual = Toolshed.date()
     expected2 = unix_date_output()
 
     assert actual == expected1 or actual == expected2

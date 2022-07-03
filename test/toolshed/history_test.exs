@@ -1,7 +1,6 @@
 defmodule Toolshed.HistoryTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
-  alias Toolshed.History
 
   test "history can print out commandline history" do
     # Use this process as a fake group leader
@@ -12,7 +11,7 @@ defmodule Toolshed.HistoryTest do
 
     fake_gl = self()
 
-    output = capture_io(fn -> History.history(fake_gl) end)
+    output = capture_io(fn -> Toolshed.history(fake_gl) end)
 
     assert output == """
            1  First command

@@ -1,18 +1,7 @@
 defmodule Toolshed.Lsusb do
-  @moduledoc """
-  This module provides the `lsusb` command
-  """
+  @moduledoc false
 
-  @doc """
-  Print out information on all of the connected USB devices.
-  """
-  @spec lsusb() :: :"do not show this result in output"
-  def lsusb() do
-    Enum.each(Path.wildcard("/sys/bus/usb/devices/*/uevent"), &print_usb/1)
-    IEx.dont_display_result()
-  end
-
-  defp print_usb(uevent_path) do
+  def print_usb(uevent_path) do
     File.read!(uevent_path)
     |> parse_kv_config()
     |> find_more_usb_info(Path.dirname(uevent_path))

@@ -1,25 +1,7 @@
 defmodule Toolshed.Weather do
-  @moduledoc """
-  This module provides the `weather` command
-  """
-
-  import Toolshed.Utils, only: [check_app: 1]
+  @moduledoc false
 
   @weather_url 'https://v2.wttr.in/?An0'
-
-  @doc """
-  Display the local weather
-
-  See http://wttr.in/:help for more information.
-  """
-  @spec weather() :: :"do not show this result in output"
-  def weather() do
-    check_app(:inets)
-    check_app(:ssl)
-
-    get_weather() |> IO.puts()
-    IEx.dont_display_result()
-  end
 
   @doc false
   @spec get_weather() :: binary

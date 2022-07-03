@@ -1,19 +1,7 @@
 defmodule Toolshed.Ifconfig do
-  @moduledoc """
-  This module provides the `ifconfig` command
-  """
+  @moduledoc false
 
-  @doc """
-  Print out the network interfaces and their addresses.
-  """
-  @spec ifconfig() :: :"do not show this result in output"
-  def ifconfig() do
-    {:ok, if_list} = :inet.getifaddrs()
-    Enum.each(if_list, &print_if/1)
-    IEx.dont_display_result()
-  end
-
-  defp print_if({ifname, kvlist}) do
+  def print_if({ifname, kvlist}) do
     IO.puts("#{ifname}: flags=#{inspect(Keyword.get(kvlist, :flags))}")
     print_if_info(kvlist)
     IO.puts("")
