@@ -2,13 +2,13 @@
 # longer needed.
 if Version.match?(System.version(), "< 1.13.0-rc.0") do
   defmodule Toolshed.Autocomplete do
-    @moduledoc """
-    Add path completion to the default IEx autocompletion
+    @moduledoc false
 
-    This modules augments the IEx autocompletion logic to complete file paths in
-    strings. This lets you tab the paths in calls to Toolshed helpers and
-    functions like `File.read/1`.
-    """
+    # Add path completion to the default IEx autocompletion
+    #
+    # This modules augments the IEx autocompletion logic to complete file paths in
+    # strings. This lets you tab the paths in calls to Toolshed helpers and
+    # functions like `File.read/1`.
 
     @type result() :: {:yes | :no, charlist(), [charlist()]}
 
@@ -199,9 +199,7 @@ if Version.match?(System.version(), "< 1.13.0-rc.0") do
   end
 else
   defmodule Toolshed.Autocomplete do
-    @moduledoc """
-    Path autocompletion comes with Elixir now
-    """
+    @moduledoc false
 
     @doc "Path autocomplete comes with Elixir"
     @spec set_expand_fun() :: :ok

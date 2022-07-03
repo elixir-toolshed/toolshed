@@ -1,7 +1,5 @@
 defmodule Toolshed.Ifconfig do
-  @moduledoc """
-  This module provides the `ifconfig` command
-  """
+  @moduledoc false
 
   @doc """
   Print out the network interfaces and their addresses.

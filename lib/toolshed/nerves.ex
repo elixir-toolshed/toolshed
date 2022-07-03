@@ -1,18 +1,7 @@
 if Code.ensure_loaded?(Nerves.Runtime) do
   defmodule Toolshed.Nerves do
-    @moduledoc """
-    Helpers that are useful on Nerves devices
-
-    Helpers include:
-
-    * `dmesg/0`        - print kernel messages
-    * `exit/0`         - exit the current IEx session
-    * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
-    * `lsmod/0`        - print out what kernel modules have been loaded
-    * `reboot/0`       - reboots gracefully
-    * `reboot!/0`      - reboots immediately
-    * `uname/0`        - print information about the running system
-    """
+    @moduledoc false
+    # Helpers that are useful on Nerves devices
 
     alias Nerves.Runtime.KV
 

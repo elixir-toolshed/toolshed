@@ -1,11 +1,10 @@
 defmodule Toolshed.Log do
-  @moduledoc """
-  Utilities for attaching and detaching to the log
-
-  These utilities configure Elixir's console backend to attach
-  to the current group leader. This makes it work over `ssh` sessions
-  and play well with the IEx prompt.
-  """
+  @moduledoc false
+  # Utilities for attaching and detaching to the log
+  #
+  # These utilities configure Elixir's console backend to attach
+  # to the current group leader. This makes it work over `ssh` sessions
+  # and play well with the IEx prompt.
 
   @doc """
   Attach the current session to the Elixir logger

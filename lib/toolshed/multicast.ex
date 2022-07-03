@@ -1,7 +1,6 @@
 defmodule Toolshed.Multicast do
-  @moduledoc """
-  Multicast utilities
-  """
+  @moduledoc false
+  # Multicast utilities
 
   @doc """
   List all active multicast addresses

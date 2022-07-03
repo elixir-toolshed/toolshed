@@ -1,7 +1,5 @@
 defmodule Toolshed.Cat do
-  @moduledoc """
-  This module provides the `cat` command
-  """
+  @moduledoc false
 
   @doc """
   Reads and prints out the contents of a file

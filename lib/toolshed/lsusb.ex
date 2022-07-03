@@ -1,7 +1,5 @@
 defmodule Toolshed.Lsusb do
-  @moduledoc """
-  This module provides the `lsusb` command
-  """
+  @moduledoc false
 
   @doc """
   Print out information on all of the connected USB devices.

@@ -1,7 +1,6 @@
 defmodule Toolshed.Misc do
-  @moduledoc """
-  Miscellaneous helpers
-  """
+  @moduledoc false
+  # Miscellaneous helpers
 
   @doc """
   Save a value to a file as Elixir terms

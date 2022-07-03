@@ -1,7 +1,5 @@
 defmodule Toolshed.Nslookup do
-  @moduledoc """
-  This module provides the `nslookup` command
-  """
+  @moduledoc false
 
   require Record
 

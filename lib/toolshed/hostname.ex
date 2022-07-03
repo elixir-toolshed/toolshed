@@ -1,7 +1,5 @@
 defmodule Toolshed.Hostname do
-  @moduledoc """
-  This module provides the `hostname` command
-  """
+  @moduledoc false
 
   require Record
 

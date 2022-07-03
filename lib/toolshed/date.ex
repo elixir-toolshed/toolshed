@@ -1,7 +1,5 @@
 defmodule Toolshed.Date do
-  @moduledoc """
-  This module provides the `date` command
-  """
+  @moduledoc false
 
   @doc """
   Return the date and time in UTC
