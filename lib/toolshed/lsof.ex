@@ -1,6 +1,7 @@
 defmodule Toolshed.Lsof do
   @moduledoc false
 
+  @spec lsof_process(binary) :: :ok | [] | {:error, any}
   def lsof_process(path) do
     with {:ok, cmdline} <- File.read(Path.join(path, "cmdline")),
          [cmd | _args] <- String.split(cmdline, <<0>>) do
@@ -9,7 +10,8 @@ defmodule Toolshed.Lsof do
     end
   end
 
-  def lsof_fd(fd_path, cmd) do
+  @spec lsof_fd(binary, binary) :: :ok
+  defp lsof_fd(fd_path, cmd) do
     case File.read_link(fd_path) do
       {:ok, where} ->
         IO.puts("#{where}\t\t\t#{cmd}")
@@ -19,6 +21,7 @@ defmodule Toolshed.Lsof do
     end
   end
 
+  @spec path_ls(binary) :: [binary]
   def path_ls(path) do
     case File.ls(path) do
       {:ok, names} ->

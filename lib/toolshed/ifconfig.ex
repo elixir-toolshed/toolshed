@@ -1,6 +1,7 @@
 defmodule Toolshed.Ifconfig do
   @moduledoc false
 
+  @spec print_if({binary, keyword}) :: :ok
   def print_if({ifname, kvlist}) do
     IO.puts("#{ifname}: flags=#{inspect(Keyword.get(kvlist, :flags))}")
     print_if_info(kvlist)

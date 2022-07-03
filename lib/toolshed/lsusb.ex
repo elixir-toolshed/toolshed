@@ -1,6 +1,7 @@
 defmodule Toolshed.Lsusb do
   @moduledoc false
 
+  @spec print_usb(binary) :: :ok
   def print_usb(uevent_path) do
     File.read!(uevent_path)
     |> parse_kv_config()

@@ -6,6 +6,10 @@ defmodule Toolshed.Tping do
   @doc false
   Record.defrecord(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
 
+  @type address :: binary
+  @type ip :: binary | {non_neg_integer, non_neg_integer, non_neg_integer, non_neg_integer}
+
+  @spec connect_options(keyword) :: keyword()
   def connect_options(ping_options) do
     Enum.flat_map(ping_options, &ping_option_to_connect/1)
   end
@@ -27,6 +31,7 @@ defmodule Toolshed.Tping do
 
   defp ping_option_to_connect({_option, _}), do: []
 
+  @spec ping_ip(address, ip, non_neg_integer, keyword) :: :ok
   def ping_ip(address, ip, port, connect_options) do
     message =
       case try_connect(ip, port, connect_options) do
@@ -43,6 +48,7 @@ defmodule Toolshed.Tping do
   defp pretty_ip_port({_, _, _, _} = ip, port), do: "#{:inet.ntoa(ip)}:#{port}"
   defp pretty_ip_port(ip, port), do: "[#{:inet.ntoa(ip)}]:#{port}"
 
+  @spec resolve_addr(address) :: {:ok, ip} | {:error, any}
   def resolve_addr(address) do
     case gethostbyname(address, :inet) || gethostbyname(address, :inet6) do
       nil -> {:error, "Error resolving #{address}"}

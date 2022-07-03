@@ -16,6 +16,7 @@ defmodule Toolshed.Utils do
     end
   end
 
+  @spec read_or_empty(Path.t()) :: binary()
   def read_or_empty(path) do
     case File.read(path) do
       {:ok, contents} -> contents
