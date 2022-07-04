@@ -45,6 +45,8 @@ defmodule Toolshed do
 
   """
 
+  alias Toolshed.Utils
+
   defmacro __using__(_) do
     quote do
       import Toolshed
@@ -184,7 +186,7 @@ defmodule Toolshed do
   @spec httpget(String.t(), dest: Path.t(), verbose: boolean()) ::
           :"do not show this result in output"
   def httpget(url, options \\ []) do
-    Toolshed.Utils.check_app(:inets)
+    Utils.check_app(:inets)
 
     url = Toolshed.HTTP.url_defaults(url)
     dest = Keyword.get(options, :dest, nil)
@@ -333,9 +335,9 @@ defmodule Toolshed do
   """
   @spec multicast_addresses() :: :ok
   def multicast_addresses() do
-    dev_mcast = Toolshed.Utils.read_or_empty("/proc/net/dev_mcast")
-    igmp = Toolshed.Utils.read_or_empty("/proc/net/igmp")
-    igmp6 = Toolshed.Utils.read_or_empty("/proc/net/igmp6")
+    dev_mcast = Utils.read_or_empty("/proc/net/dev_mcast")
+    igmp = Utils.read_or_empty("/proc/net/igmp")
+    igmp6 = Utils.read_or_empty("/proc/net/igmp6")
 
     Toolshed.Multicast.process_proc(dev_mcast, igmp, igmp6)
     |> IO.puts()
@@ -417,7 +419,7 @@ defmodule Toolshed do
   """
   @spec qr_encode(String.t()) :: :"do not show this result in output"
   def qr_encode(message) do
-    Toolshed.Utils.check_app(:inets)
+    Utils.check_app(:inets)
 
     encoded = message |> URI.encode() |> to_charlist()
     form_data = [?x, ?= | encoded]
@@ -485,17 +487,19 @@ defmodule Toolshed do
   """
   @spec top(keyword()) :: :ok
   def top(opts \\ []) do
+    alias Toolshed.Top
+
     options = %{
       order: Keyword.get(opts, :order, :delta_reductions),
-      rows: Toolshed.Top.rows(),
-      columns: Toolshed.Top.columns()
+      rows: Top.rows(),
+      columns: Top.columns()
     }
 
     IO.puts("Press enter to stop\n")
 
-    {:ok, pid} = Toolshed.Top.Server.start_link(options)
+    {:ok, pid} = Top.Server.start_link(options)
     _ = IO.gets("")
-    Toolshed.Top.Server.stop(pid)
+    Top.Server.stop(pid)
   end
 
   @doc """
@@ -562,8 +566,8 @@ defmodule Toolshed do
   """
   @spec weather() :: :"do not show this result in output"
   def weather() do
-    Toolshed.Utils.check_app(:inets)
-    Toolshed.Utils.check_app(:ssl)
+    Utils.check_app(:inets)
+    Utils.check_app(:ssl)
 
     Toolshed.Weather.get_weather() |> IO.puts()
     IEx.dont_display_result()
@@ -576,7 +580,7 @@ defmodule Toolshed do
     """
     @spec dmesg() :: :"do not show this result in output"
     def dmesg() do
-      Toolshed.cmd("dmesg")
+      cmd("dmesg")
       IEx.dont_display_result()
     end
 
@@ -584,9 +588,7 @@ defmodule Toolshed do
     Exit the current IEx session
     """
     @spec exit() :: true
-    def exit() do
-      Process.exit(Process.group_leader(), :kill)
-    end
+    def exit(), do: Process.exit(Process.group_leader(), :kill)
 
     @doc """
     Validate a firmware image
@@ -642,14 +644,13 @@ defmodule Toolshed do
     """
     @spec uname() :: :"do not show this result in output"
     def uname() do
+      alias Nerves.Runtime.KV
+
       sysname = "Nerves"
       nodename = Toolshed.hostname()
-      release = Nerves.Runtime.KV.get_active("nerves_fw_product")
-
-      version =
-        "#{Nerves.Runtime.KV.get_active("nerves_fw_version")} (#{Nerves.Runtime.KV.get_active("nerves_fw_uuid")})"
-
-      arch = Nerves.Runtime.KV.get_active("nerves_fw_architecture")
+      release = KV.get_active("nerves_fw_product")
+      version = "#{KV.get_active("nerves_fw_version")} (#{KV.get_active("nerves_fw_uuid")})"
+      arch = KV.get_active("nerves_fw_architecture")
 
       IO.puts("#{sysname} #{nodename} #{release} #{version} #{arch}")
       IEx.dont_display_result()
