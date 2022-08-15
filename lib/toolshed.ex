@@ -1,3 +1,16 @@
+# Get the doc of a function at compile time
+get_function_doc = fn m, f, arity ->
+  Code.ensure_compiled!(m)
+
+  with {:docs_v1, _, _, _, _, _, functions} <- Code.fetch_docs(m),
+       {_, _, _, %{"en" => doc}, _} <-
+         Enum.find(functions, &Kernel.match?({{:function, ^f, ^arity}, _, _, _, _}, &1)) do
+    doc
+  else
+    _ -> raise "could not find a doc for #{m}.#{f}/#{arity}"
+  end
+end
+
 defmodule Toolshed do
   @moduledoc """
   Making the IEx console friendlier one command at a time
@@ -99,39 +112,97 @@ defmodule Toolshed do
     inspect(value, base: :hex)
   end
 
+  @doc get_function_doc.(Toolshed.Cat, :cat, 1)
   defdelegate cat(path), to: Toolshed.Cat
+
+  @doc get_function_doc.(Toolshed.Date, :date, 0)
   defdelegate date(), to: Toolshed.Date
+
+  @doc get_function_doc.(Toolshed.Grep, :grep, 2)
   defdelegate grep(regex, path), to: Toolshed.Grep
-  defdelegate history(), to: Toolshed.History
+
+  @doc get_function_doc.(Toolshed.History, :history, 1)
+  defdelegate history(gl \\ Process.group_leader()), to: Toolshed.History
+
+  @doc get_function_doc.(Toolshed.Hostname, :hostname, 0)
   defdelegate hostname(), to: Toolshed.Hostname
+
+  @doc get_function_doc.(Toolshed.HTTP, :httpget, 2)
   defdelegate httpget(url, options \\ []), to: Toolshed.HTTP
+
+  @doc get_function_doc.(Toolshed.Ifconfig, :ifconfig, 0)
   defdelegate ifconfig(), to: Toolshed.Ifconfig
+
+  @doc get_function_doc.(Toolshed.Misc, :load_term!, 1)
   defdelegate load_term!(path), to: Toolshed.Misc
+
+  @doc get_function_doc.(Toolshed.Log, :log_attach, 1)
   defdelegate log_attach(options \\ []), to: Toolshed.Log
+
+  @doc get_function_doc.(Toolshed.Log, :log_detach, 0)
   defdelegate log_detach(), to: Toolshed.Log
+
+  @doc get_function_doc.(Toolshed.Lsof, :lsof, 0)
   defdelegate lsof(), to: Toolshed.Lsof
+
+  @doc get_function_doc.(Toolshed.Lsusb, :lsusb, 0)
   defdelegate lsusb(), to: Toolshed.Lsusb
+
+  @doc get_function_doc.(Toolshed.Multicast, :multicast_addresses, 0)
   defdelegate multicast_addresses(), to: Toolshed.Multicast
+
+  @doc get_function_doc.(Toolshed.Nslookup, :nslookup, 1)
   defdelegate nslookup(name), to: Toolshed.Nslookup
+
+  @doc get_function_doc.(Toolshed.Ping, :ping, 2)
   defdelegate ping(address, options \\ []), to: Toolshed.Ping
+
+  @doc get_function_doc.(Toolshed.HTTP, :qr_encode, 1)
   defdelegate qr_encode(message), to: Toolshed.HTTP
+
+  @doc get_function_doc.(Toolshed.Misc, :save_term!, 2)
   defdelegate save_term!(term, path), to: Toolshed.Misc
+
+  @doc get_function_doc.(Toolshed.Misc, :save_value, 3)
   defdelegate save_value(value, path, inspect_opts \\ []), to: Toolshed.Misc
-  defdelegate top(), to: Toolshed.Top
+
+  @doc get_function_doc.(Toolshed.Top, :top, 1)
+  defdelegate top(opts \\ []), to: Toolshed.Top
+
+  @doc get_function_doc.(Toolshed.Tping, :tping, 2)
   defdelegate tping(address, options \\ []), to: Toolshed.Tping
-  defdelegate tree(), to: Toolshed.Tree
+
+  @doc get_function_doc.(Toolshed.Tree, :tree, 1)
+  defdelegate tree(opts \\ []), to: Toolshed.Tree
+
+  @doc get_function_doc.(Toolshed.Uptime, :uptime, 0)
   defdelegate uptime(), to: Toolshed.Uptime
+
+  @doc get_function_doc.(Toolshed.Weather, :weather, 0)
   defdelegate weather(), to: Toolshed.Weather
 
   # Nerves-specific functions
   if Code.ensure_loaded?(Nerves.Runtime) do
+    @doc get_function_doc.(Toolshed.Nerves, :dmesg, 0)
     defdelegate dmesg(), to: Toolshed.Nerves
+
+    @doc get_function_doc.(Toolshed.Nerves, :exit, 0)
     defdelegate exit(), to: Toolshed.Nerves
+
+    @doc get_function_doc.(Toolshed.Nerves, :fw_validate, 0)
     defdelegate fw_validate(), to: Toolshed.Nerves
+
+    @doc get_function_doc.(Toolshed.Nerves, :lsmod, 0)
     defdelegate lsmod(), to: Toolshed.Nerves
+
     @spec reboot!() :: no_return()
+    @doc get_function_doc.(Toolshed.Nerves, :reboot!, 0)
     defdelegate reboot!(), to: Toolshed.Nerves
+
+    @doc get_function_doc.(Toolshed.Nerves, :reboot, 0)
     defdelegate reboot(), to: Toolshed.Nerves
+
+    @doc get_function_doc.(Toolshed.Nerves, :uname, 0)
     defdelegate uname(), to: Toolshed.Nerves
   end
 end

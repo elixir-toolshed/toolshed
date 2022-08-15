@@ -27,7 +27,7 @@ defmodule Toolshed.Misc do
   This function returns the `value` passed in to allow easy piping.
 
   ## Examples
-  #
+
       iex> :sys.get_state(MyServer) |> save_term!("/root/my_server.term")
       # Reboot board
       iex> :sys.replace_state(&load_term!("/root/my_server.term"))
@@ -43,7 +43,7 @@ defmodule Toolshed.Misc do
   Load an Erlang term from the filesystem.
 
   ## Examples
-  #
+
       iex> save_term!({:some_interesting_atom, ["some", "list"]}, "/root/some_atom.term")
       {:some_interesting_atom, ["some", "list"]}
       iex> load_term!("/root/some_atom.term")
