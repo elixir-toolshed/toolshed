@@ -8,7 +8,7 @@ defmodule ToolshedTest do
     date: 0,
     grep: 2,
     hex: 1,
-    history: 0,
+    history: 1,
     hostname: 0,
     httpget: 2,
     ifconfig: 0,
@@ -23,9 +23,9 @@ defmodule ToolshedTest do
     qr_encode: 1,
     save_term!: 2,
     save_value: 3,
-    top: 0,
+    top: 1,
     tping: 2,
-    tree: 0,
+    tree: 1,
     uptime: 0,
     weather: 0
   ]

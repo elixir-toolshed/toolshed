@@ -118,7 +118,7 @@ defmodule Toolshed do
   defdelegate cat(path), to: Toolshed.Cat
   defdelegate date(), to: Toolshed.Date
   defdelegate grep(regex, path), to: Toolshed.Grep
-  defdelegate history(), to: Toolshed.History
+  defdelegate history(gl \\ Process.group_leader()), to: Toolshed.History
   defdelegate hostname(), to: Toolshed.Hostname
   defdelegate httpget(url, options \\ []), to: Toolshed.HTTP
   defdelegate ifconfig(), to: Toolshed.Ifconfig
@@ -133,9 +133,9 @@ defmodule Toolshed do
   defdelegate qr_encode(message), to: Toolshed.HTTP
   defdelegate save_term!(term, path), to: Toolshed.Misc
   defdelegate save_value(value, path, inspect_opts \\ []), to: Toolshed.Misc
-  defdelegate top(), to: Toolshed.Top
+  defdelegate top(opts \\ []), to: Toolshed.Top
   defdelegate tping(address, options \\ []), to: Toolshed.Tping
-  defdelegate tree(), to: Toolshed.Tree
+  defdelegate tree(path \\ "."), to: Toolshed.Tree
   defdelegate uptime(), to: Toolshed.Uptime
   defdelegate weather(), to: Toolshed.Weather
 
