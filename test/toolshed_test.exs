@@ -58,4 +58,21 @@ defmodule ToolshedTest do
              Toolshed.cmd("printf '\\x0'")
            end) == <<0>>
   end
+
+  test "h/1 macro prints doc" do
+    use Toolshed
+
+    assert capture_io(fn ->
+             h(weather)
+           end) == """
+           \e[0m\n\e[7m\e[33m                                 def weather()                                  \e[0m
+           \e[0m
+             \e[36m@spec\e[0m weather() :: :\"do not show this result in output\"
+
+           Display the local weather
+           \e[0m
+           See http://wttr.in/:help for more information.
+           \e[0m
+           """
+  end
 end
