@@ -47,7 +47,9 @@ defmodule Toolshed do
 
   defmacro __using__(_) do
     quote do
+      import IEx.Helpers, except: [h: 1]
       import Toolshed
+      require Toolshed
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
@@ -66,6 +68,20 @@ defmodule Toolshed do
         " imported.",
         help_text
       ])
+    end
+  end
+
+  defmacro h(term) do
+    quote do
+      case unquote(IEx.Introspection.decompose(term, __CALLER__)) do
+        {Toolshed, f} ->
+          f_module = f |> Atom.to_string() |> Macro.camelize()
+          delegate = {Module.concat(Toolshed, f_module), f}
+          IEx.Introspection.h(delegate)
+
+        other ->
+          IEx.Introspection.h(other)
+      end
     end
   end
 
