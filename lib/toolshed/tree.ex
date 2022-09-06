@@ -1,7 +1,5 @@
 defmodule Toolshed.Tree do
-  @moduledoc """
-  This module provides the `tree` command
-  """
+  @moduledoc ""
 
   @doc """
   Print out directories and files in tree form.

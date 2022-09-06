@@ -1,7 +1,5 @@
 defmodule Toolshed.Grep do
-  @moduledoc """
-  This module provides the `grep` command
-  """
+  @moduledoc ""
 
   @doc """
   Run a regular expression on a file and print the matching lines.

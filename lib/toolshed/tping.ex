@@ -1,7 +1,5 @@
 defmodule Toolshed.Tping do
-  @moduledoc """
-  This module provides the `tping` command
-  """
+  @moduledoc ""
 
   require Record
 
