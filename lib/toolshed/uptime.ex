@@ -1,7 +1,5 @@
 defmodule Toolshed.Uptime do
-  @moduledoc """
-  This module provides the `tree` command
-  """
+  @moduledoc ""
 
   @doc """
   Print out the current uptime.

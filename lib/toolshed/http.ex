@@ -1,7 +1,5 @@
 defmodule Toolshed.HTTP do
-  @moduledoc """
-  Helpers that make HTTP requests
-  """
+  @moduledoc ""
 
   import Toolshed.Utils, only: [check_app: 1]
 

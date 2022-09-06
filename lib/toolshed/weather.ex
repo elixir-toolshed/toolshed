@@ -1,7 +1,5 @@
 defmodule Toolshed.Weather do
-  @moduledoc """
-  This module provides the `weather` command
-  """
+  @moduledoc ""
 
   import Toolshed.Utils, only: [check_app: 1]
 

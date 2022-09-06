@@ -1,7 +1,5 @@
 defmodule Toolshed.Lsof do
-  @moduledoc """
-  List out open files by process
-  """
+  @moduledoc ""
 
   @doc """
   List out open files by process

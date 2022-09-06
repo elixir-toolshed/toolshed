@@ -1,7 +1,5 @@
 defmodule Toolshed.Ping do
-  @moduledoc """
-  This module provides the `ping` command
-  """
+  @moduledoc ""
 
   @doc """
   Ping an IP address using TCP

@@ -1,7 +1,5 @@
 defmodule Toolshed.Top do
-  @moduledoc """
-  Find the top processes
-  """
+  @moduledoc ""
 
   alias Toolshed.Top.Server
 
