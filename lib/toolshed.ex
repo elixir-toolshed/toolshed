@@ -71,17 +71,23 @@ defmodule Toolshed do
     end
   end
 
+  @doc false
   defmacro h(term) do
     quote do
-      case unquote(IEx.Introspection.decompose(term, __CALLER__)) do
-        {Toolshed, f} ->
-          f_module = f |> Atom.to_string() |> Macro.camelize()
-          delegate = {Module.concat(Toolshed, f_module), f}
-          IEx.Introspection.h(delegate)
+      target =
+        case unquote(IEx.Introspection.decompose(term, __CALLER__)) do
+          {Toolshed, :h} ->
+            {Toolshed, :h}
 
-        other ->
-          IEx.Introspection.h(other)
-      end
+          {Toolshed, f} ->
+            f_module = f |> Atom.to_string() |> Macro.camelize()
+            {Module.concat(Toolshed, f_module), f}
+
+          other ->
+            other
+        end
+
+      IEx.Introspection.h(target)
     end
   end
 
