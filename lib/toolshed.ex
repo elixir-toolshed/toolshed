@@ -133,7 +133,7 @@ defmodule Toolshed do
   defdelegate log_detach(), to: Toolshed.LogDetach
   defdelegate lsof(), to: Toolshed.Lsof
   defdelegate lsusb(), to: Toolshed.Lsusb
-  defdelegate multicast_addresses(), to: Toolshed.Multicast
+  defdelegate multicast_addresses(), to: Toolshed.MulticastAddresses
   defdelegate nslookup(name), to: Toolshed.Nslookup
   defdelegate ping(address, options \\ []), to: Toolshed.Ping
   defdelegate qr_encode(message), to: Toolshed.QrEncode
