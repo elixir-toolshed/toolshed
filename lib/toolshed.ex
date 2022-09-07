@@ -129,8 +129,8 @@ defmodule Toolshed do
   defdelegate httpget(url, options \\ []), to: Toolshed.Httpget
   defdelegate ifconfig(), to: Toolshed.Ifconfig
   defdelegate load_term(path), to: Toolshed.LoadTerm
-  defdelegate log_attach(options \\ []), to: Toolshed.Log
-  defdelegate log_detach(), to: Toolshed.Log
+  defdelegate log_attach(options \\ []), to: Toolshed.LogAttach
+  defdelegate log_detach(), to: Toolshed.LogDetach
   defdelegate lsof(), to: Toolshed.Lsof
   defdelegate lsusb(), to: Toolshed.Lsusb
   defdelegate multicast_addresses(), to: Toolshed.Multicast
