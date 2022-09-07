@@ -1,4 +1,4 @@
-defmodule Toolshed.MulticastTest do
+defmodule Toolshed.MulticastAddressesTest do
   use ExUnit.Case
 
   test "parses proc files" do
@@ -41,10 +41,10 @@ defmodule Toolshed.MulticastTest do
        inet6 ff01::1
     """
 
-    assert Toolshed.Multicast.process_proc(dev_mcast, igmp, igmp6) == result
+    assert Toolshed.MulticastAddresses.process_proc(dev_mcast, igmp, igmp6) == result
   end
 
   test "multicast_addresses/0 returns correct value" do
-    assert Toolshed.Multicast.multicast_addresses() == :ok
+    assert Toolshed.MulticastAddresses.multicast_addresses() == :ok
   end
 end
