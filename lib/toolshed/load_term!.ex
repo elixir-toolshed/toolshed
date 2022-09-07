@@ -1,4 +1,4 @@
-defmodule Toolshed.LoadTerm do
+defmodule :"Elixir.Toolshed.LoadTerm!" do
   @moduledoc ""
 
   @doc """
@@ -6,13 +6,13 @@ defmodule Toolshed.LoadTerm do
 
   ## Examples
 
-      iex> save_term({:some_interesting_atom, ["some", "list"]}, "/root/some_atom.term")
+      iex> save_term!({:some_interesting_atom, ["some", "list"]}, "/root/some_atom.term")
       {:some_interesting_atom, ["some", "list"]}
-      iex> load_term("/root/some_atom.term")
+      iex> load_term!("/root/some_atom.term")
       {:some_interesting_atom, ["some", "list"]}
   """
-  @spec load_term(Path.t()) :: term()
-  def load_term(path) do
+  @spec load_term!(Path.t()) :: term()
+  def load_term!(path) do
     path
     |> File.read!()
     |> :erlang.binary_to_term()

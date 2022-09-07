@@ -22,7 +22,7 @@ defmodule Toolshed do
     * `httpget/2`      - print or download the results of a HTTP GET request
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
-    * `load_term/1`   - load a term that was saved by `save_term/2`
+    * `load_term!/1`   - load a term that was saved by `save_term!/2`
     * `log_attach/1`   - send log messages to the current group leader
     * `log_detach/0`   - stop sending log messages to the current group leader
     * `lsof/0`         - print out open file handles by OS process
@@ -35,7 +35,7 @@ defmodule Toolshed do
     * `reboot/0`       - reboots gracefully (Nerves-only)
     * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/3`   - save a value to a file as Elixir terms (uses inspect)
-    * `save_term/2`   - save a term as a binary
+    * `save_term!/2`   - save a term as a binary
     * `top/2`          - list out the top processes
     * `tping/2`        - check if a host can be reached (like ping, but uses TCP)
     * `tree/1`         - pretty print a directory tree
@@ -128,7 +128,7 @@ defmodule Toolshed do
   defdelegate hostname(), to: Toolshed.Hostname
   defdelegate httpget(url, options \\ []), to: Toolshed.Httpget
   defdelegate ifconfig(), to: Toolshed.Ifconfig
-  defdelegate load_term(path), to: Toolshed.LoadTerm
+  defdelegate load_term!(path), to: :"Elixir.Toolshed.LoadTerm!"
   defdelegate log_attach(options \\ []), to: Toolshed.LogAttach
   defdelegate log_detach(), to: Toolshed.LogDetach
   defdelegate lsof(), to: Toolshed.Lsof
@@ -137,7 +137,7 @@ defmodule Toolshed do
   defdelegate nslookup(name), to: Toolshed.Nslookup
   defdelegate ping(address, options \\ []), to: Toolshed.Ping
   defdelegate qr_encode(message), to: Toolshed.QrEncode
-  defdelegate save_term(term, path), to: Toolshed.SaveTerm
+  defdelegate save_term!(term, path), to: :"Elixir.Toolshed.SaveTerm!"
   defdelegate save_value(value, path, inspect_opts \\ []), to: Toolshed.SaveValue
   defdelegate top(opts \\ []), to: Toolshed.Top
   defdelegate tping(address, options \\ []), to: Toolshed.Tping

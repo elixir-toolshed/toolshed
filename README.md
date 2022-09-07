@@ -16,7 +16,7 @@ Here's a sample list of helpers:
   CPU and memory
 * `exit` - exit an IEx session (useful over ssh)
 * `tree` - list directory contents as a tree
-* `save_term`/`load_term` - save and load Elixir terms to files
+* `save_term!`/`load_term!` - save and load Elixir terms to files
 * `ping` - check if a remote host is up (almost like ping, but uses TCP instead
   of ICMP to avoid needing additional permissions)
 * `ifconfig` - list network interfaces
