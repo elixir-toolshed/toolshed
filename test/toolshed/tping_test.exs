@@ -3,6 +3,11 @@ defmodule Toolshed.TpingTest do
   import ExUnit.CaptureIO
   import Toolshed.Tping
 
+  test "Toolshed.h/1 macro prints doc" do
+    use Toolshed
+    assert capture_io(fn -> h(tping) end) |> String.match?(~r/def tping/)
+  end
+
   test "can ping an IPv4 address" do
     assert capture_io(fn ->
              tping("127.0.0.1")
