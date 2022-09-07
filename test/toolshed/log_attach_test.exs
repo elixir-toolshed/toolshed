@@ -15,6 +15,12 @@ defmodule Toolshed.LogAttachTest do
     capture_io(fn -> capture_log(function) end)
   end
 
+  test "Toolshed.h/1 macro prints doc" do
+    use Toolshed
+    assert capture_io(fn -> h(log_attach) end) |> String.match?(~r/def log_attach/)
+    assert capture_io(fn -> h(log_detach) end) |> String.match?(~r/def log_detach/)
+  end
+
   test "logging events while attached and detached" do
     output =
       capture_io_and_not_log(fn ->

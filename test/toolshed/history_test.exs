@@ -3,6 +3,11 @@ defmodule Toolshed.HistoryTest do
   import ExUnit.CaptureIO
   alias Toolshed.History
 
+  test "Toolshed.h/1 macro prints doc" do
+    use Toolshed
+    assert capture_io(fn -> h(history) end) |> String.match?(~r/def history/)
+  end
+
   test "history can print out commandline history" do
     # Use this process as a fake group leader
     Process.put(

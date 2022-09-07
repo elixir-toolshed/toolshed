@@ -1,5 +1,13 @@
 defmodule Toolshed.MulticastAddressesTest do
   use ExUnit.Case
+  import ExUnit.CaptureIO
+
+  test "Toolshed.h/1 macro prints doc" do
+    use Toolshed
+
+    assert capture_io(fn -> h(multicast_addresses) end)
+           |> String.match?(~r/def multicast_addresses/)
+  end
 
   test "parses proc files" do
     # This formatting changes tabs and spaces. Linux does use tabs when
