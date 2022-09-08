@@ -13,9 +13,6 @@ defmodule Toolshed do
     * `cat/1`          - print out a file
     * `cmd/1`          - run a system command and print the output
     * `date/0`         - print out the current date and time
-    * `dmesg/0`        - print kernel messages (Nerves-only)
-    * `exit/0`         - exit out of an IEx session
-    * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `grep/2`         - print out lines that match a regular expression
     * `hex/1`          - print a number as hex
     * `history/0`      - print out the IEx shell history
@@ -26,21 +23,17 @@ defmodule Toolshed do
     * `log_attach/1`   - send log messages to the current group leader
     * `log_detach/0`   - stop sending log messages to the current group leader
     * `lsof/0`         - print out open file handles by OS process
-    * `lsmod/0`        - print out what kernel modules have been loaded (Nerves-only)
     * `lsusb/0`        - print info on USB devices
     * `multicast_addresses/0` - print out all multicast addresses
     * `nslookup/1`     - query DNS to find an IP address
     * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
     * `qr_encode/1`    - create a QR code (requires networking)
-    * `reboot/0`       - reboots gracefully (Nerves-only)
-    * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/3`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
     * `top/2`          - list out the top processes
     * `tping/2`        - check if a host can be reached (like ping, but uses TCP)
     * `tree/1`         - pretty print a directory tree
     * `uptime/0`       - print out the current Erlang VM uptime
-    * `uname/0`        - print information about the running system (Nerves-only)
     * `weather/0`      - get the local weather (requires networking)
 
   """
@@ -68,6 +61,25 @@ defmodule Toolshed do
         " imported.",
         help_text
       ])
+
+      if unquote(Code.ensure_loaded?(Nerves.Runtime) and not Code.ensure_loaded?(Toolshed.Nerves)) do
+        IO.warn("""
+        Nerves-specific helpers have been removed from :toolshed.
+        Add :toolshed_nerves to your Nerves project's dependencies.
+        """)
+      end
+
+      if unquote(Code.ensure_loaded?(Toolshed.Nerves)) do
+        IO.warn("""
+        Using Toolshed in a Nerves project is deprecated, instead of:
+
+            use Toolshed
+
+        do:
+
+            use Toolshed.Nerves
+        """)
+      end
     end
   end
 
@@ -144,16 +156,4 @@ defmodule Toolshed do
   defdelegate tree(path \\ "."), to: Toolshed.Tree
   defdelegate uptime(), to: Toolshed.Uptime
   defdelegate weather(), to: Toolshed.Weather
-
-  # Nerves-specific functions
-  if Code.ensure_loaded?(Nerves.Runtime) do
-    defdelegate dmesg(), to: Toolshed.Nerves
-    defdelegate exit(), to: Toolshed.Nerves
-    defdelegate fw_validate(), to: Toolshed.Nerves
-    defdelegate lsmod(), to: Toolshed.Nerves
-    @spec reboot!() :: no_return()
-    defdelegate reboot!(), to: Toolshed.Nerves
-    defdelegate reboot(), to: Toolshed.Nerves
-    defdelegate uname(), to: Toolshed.Nerves
-  end
 end

@@ -31,7 +31,6 @@ defmodule Toolshed.MixProject do
 
   defp deps do
     [
-      {:nerves_runtime, "~> 0.8", optional: true},
       {:credo, "~> 1.2", only: :test, runtime: false},
       {:ex_doc, "~> 0.19", only: :docs, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false}
@@ -52,7 +51,7 @@ defmodule Toolshed.MixProject do
   defp dialyzer() do
     [
       flags: [:missing_return, :extra_return, :unmatched_returns, :error_handling, :underspecs],
-      plt_add_apps: [:iex, :nerves_runtime, :inets]
+      plt_add_apps: [:iex, :inets]
     ]
   end
 

@@ -2,7 +2,7 @@ defmodule ToolshedTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 
-  @generic_functions [
+  @toolshed_commands [
     cat: 1,
     cmd: 1,
     date: 0,
@@ -30,21 +30,10 @@ defmodule ToolshedTest do
     weather: 0
   ]
 
-  @nerves_specific_functions [
-    dmesg: 0,
-    exit: 0,
-    fw_validate: 0,
-    lsmod: 0,
-    reboot: 0,
-    reboot!: 0,
-    uname: 0
-  ]
-
   test "public functions" do
-    expected = @generic_functions ++ @nerves_specific_functions
     actual = Toolshed.__info__(:functions)
 
-    for f <- expected, do: assert(f in actual)
+    for f <- @toolshed_commands, do: assert(f in actual)
   end
 
   test "cmd/1 normal printable chars" do
