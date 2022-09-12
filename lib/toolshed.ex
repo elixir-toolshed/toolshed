@@ -91,10 +91,19 @@ defmodule Toolshed do
           {Toolshed, :h} ->
             {Toolshed, :h}
 
-          {Toolshed, f} ->
-            f_module = f |> Atom.to_string() |> Macro.camelize()
-            {Module.concat(Toolshed, f_module), f}
+          # function doc
+          {m, f} ->
+            case to_string(m) do
+              # Toolshed or Toolshed* modules
+              "Elixir.Toolshed" <> _ ->
+                f_module = f |> Atom.to_string() |> Macro.camelize()
+                {Module.concat(m, f_module), f}
 
+              _other ->
+                {m, f}
+            end
+
+          # module doc
           other ->
             other
         end
