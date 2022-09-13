@@ -38,40 +38,21 @@ defmodule Toolshed do
 
   """
 
-  defmacro __using__(_) do
+  defmacro __using__(opts \\ []) do
     quote do
       import IEx.Helpers, except: [h: 1]
       import Toolshed
       require Toolshed
 
-      # If module docs have been stripped, then don't tell the user that they can
-      # see them.
-      help_text =
-        case Code.fetch_docs(Toolshed) do
-          {:error, _anything} -> ""
-          _ -> " Run h(Toolshed) for more info."
-        end
+      nerves_loaded = unquote(Code.ensure_loaded?(Nerves.Runtime))
+      toolshed_nerves_loaded = unquote(Code.ensure_loaded?(Toolshed.Nerves))
 
-      Toolshed.Autocomplete.set_expand_fun()
-
-      IO.puts([
-        IO.ANSI.color(:rand.uniform(231) + 1),
-        "Toolshed",
-        IO.ANSI.reset(),
-        " imported.",
-        help_text
-      ])
-
-      if unquote(Code.ensure_loaded?(Nerves.Runtime) and not Code.ensure_loaded?(Toolshed.Nerves)) do
+      if nerves_loaded and not toolshed_nerves_loaded do
         IO.warn("""
         Nerves-specific helpers have been removed from :toolshed.
         Add :toolshed_nerves to your Nerves project's dependencies.
-        """)
-      end
 
-      if unquote(Code.ensure_loaded?(Toolshed.Nerves)) do
-        IO.warn("""
-        Using Toolshed in a Nerves project is deprecated, instead of:
+        In your rootfs_overlays/etc/iex.exs, instead of:
 
             use Toolshed
 
@@ -80,6 +61,28 @@ defmodule Toolshed do
             use Toolshed.Nerves
         """)
       end
+
+      unless unquote(opts[:quiet]) do
+        # If module docs have been stripped, then don't tell the user that they can
+        # see them.
+        help_text =
+          case Code.fetch_docs(Toolshed) do
+            {:error, _anything} -> ""
+            _ -> " Run h(Toolshed) for more info."
+          end
+
+        Toolshed.Autocomplete.set_expand_fun()
+
+        IO.puts([
+          IO.ANSI.color(:rand.uniform(231) + 1),
+          "Toolshed",
+          IO.ANSI.reset(),
+          " imported.",
+          help_text
+        ])
+      end
+
+      :ok
     end
   end
 
