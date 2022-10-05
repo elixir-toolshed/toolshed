@@ -58,4 +58,13 @@ defmodule ToolshedTest do
              Toolshed.cmd("printf '\\x0'")
            end) == <<0>>
   end
+
+  test "__using__ prints help text by default" do
+    assert capture_io(fn -> use Toolshed end) =~
+             "Toolshed\e[0m imported. Run h(Toolshed) for more info"
+  end
+
+  test "__using__ with quiet option prints nothing" do
+    assert capture_io(fn -> use Toolshed, quiet: true end) == ""
+  end
 end

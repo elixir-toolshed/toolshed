@@ -45,29 +45,33 @@ defmodule Toolshed do
 
   """
 
-  defmacro __using__(_) do
+  defmacro __using__(opts \\ []) do
     quote do
       import IEx.Helpers, except: [h: 1]
       import Toolshed
       require Toolshed
 
-      # If module docs have been stripped, then don't tell the user that they can
-      # see them.
-      help_text =
-        case Code.fetch_docs(Toolshed) do
-          {:error, _anything} -> ""
-          _ -> " Run h(Toolshed) for more info."
-        end
+      unless unquote(opts[:quiet]) do
+        # If module docs have been stripped, then don't tell the user that they can
+        # see them.
+        help_text =
+          case Code.fetch_docs(Toolshed) do
+            {:error, _anything} -> ""
+            _ -> " Run h(Toolshed) for more info."
+          end
 
-      Toolshed.Autocomplete.set_expand_fun()
+        Toolshed.Autocomplete.set_expand_fun()
 
-      IO.puts([
-        IO.ANSI.color(:rand.uniform(231) + 1),
-        "Toolshed",
-        IO.ANSI.reset(),
-        " imported.",
-        help_text
-      ])
+        IO.puts([
+          IO.ANSI.color(:rand.uniform(231) + 1),
+          "Toolshed",
+          IO.ANSI.reset(),
+          " imported.",
+          help_text
+        ])
+      end
+
+      :ok
     end
   end
 
