@@ -55,7 +55,7 @@ defmodule Toolshed.Top.Processes do
       {m, f, a} ->
         module = m |> to_string() |> friendly_module_name()
 
-        IO.iodata_to_binary([
+        IO.chardata_to_string([
           :erlang.pid_to_list(pid),
           "=",
           module,
@@ -81,7 +81,7 @@ defmodule Toolshed.Top.Processes do
   end
 
   defp short_pid_to_string(pid) do
-    IO.iodata_to_binary(:erlang.pid_to_list(pid))
+    IO.chardata_to_string(:erlang.pid_to_list(pid))
   end
 
   defp add_deltas(info, []) do

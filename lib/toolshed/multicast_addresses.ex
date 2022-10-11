@@ -46,7 +46,7 @@ defmodule Toolshed.MulticastAddresses do
     if_keys = Map.keys(if_map) |> Enum.sort()
 
     Enum.map(if_keys, fn if_key -> format(if_key, if_map[if_key]) end)
-    |> IO.iodata_to_binary()
+    |> IO.chardata_to_string()
   end
 
   defp format({index, ifname}, addresses) do
