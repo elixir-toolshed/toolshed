@@ -18,7 +18,7 @@ defmodule Toolshed.Top do
     `:mailbox`, `:delta_mailbox`, `:total_heap_size`, `:delta_total_heap_size`, `:heap_size`,
     `:delta_heap_size`, `:stack_size`, `:delta_stack_size`)
   """
-  @spec top(keyword()) :: :ok
+  @spec top(keyword()) :: :"do not show this result in output"
   def top(opts \\ []) do
     options = %{
       order: Keyword.get(opts, :order, :delta_reductions),
@@ -31,6 +31,8 @@ defmodule Toolshed.Top do
     {:ok, pid} = Server.start_link(options)
     _ = IO.gets("")
     Server.stop(pid)
+
+    IEx.dont_display_result()
   end
 
   defp rows() do
