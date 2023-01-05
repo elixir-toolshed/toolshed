@@ -27,16 +27,18 @@ defmodule Toolshed.Weather do
         body |> :binary.list_to_bin()
 
       {:error, reason} ->
-        """
-        Something went wrong when making an HTTP request.
-        #{inspect(reason)}
-        """
+        error_message(reason)
     end
+  rescue
+    e in MatchError -> error_message(e)
   catch
-    :exit, reason ->
-      """
-      Something went wrong when making an HTTP request.
-      #{inspect(reason)}
-      """
+    :exit, reason -> error_message(reason)
+  end
+
+  defp error_message(reason) do
+    """
+    Something went wrong when making an HTTP request.
+    #{inspect(reason)}
+    """
   end
 end
