@@ -1,6 +1,4 @@
-defmodule Toolshed.Weather do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Weather do
   import Toolshed.Utils, only: [check_app: 1]
 
   @weather_url 'https://v2.wttr.in/?An0'
@@ -20,8 +18,7 @@ defmodule Toolshed.Weather do
   end
 
   @doc false
-  @spec get_weather() :: binary
-  def get_weather() do
+  defp get_weather() do
     case :httpc.request(:get, {@weather_url, []}, [ssl: [verify: :verify_none]], []) do
       {:ok, {_status, _headers, body}} ->
         body |> :binary.list_to_bin()

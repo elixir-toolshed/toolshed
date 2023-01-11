@@ -1,6 +1,4 @@
-defmodule Toolshed.SaveValue do
-  @moduledoc ""
-
+defmodule Toolshed.Core.SaveValue do
   @doc """
   Save a value to a file as Elixir terms
 

@@ -1,6 +1,4 @@
-defmodule Toolshed.Grep do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Grep do
   @doc """
   Run a regular expression on a file and print the matching lines.
 

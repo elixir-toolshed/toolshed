@@ -1,6 +1,4 @@
-defmodule :"Elixir.Toolshed.SaveTerm!" do
-  @moduledoc ""
-
+defmodule Toolshed.Core.SaveTerm do
   @doc """
   Save an Erlang term to the filesystem for easy loading later
 

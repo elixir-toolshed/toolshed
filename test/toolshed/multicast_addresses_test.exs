@@ -1,13 +1,5 @@
 defmodule Toolshed.MulticastAddressesTest do
   use ExUnit.Case
-  import ExUnit.CaptureIO
-
-  test "Toolshed.h/1 macro prints doc" do
-    use Toolshed
-
-    assert capture_io(fn -> h(multicast_addresses) end)
-           |> String.match?(~r/def multicast_addresses/)
-  end
 
   test "parses proc files" do
     # This formatting changes tabs and spaces. Linux does use tabs when
@@ -49,10 +41,10 @@ defmodule Toolshed.MulticastAddressesTest do
        inet6 ff01::1
     """
 
-    assert Toolshed.MulticastAddresses.process_proc(dev_mcast, igmp, igmp6) == result
+    assert Toolshed.Impl.process_proc(dev_mcast, igmp, igmp6) == result
   end
 
   test "multicast_addresses/0 returns correct value" do
-    assert Toolshed.MulticastAddresses.multicast_addresses() == :ok
+    assert Toolshed.multicast_addresses() == :ok
   end
 end

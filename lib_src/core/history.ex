@@ -1,6 +1,4 @@
-defmodule Toolshed.History do
-  @moduledoc ""
-
+defmodule Toolshed.Core.History do
   @doc """
   Print out the IEx shell history
 

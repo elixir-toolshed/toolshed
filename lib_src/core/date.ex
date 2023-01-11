@@ -1,6 +1,4 @@
-defmodule Toolshed.Date do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Date do
   @doc """
   Return the date and time in UTC
   """

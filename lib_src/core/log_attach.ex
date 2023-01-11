@@ -1,6 +1,4 @@
-defmodule Toolshed.LogAttach do
-  @moduledoc ""
-
+defmodule Toolshed.Core.LogAttach do
   # Utilities for attaching and detaching to the log
   #
   # These utilities configure Elixir's console backend to attach
@@ -8,6 +6,24 @@ defmodule Toolshed.LogAttach do
   # and play well with the IEx prompt.
 
   @process_name Toolshed.Log
+
+  defmodule Watcher do
+    @moduledoc false
+
+    use GenServer
+
+    @impl GenServer
+    def init({watch_pid, backend}) do
+      Process.monitor(watch_pid)
+      {:ok, backend}
+    end
+
+    @impl GenServer
+    def handle_info({:DOWN, _ref, :process, _pid, _reason}, backend) do
+      _ = Logger.remove_backend(backend)
+      {:stop, :normal, backend}
+    end
+  end
 
   @doc """
   Attach the current session to the Elixir logger
@@ -34,7 +50,7 @@ defmodule Toolshed.LogAttach do
         all_options = Keyword.put(options, :device, Process.group_leader())
         backend = {Logger.Backends.Console, all_options}
 
-        {:ok, pid} = GenServer.start(Toolshed.Log.Watcher, {Process.group_leader(), backend})
+        {:ok, pid} = GenServer.start(Watcher, {Process.group_leader(), backend})
 
         Process.put(@process_name, {pid, backend})
 

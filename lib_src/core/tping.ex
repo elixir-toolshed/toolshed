@@ -1,11 +1,4 @@
-defmodule Toolshed.Tping do
-  @moduledoc ""
-
-  require Record
-
-  @doc false
-  Record.defrecordp(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
-
+defmodule Toolshed.Core.Tping do
   @doc """
   Check if a computer is up using TCP.
 

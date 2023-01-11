@@ -44,12 +44,13 @@ defmodule Toolshed do
     * `weather/0`      - get the local weather (requires networking)
 
   """
+  require Toolshed.OneBeam, as: OneBeam
+
+  OneBeam.include_all()
 
   defmacro __using__(_) do
     quote do
-      import IEx.Helpers, except: [h: 1]
       import Toolshed
-      require Toolshed
 
       # If module docs have been stripped, then don't tell the user that they can
       # see them.
@@ -66,26 +67,6 @@ defmodule Toolshed do
         " imported.",
         help_text
       ])
-    end
-  end
-
-  @doc false
-  defmacro h(term) do
-    quote do
-      target =
-        case unquote(IEx.Introspection.decompose(term, __CALLER__)) do
-          {Toolshed, :h} ->
-            {Toolshed, :h}
-
-          {Toolshed, f} ->
-            f_module = f |> Atom.to_string() |> Macro.camelize()
-            {Module.concat(Toolshed, f_module), f}
-
-          other ->
-            other
-        end
-
-      IEx.Introspection.h(target)
     end
   end
 
@@ -119,39 +100,13 @@ defmodule Toolshed do
     inspect(value, base: :hex)
   end
 
-  defdelegate cat(path), to: Toolshed.Cat
-  defdelegate date(), to: Toolshed.Date
-  defdelegate grep(regex, path), to: Toolshed.Grep
-  defdelegate history(gl \\ Process.group_leader()), to: Toolshed.History
-  defdelegate hostname(), to: Toolshed.Hostname
-  defdelegate httpget(url, options \\ []), to: Toolshed.Httpget
-  defdelegate ifconfig(), to: Toolshed.Ifconfig
-  defdelegate load_term!(path), to: :"Elixir.Toolshed.LoadTerm!"
-  defdelegate log_attach(options \\ []), to: Toolshed.LogAttach
-  defdelegate log_detach(), to: Toolshed.LogDetach
-  defdelegate lsof(), to: Toolshed.Lsof
-  defdelegate lsusb(), to: Toolshed.Lsusb
-  defdelegate multicast_addresses(), to: Toolshed.MulticastAddresses
-  defdelegate nslookup(name), to: Toolshed.Nslookup
-  defdelegate ping(address, options \\ []), to: Toolshed.Ping
-  defdelegate qr_encode(message), to: Toolshed.QrEncode
-  defdelegate save_term!(term, path), to: :"Elixir.Toolshed.SaveTerm!"
-  defdelegate save_value(value, path, inspect_opts \\ []), to: Toolshed.SaveValue
-  defdelegate top(opts \\ []), to: Toolshed.Top
-  defdelegate tping(address, options \\ []), to: Toolshed.Tping
-  defdelegate tree(path \\ "."), to: Toolshed.Tree
-  defdelegate uptime(), to: Toolshed.Uptime
-  defdelegate weather(), to: Toolshed.Weather
+  # Recompilation logic
+  paths = Path.wildcard("lib_src/**/*.ex")
+  @paths_hash paths |> Enum.map(&File.read!/1) |> :erlang.md5()
 
-  # Nerves-specific functions
-  if Code.ensure_loaded?(Nerves.Runtime) do
-    defdelegate dmesg(), to: Toolshed.Nerves
-    defdelegate exit(), to: Toolshed.Nerves
-    defdelegate fw_validate(), to: Toolshed.Nerves
-    defdelegate lsmod(), to: Toolshed.Nerves
-    @spec reboot!() :: no_return()
-    defdelegate reboot!(), to: Toolshed.Nerves
-    defdelegate reboot(), to: Toolshed.Nerves
-    defdelegate uname(), to: Toolshed.Nerves
+  @doc false
+  @spec __mix_recompile__?() :: boolean()
+  def __mix_recompile__?() do
+    Path.wildcard("lib_src/**/*.ex") |> Enum.map(&File.read!/1) |> :erlang.md5() != @paths_hash
   end
 end

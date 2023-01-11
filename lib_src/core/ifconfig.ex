@@ -1,6 +1,4 @@
-defmodule Toolshed.Ifconfig do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Ifconfig do
   @doc """
   Print out the network interfaces and their addresses.
   """

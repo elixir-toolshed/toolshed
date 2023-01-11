@@ -1,6 +1,4 @@
-defmodule Toolshed.Uptime do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Uptime do
   @doc """
   Print out the current uptime.
   """

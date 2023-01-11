@@ -1,6 +1,4 @@
-defmodule Toolshed.Cat do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Cat do
   @doc """
   Reads and prints out the contents of a file
   """

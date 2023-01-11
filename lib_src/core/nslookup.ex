@@ -1,11 +1,4 @@
-defmodule Toolshed.Nslookup do
-  @moduledoc ""
-
-  require Record
-
-  @doc false
-  Record.defrecordp(:hostent, Record.extract(:hostent, from_lib: "kernel/include/inet.hrl"))
-
+defmodule Toolshed.Core.Nslookup do
   @doc """
   Lookup the specified hostname in the DNS and print out the addresses.
 

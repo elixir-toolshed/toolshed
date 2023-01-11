@@ -31,7 +31,7 @@ defmodule Toolshed.MixProject do
 
   defp deps do
     [
-      {:nerves_runtime, "~> 0.8", optional: true},
+      {:nerves_runtime, "~> 0.8", optional: true, only: [:dev, :test, :prod, :docs]},
       {:credo, "~> 1.2", only: :test, runtime: false},
       {:ex_doc, "~> 0.19", only: :docs, runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false}
@@ -59,9 +59,10 @@ defmodule Toolshed.MixProject do
   defp docs do
     [
       extras: ["README.md", "CHANGELOG.md"],
-      main: "readme",
-      source_ref: "v#{@version}",
-      source_url: @source_url
+      main: "readme"
+      # Don't include source refs since lines numbers don't match up to files
+      # source_ref: "v#{@version}",
+      # source_url: @source_url
     ]
   end
 end

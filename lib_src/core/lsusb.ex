@@ -1,6 +1,4 @@
-defmodule Toolshed.Lsusb do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Lsusb do
   @doc """
   Print out information on all of the connected USB devices.
   """

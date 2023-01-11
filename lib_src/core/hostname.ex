@@ -1,6 +1,4 @@
-defmodule Toolshed.Hostname do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Hostname do
   require Record
 
   @doc """

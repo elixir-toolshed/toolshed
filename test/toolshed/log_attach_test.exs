@@ -4,9 +4,6 @@ defmodule Toolshed.LogAttachTest do
   import ExUnit.CaptureIO
   import ExUnit.CaptureLog
 
-  import Toolshed.LogAttach
-  import Toolshed.LogDetach
-
   require Logger
 
   @default_options [format: "unittest[$level] $message\n", colors: [enabled: false]]
@@ -15,18 +12,12 @@ defmodule Toolshed.LogAttachTest do
     capture_io(fn -> capture_log(function) end)
   end
 
-  test "Toolshed.h/1 macro prints doc" do
-    use Toolshed
-    assert capture_io(fn -> h(log_attach) end) |> String.match?(~r/def log_attach/)
-    assert capture_io(fn -> h(log_detach) end) |> String.match?(~r/def log_detach/)
-  end
-
   test "logging events while attached and detached" do
     output =
       capture_io_and_not_log(fn ->
-        log_attach(@default_options)
+        Toolshed.log_attach(@default_options)
         Logger.info("hello1")
-        log_detach()
+        Toolshed.log_detach()
         Logger.error("shouldn't log")
       end)
 
@@ -34,19 +25,19 @@ defmodule Toolshed.LogAttachTest do
   end
 
   test "detaching returns an error when not attached" do
-    assert {:error, :not_attached} = log_detach()
+    assert {:error, :not_attached} = Toolshed.log_detach()
   end
 
   test "attaching twice returns an error" do
-    assert {:ok, _pid} = log_attach()
-    assert {:error, :detach_first} == log_attach()
-    assert :ok == log_detach()
+    assert {:ok, _pid} = Toolshed.log_attach()
+    assert {:error, :detach_first} == Toolshed.log_attach()
+    assert :ok == Toolshed.log_detach()
   end
 
   test "filtering by log level" do
     output =
       capture_io_and_not_log(fn ->
-        {:ok, _pid} = log_attach(@default_options ++ [level: :error])
+        {:ok, _pid} = Toolshed.log_attach(@default_options ++ [level: :error])
         Logger.error("hello1")
         Logger.info("shouldn't log")
       end)
@@ -69,7 +60,7 @@ defmodule Toolshed.LogAttachTest do
     original_count = backend_count()
 
     # Attach -> this should cause there to be a new backend
-    {:ok, _pid} = log_attach(@default_options)
+    {:ok, _pid} = Toolshed.log_attach(@default_options)
     assert backend_count() == original_count + 1
 
     # Set the group leader back and exit the new one we made

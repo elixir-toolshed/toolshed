@@ -1,6 +1,4 @@
-defmodule Toolshed.Httpget do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Httpget do
   import Toolshed.Utils, only: [check_app: 1]
 
   @doc """

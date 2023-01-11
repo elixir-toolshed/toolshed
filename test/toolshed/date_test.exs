@@ -1,18 +1,12 @@
 defmodule Toolshed.DateTest do
   use ExUnit.Case
-  import ExUnit.CaptureIO
-
-  test "Toolshed.h/1 macro prints doc" do
-    use Toolshed
-    assert capture_io(fn -> h(date) end) |> String.match?(~r/def date/)
-  end
 
   test "date/0 returns current date in unix format" do
     # There's a race condition on the time that's returned between the
     # two date functions if we catch the seconds changing.
 
     expected1 = unix_date_output()
-    actual = Toolshed.Date.date()
+    actual = Toolshed.date()
     expected2 = unix_date_output()
 
     assert actual == expected1 or actual == expected2

@@ -1,6 +1,4 @@
-defmodule Toolshed.LogDetach do
-  @moduledoc ""
-
+defmodule Toolshed.Core.LogDetach do
   @process_name Toolshed.Log
 
   @doc """

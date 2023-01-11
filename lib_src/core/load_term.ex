@@ -1,6 +1,4 @@
-defmodule :"Elixir.Toolshed.LoadTerm!" do
-  @moduledoc ""
-
+defmodule Toolshed.Core.LoadTerm do
   @doc """
   Load an Erlang term from the filesystem.
 

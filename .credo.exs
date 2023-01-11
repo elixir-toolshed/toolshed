@@ -3,6 +3,9 @@
   configs: [
     %{
       name: "default",
+      files: %{
+        included: ["lib/", "lib_src/"]
+      },
       strict: true,
       checks: [
         {Credo.Check.Refactor.MapInto, false},

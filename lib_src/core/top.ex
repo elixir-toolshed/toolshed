@@ -1,6 +1,4 @@
-defmodule Toolshed.Top do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Top do
   alias Toolshed.Top.Server
 
   @default_rows 23

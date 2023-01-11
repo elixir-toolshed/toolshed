@@ -1,6 +1,4 @@
-defmodule Toolshed.Tree do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Tree do
   @doc """
   Print out directories and files in tree form.
   """

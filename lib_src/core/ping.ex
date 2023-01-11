@@ -1,6 +1,4 @@
-defmodule Toolshed.Ping do
-  @moduledoc ""
-
+defmodule Toolshed.Core.Ping do
   @doc """
   Ping an IP address using TCP
 
