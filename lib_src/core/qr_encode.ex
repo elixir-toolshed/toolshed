@@ -1,6 +1,4 @@
 defmodule Toolshed.Core.QrEncode do
-  import Toolshed.Utils, only: [check_app: 1]
-
   @doc """
   Generate an ASCII art QR code
 

@@ -1,6 +1,4 @@
 defmodule Toolshed.Core.Httpget do
-  import Toolshed.Utils, only: [check_app: 1]
-
   @doc """
   Perform a HTTP GET request for the specified URL
 
