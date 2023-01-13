@@ -70,36 +70,6 @@ defmodule Toolshed do
     end
   end
 
-  @doc """
-  Run a command and return the exit code. This function is intended to be run
-  interactively.
-  """
-  @spec cmd(String.t() | charlist()) :: integer()
-  def cmd(str) when is_binary(str) do
-    {_collectable, exit_code} =
-      System.cmd("sh", ["-c", str], stderr_to_stdout: true, into: IO.binstream(:stdio, :line))
-
-    exit_code
-  end
-
-  def cmd(str) when is_list(str) do
-    str |> to_string |> cmd
-  end
-
-  @doc """
-  Inspect a value with all integers printed out in hex. This is useful for
-  one-off hex conversions. If you're doing a lot of work that requires
-  hexadecimal output, you should consider running:
-
-  `IEx.configure(inspect: [base: :hex])`
-
-  The drawback of doing the above is that strings print out as hex binaries.
-  """
-  @spec hex(integer()) :: String.t()
-  def hex(value) do
-    inspect(value, base: :hex)
-  end
-
   # Recompilation logic
   paths = Path.wildcard("lib_src/**/*.ex")
   @paths_hash paths |> Enum.map(&File.read!/1) |> :erlang.md5()
