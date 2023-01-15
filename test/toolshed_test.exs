@@ -13,6 +13,8 @@ defmodule ToolshedTest do
     hostname: 0,
     httpget: 1,
     httpget: 2,
+    icmp_ping: 1,
+    icmp_ping: 2,
     ifconfig: 0,
     inspect_bits: 1,
     load_term!: 1,

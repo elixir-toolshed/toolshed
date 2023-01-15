@@ -31,11 +31,7 @@ defmodule Toolshed.Core.Ping do
   """
   @spec ping(String.t(), keyword()) :: :"do not show this result in output"
   def ping(address, options \\ []) do
-    IO.puts("Press enter to stop")
-
-    pid = spawn(fn -> repeat_ping(address, options) end)
-    _ = IO.gets("")
-    Process.exit(pid, :kill)
+    run_or_enter(fn -> repeat_ping(address, options) end)
 
     IEx.dont_display_result()
   end

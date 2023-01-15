@@ -44,7 +44,7 @@ defmodule Toolshed.Core.Tping do
       _ ->
         # HACK: Give an IP address that will give an address error so
         # that if the interface appears that it will work.
-        [{:ip, {1, 2, 3, 4}}]
+        [{:ip, {192, 0, 2, 1}}]
     end
   end
 
@@ -65,24 +65,6 @@ defmodule Toolshed.Core.Tping do
 
   defp pretty_ip_port({_, _, _, _} = ip, port), do: "#{:inet.ntoa(ip)}:#{port}"
   defp pretty_ip_port(ip, port), do: "[#{:inet.ntoa(ip)}]:#{port}"
-
-  defp resolve_addr(address) do
-    case gethostbyname(address, :inet) || gethostbyname(address, :inet6) do
-      nil -> {:error, "Error resolving #{address}"}
-      ip -> {:ok, ip}
-    end
-  end
-
-  defp gethostbyname(address, family) do
-    case :inet.gethostbyname(to_charlist(address), family) do
-      {:ok, hostent} ->
-        hostent(h_addr_list: ip_list) = hostent
-        hd(ip_list)
-
-      _ ->
-        nil
-    end
-  end
 
   defp try_connect(address, port, connect_options) do
     start = System.monotonic_time(:microsecond)

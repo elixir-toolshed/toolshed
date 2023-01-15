@@ -14,21 +14,20 @@ defmodule Toolshed.Core.Nslookup do
     IO.puts("Name:     #{name}")
     name_charlist = to_charlist(name)
 
-    case :inet.gethostbyname(name_charlist, :inet) do
-      {:ok, v4} -> print_addresses(v4)
-      {:error, :nxdomain} -> IO.puts("IPv4 lookup failed")
+    case get_hosts_by_name(name_charlist, :inet) do
+      [] -> IO.puts("IPv4 lookup failed")
+      v4 -> print_addresses(v4)
     end
 
-    case :inet.gethostbyname(name_charlist, :inet6) do
-      {:ok, v6} -> print_addresses(v6)
-      {:error, :nxdomain} -> IO.puts("IPv6 lookup failed")
+    case get_hosts_by_name(name_charlist, :inet6) do
+      [] -> IO.puts("IPv6 lookup failed")
+      v6 -> print_addresses(v6)
     end
 
     IEx.dont_display_result()
   end
 
-  defp print_addresses(hostent) do
-    hostent(h_addr_list: ip_list) = hostent
-    Enum.each(ip_list, &IO.puts("Address:  #{:inet.ntoa(&1)}"))
+  defp print_addresses(addresses) do
+    Enum.each(addresses, &IO.puts("Address:  #{:inet.ntoa(&1)}"))
   end
 end
