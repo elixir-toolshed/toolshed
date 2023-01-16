@@ -43,6 +43,7 @@ defmodule ToolshedTest do
     exit: 0,
     fw_validate: 0,
     lsmod: 0,
+    poweroff: 0,
     reboot: 0,
     reboot!: 0,
     uname: 0
