@@ -31,14 +31,14 @@ defmodule Toolshed do
     * `lsusb/0`        - print info on USB devices
     * `multicast_addresses/0` - print out all multicast addresses
     * `nslookup/1`     - query DNS to find an IP address
-    * `ping/2`         - ping a remote host (but use TCP instead of ICMP)
+    * `ping/2`         - ping a remote host
     * `qr_encode/1`    - create a QR code (requires networking)
     * `reboot/0`       - reboots gracefully (Nerves-only)
     * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/3`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
     * `top/2`          - list out the top processes
-    * `tping/2`        - check if a host can be reached (like ping, but uses TCP)
+    * `tcping/2`       - check if a host can be reached (like ping, but uses TCP)
     * `tree/1`         - pretty print a directory tree
     * `uptime/0`       - print out the current Erlang VM uptime
     * `uname/0`        - print information about the running system (Nerves-only)

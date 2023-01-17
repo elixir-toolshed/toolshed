@@ -28,6 +28,31 @@ defmodule Toolshed.Core.Common do
     get_hosts_by_name(address, family) |> List.first()
   end
 
+  defp ifname_to_ip(nil, _family), do: :any
+
+  defp ifname_to_ip(ifname, family) do
+    ifname_cl = to_charlist(ifname)
+
+    with {:ok, ifaddrs} <- :inet.getifaddrs(),
+         {_, params} <- Enum.find(ifaddrs, fn {k, _v} -> k == ifname_cl end),
+         [addr | _] <- find_addr_by_family(params, family) do
+      addr
+    else
+      _ ->
+        # HACK: Give an IP address that will give an address error so
+        # that if the interface appears that it will work.
+        {192, 0, 2, 1}
+    end
+  end
+
+  defp find_addr_by_family(params, family) do
+    addr_size = family_to_tuple_size(family)
+    for {:addr, addr} when tuple_size(addr) == addr_size <- params, do: addr
+  end
+
+  defp family_to_tuple_size(:inet), do: 4
+  defp family_to_tuple_size(:inet6), do: 6
+
   defp run_or_enter(fun) do
     us = self()
 
