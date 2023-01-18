@@ -5,7 +5,6 @@ defmodule ToolshedTest do
   @core_helpers [
     cat: 1,
     cmd: 1,
-    convert_bits: 1,
     date: 0,
     grep: 2,
     hex: 1,

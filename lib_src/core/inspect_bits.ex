@@ -1,116 +1,81 @@
 defmodule Toolshed.Core.InspectBits do
-  @type conversion :: %{
-          :binary => binary(),
-          :decimal => binary(),
-          :hex => binary(),
-          :octal => binary()
-        }
-
   @doc """
-  Prints out information on the given numeric value.
+  Pretty prints a number in hex, octal and binary
+
+  Example:
+
+  ```
+  iex> Toolshed.inspect_bits(123)
+  Decimal     : 123
+  Hexadecimal : 0000_007B
+  Octal       : 173
+  Binary      : 01111011
+  ```
   """
-  @spec inspect_bits(integer | binary) :: :"do not show this result in output"
-  def inspect_bits(number) do
-    conversion = convert_bits(number)
+  @spec inspect_bits(number() | binary()) :: :"do not show this result in output"
+  def inspect_bits(value) do
+    number = parse_number(value)
 
     [
-      [:cyan, "Decimal    ", :reset, " : ", conversion.decimal],
-      [:cyan, "Hexadecimal", :reset, " : ", conversion.hex],
-      [:cyan, "Octal      ", :reset, " : ", conversion.octal],
-      [:cyan, "Binary     ", :reset, " : ", format_base2_string(conversion.binary)]
+      bit_line("Decimal    ", "", Integer.to_string(number) |> add_underscores(3)),
+      bit_line("Hexadecimal", "", format_base(number, 16, 16, 32, 32)),
+      bit_line("Octal      ", "", format_base(number, 8, 9, 9, 32)),
+      bit_line("Binary     ", "", format_base(number, 2, 8, 8, 32))
     ]
-    |> Enum.map(&IO.ANSI.format(&1))
-    |> Enum.intersperse('\n')
-    |> IO.puts()
+    |> IO.ANSI.format()
+    |> IO.write()
 
     IEx.dont_display_result()
   end
 
-  @doc """
-  Converts a given number to different representations.
-  """
-  @spec convert_bits(integer | binary) :: conversion
-  def convert_bits(number) when is_binary(number) do
-    number |> parse_numeric_string() |> convert_bits()
+  defp format_base(x, base, bits_per_group, pad_to_bits_pos, pad_to_bits_neg) do
+    pad_to_bits = if x < 0, do: pad_to_bits_neg, else: pad_to_bits_pos
+    bits_per_digit = round(:math.log2(base))
+    bits = round_bits(x, pad_to_bits)
+    digits_per_group = div(bits_per_group, bits_per_digit)
+    total_digits = div(bits, bits_per_digit)
+
+    <<unsigned_x::unsigned-size(bits)>> = <<x::size(bits)>>
+
+    Integer.to_string(unsigned_x, base)
+    |> String.pad_leading(total_digits, "0")
+    |> add_underscores(digits_per_group)
   end
 
-  def convert_bits(number) when is_integer(number) do
-    %{
-      decimal: integer_to_string(number, :decimal),
-      binary: integer_to_string(number, :binary),
-      octal: integer_to_string(number, :octal),
-      hex: integer_to_string(number, :hex)
-    }
+  defp add_underscores("-" <> number_string, digits_per_group) do
+    ["-" | add_underscores(number_string, digits_per_group)]
   end
 
-  defp integer_to_string(number, :hex) when is_integer(number) do
-    "0x" <> value = inspect(number, base: :hex)
-    value
+  defp add_underscores(number_string, digits_per_group) do
+    number_string
+    |> to_charlist()
+    |> Enum.reverse()
+    |> Enum.chunk_every(digits_per_group)
+    |> Enum.map(&Enum.reverse/1)
+    |> Enum.reverse()
+    |> Enum.intersperse(?_)
   end
 
-  defp integer_to_string(number, :octal) when is_integer(number) do
-    "0o" <> value = inspect(number, base: :octal)
-    value
+  defp round_bits(0, bits_per_group), do: bits_per_group
+
+  defp round_bits(x, bits_per_group) do
+    negative_bit = if x < 0, do: 1, else: 0
+    bits = x |> abs() |> :math.log2() |> ceil()
+    div(bits + negative_bit + bits_per_group - 1, bits_per_group) * bits_per_group
   end
 
-  defp integer_to_string(number, :binary) when is_integer(number) do
-    "0b" <> value = inspect(number, base: :binary)
-    value
+  defp bit_line(label, prefix, value) do
+    [:cyan, label, :reset, " : ", :light_white, prefix, :reset, value, ?\n]
   end
 
-  defp integer_to_string(number, _) when is_integer(number) do
-    to_string(number)
-  end
-
-  defp parse_numeric_string("0x" <> hex) do
-    case Integer.parse(hex, 16) do
-      {value, _} -> value
-      _ -> nil
-    end
-  end
-
-  defp parse_numeric_string("0o" <> octal) do
-    case Integer.parse(octal, 8) do
-      {value, _} -> value
-      _ -> nil
-    end
-  end
-
-  defp parse_numeric_string("0b" <> binary) do
-    case Integer.parse(binary, 2) do
-      {value, _} -> value
-      _ -> nil
-    end
-  end
-
-  defp parse_numeric_string(decimal) when is_binary(decimal) do
-    case Integer.parse(decimal, 10) do
-      {value, _} -> value
-      _ -> nil
-    end
-  end
-
-  defp format_base2_string(base2_string) when is_binary(base2_string) do
-    string_length = String.length(base2_string)
-
-    byte_count =
-      if rem(string_length, 8) == 0 do
-        div(string_length, 8)
-      else
-        div(string_length, 8) + 1
-      end
-
-    String.pad_leading(base2_string, byte_count * 8, "0")
-    |> to_charlist
-    |> Enum.chunk_every(8)
-    |> Enum.intersperse(' | ')
-    |> Enum.map(fn byte ->
-      byte
-      |> Enum.chunk_by(fn bit -> bit == ?1 end)
-      |> Enum.map(fn
-        [?1 | _] = chunk -> [:green, chunk]
-        chunk -> [:white, chunk]
-      end)
-    end)
-  end
+  defp parse_number(number) when is_integer(number), do: number
+  defp parse_number(number) when is_float(number), do: round(number)
+  defp parse_number("-" <> neg_number), do: -parse_number(neg_number)
+  defp parse_number("0x" <> hex), do: String.to_integer(hex, 16)
+  defp parse_number("0X" <> hex), do: String.to_integer(hex, 16)
+  defp parse_number("0o" <> oct), do: String.to_integer(oct, 8)
+  defp parse_number("0O" <> oct), do: String.to_integer(oct, 8)
+  defp parse_number("0b" <> bin), do: String.to_integer(bin, 2)
+  defp parse_number("0B" <> bin), do: String.to_integer(bin, 2)
+  defp parse_number(dec) when is_binary(dec), do: String.to_integer(dec)
 end

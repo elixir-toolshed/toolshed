@@ -2,42 +2,72 @@ defmodule Toolshed.InspectBitsTest do
   use ExUnit.Case
   import ExUnit.CaptureIO
 
-  test "inspect_bits/1 prints information on number" do
-    assert capture_io(fn -> Toolshed.inspect_bits(19_075_645) end) ==
-             """
-             Decimal     : 19075645
-             Hexadecimal : 123123D
-             Octal       : 110611075
-             Binary      : 00000001 | 00100011 | 00010010 | 00111101
-             """
+  @examples [
+    {0,
+     """
+     Decimal     : 0
+     Hexadecimal : 0000_0000
+     Octal       : 000
+     Binary      : 00000000
+     """},
+    {255,
+     """
+     Decimal     : 255
+     Hexadecimal : 0000_00FF
+     Octal       : 377
+     Binary      : 11111111
+     """},
+    {-1,
+     """
+     Decimal     : -1
+     Hexadecimal : FFFF_FFFF
+     Octal       : 37_777_777_777
+     Binary      : 11111111_11111111_11111111_11111111
+     """},
+    {1000,
+     """
+     Decimal     : 1_000
+     Hexadecimal : 0000_03E8
+     Octal       : 001_750
+     Binary      : 00000011_11101000
+     """},
+    {19_075_645,
+     """
+     Decimal     : 19_075_645
+     Hexadecimal : 0123_123D
+     Octal       : 110_611_075
+     Binary      : 00000001_00100011_00010010_00111101
+     """},
+    {5_000_000_000,
+     """
+     Decimal     : 5_000_000_000
+     Hexadecimal : 0000_0001_2A05_F200
+     Octal       : 045_201_371_000
+     Binary      : 00000001_00101010_00000101_11110010_00000000
+     """},
+    {-255,
+     """
+     Decimal     : -255
+     Hexadecimal : FFFF_FF01
+     Octal       : 37_777_777_401
+     Binary      : 11111111_11111111_11111111_00000001
+     """}
+  ]
 
-    assert Toolshed.inspect_bits(19_075_645) == :"do not show this result in output"
-  end
+  test "inspect_bits/1" do
+    for {input, output} <- @examples do
+      assert capture_io(fn -> Toolshed.inspect_bits(input) end) == output
+      assert capture_io(fn -> Toolshed.inspect_bits(input + 0.1) end) == output
 
-  @expected_conversion_table %{
-    decimal: "19075645",
-    hex: "123123D",
-    octal: "110611075",
-    binary: "1001000110001001000111101"
-  }
+      dec_input = Integer.to_string(input)
+      hex_input = inspect(input, base: :hex)
+      octal_input = inspect(input, base: :octal)
+      binary_input = inspect(input, base: :binary)
 
-  test "convert_bits/1 with integer" do
-    assert Toolshed.convert_bits(19_075_645) == @expected_conversion_table
-  end
-
-  test "convert_bits/1 with base 10 string" do
-    assert Toolshed.convert_bits("19075645") == @expected_conversion_table
-  end
-
-  test "convert_bits/1 with base 16 string" do
-    assert Toolshed.convert_bits("0x123123D") == @expected_conversion_table
-  end
-
-  test "convert_bits/1 with base 8 string" do
-    assert Toolshed.convert_bits("0o110611075") == @expected_conversion_table
-  end
-
-  test "convert_bits/1 with base 2 string" do
-    assert Toolshed.convert_bits("0b1001000110001001000111101") == @expected_conversion_table
+      assert capture_io(fn -> Toolshed.inspect_bits(dec_input) end) == output
+      assert capture_io(fn -> Toolshed.inspect_bits(hex_input) end) == output
+      assert capture_io(fn -> Toolshed.inspect_bits(octal_input) end) == output
+      assert capture_io(fn -> Toolshed.inspect_bits(binary_input) end) == output
+    end
   end
 end
