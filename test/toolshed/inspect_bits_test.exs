@@ -5,10 +5,10 @@ defmodule Toolshed.InspectBitsTest do
   test "inspect_bits/1 prints information on number" do
     assert capture_io(fn -> Toolshed.inspect_bits(19_075_645) end) ==
              """
-             \e[36mDecimal    \e[0m : 19075645\e[0m
-             \e[36mHexadecimal\e[0m : 123123D\e[0m
-             \e[36mOctal      \e[0m : 110611075\e[0m
-             \e[36mBinary     \e[0m : \e[37m0000000\e[32m1\e[37m | \e[37m00\e[32m1\e[37m000\e[32m11\e[37m | \e[37m000\e[32m1\e[37m00\e[32m1\e[37m0\e[37m | \e[37m00\e[32m1111\e[37m0\e[32m1\e[0m
+             Decimal     : 19075645
+             Hexadecimal : 123123D
+             Octal       : 110611075
+             Binary      : 00000001 | 00100011 | 00010010 | 00111101
              """
 
     assert Toolshed.inspect_bits(19_075_645) == :"do not show this result in output"
