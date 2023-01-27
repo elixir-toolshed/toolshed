@@ -9,6 +9,7 @@ defmodule Toolshed.Core.Httpget do
 
   * `:dest` - File path to write the response to. Defaults to printing to the terminal.
   * `:verbose` - Display request and response headers. Disabled by default.
+  * `:timeout` - Download timeout. Defaults to 30_000 ms
   """
   @spec httpget(String.t(), dest: Path.t(), verbose: boolean()) ::
           :"do not show this result in output"
@@ -18,6 +19,7 @@ defmodule Toolshed.Core.Httpget do
     url = url_defaults(url)
     dest = Keyword.get(options, :dest, nil)
     verbose = Keyword.get(options, :verbose, false)
+    timeout = Keyword.get(options, :timeout, 30_000)
 
     stream =
       if dest != nil do
@@ -44,7 +46,7 @@ defmodule Toolshed.Core.Httpget do
 
       handle_stream(verbose)
     end)
-    |> Task.await()
+    |> Task.await(timeout)
 
     IEx.dont_display_result()
   end
