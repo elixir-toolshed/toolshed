@@ -1,4 +1,4 @@
-defmodule Toolshed.Core.ICMPPing do
+defmodule Toolshed.Core.Ping do
   import Bitwise
 
   @otp_version :erlang.system_info(:otp_release)
@@ -184,8 +184,12 @@ defmodule Toolshed.Core.ICMPPing do
     end
   end
 
-  # IPv4-only
+  # MacOS returns the IPv4 header
   defp icmp_decode(<<_ip_header::20-bytes, icmp_payload::40-bytes>>) do
+    icmp_decode(icmp_payload)
+  end
+
+  defp icmp_decode(<<icmp_payload::40-bytes>>) do
     if icmp_checksum(icmp_payload, 0) == 0 do
       icmp_decode_contents(icmp_payload)
     else
