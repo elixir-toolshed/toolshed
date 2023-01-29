@@ -64,9 +64,9 @@ defmodule Toolshed.Core.Common do
 
     gets_pid =
       spawn_link(fn ->
-        IO.puts("Press enter to stop")
-        _ = IO.gets("")
-        send(us, :done)
+        if IO.gets("Press enter to stop") != :eof do
+          send(us, :done)
+        end
       end)
 
     # Wait for either the pings to stop or enter to be pressed

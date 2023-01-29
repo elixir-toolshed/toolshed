@@ -26,13 +26,11 @@ defmodule Toolshed.Core.ICMPPing do
 
   ```
   iex> ping "nerves-project.org"
-  Press enter to stop
   Response from nerves-project.org (185.199.108.153): icmp_seq=0 time=14.908ms
   Response from nerves-project.org (185.199.108.153): icmp_seq=1 time=9.057ms
   Response from nerves-project.org (185.199.108.153): icmp_seq=2 time=21.099ms
 
   iex> ping "google.com", ifname: "wlp5s0"
-  Press enter to stop
   Response from google.com (172.217.7.206): icmp_seq=0 time=88.602ms
   ```
   """
@@ -53,13 +51,14 @@ defmodule Toolshed.Core.ICMPPing do
        do: :ok
 
   defp repeat_icmp_ping(address, options, count, max_count) do
-    case resolve_addr(address) do
-      {:ok, ip} -> icmp_ping_ip(address, ip, options, count)
-      {:error, message} -> message
+    if count > 0, do: Process.sleep(1000)
+
+    case gethostbyname(address, :inet) do
+      nil -> "Error resolving #{address}"
+      ip -> icmp_ping_ip(address, ip, options, count)
     end
     |> IO.puts()
 
-    Process.sleep(1000)
     repeat_icmp_ping(address, options, count + 1, max_count)
   end
 
