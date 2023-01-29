@@ -24,15 +24,17 @@ defmodule Toolshed.Core.ICMPPing do
 
   ## Examples
 
-      iex> ping "nerves-project.org"
-      Press enter to stop
-      Response from nerves-project.org (185.199.108.153): time=4.155ms
-      Response from nerves-project.org (185.199.108.153): time=10.385ms
-      Response from nerves-project.org (185.199.108.153): time=12.458ms
+  ```
+  iex> ping "nerves-project.org"
+  Press enter to stop
+  Response from nerves-project.org (185.199.108.153): icmp_seq=0 time=14.908ms
+  Response from nerves-project.org (185.199.108.153): icmp_seq=1 time=9.057ms
+  Response from nerves-project.org (185.199.108.153): icmp_seq=2 time=21.099ms
 
-      iex> ping "google.com", ifname: "wlp5s0"
-      Press enter to stop
-      Response from google.com (172.217.7.206): time=88.602ms
+  iex> ping "google.com", ifname: "wlp5s0"
+  Press enter to stop
+  Response from google.com (172.217.7.206): icmp_seq=0 time=88.602ms
+  ```
   """
   @spec ping(String.t(), keyword()) :: :"do not show this result in output"
   def ping(address, options \\ []) do
