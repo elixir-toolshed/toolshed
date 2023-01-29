@@ -47,7 +47,7 @@ defmodule Toolshed.Core.ICMPPing do
   end
 
   defp repeat_icmp_ping(_address, _options, count, max_count)
-       when count == max_count,
+       when count >= max_count,
        do: :ok
 
   defp repeat_icmp_ping(address, options, count, max_count) do

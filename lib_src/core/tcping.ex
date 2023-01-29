@@ -8,32 +8,38 @@ defmodule Toolshed.Core.Tcping do
 
   Options:
 
+  * `:count` - number of pings to send (defaults to 3)
   * `:ifname` - Specify a network interface to use. (e.g., "eth0")
   * `:port` - Which TCP port to try (defaults to 80)
 
   ## Examples
 
       iex> tcping "nerves-project.org"
-      Press enter to stop
       Response from nerves-project.org (185.199.108.153:80): time=4.155ms
       Response from nerves-project.org (185.199.108.153:80): time=10.385ms
       Response from nerves-project.org (185.199.108.153:80): time=12.458ms
 
       iex> tcping "google.com", ifname: "wlp5s0"
-      Press enter to stop
       Response from google.com (172.217.7.206:80): time=88.602ms
   """
   @spec tcping(String.t(), keyword()) :: :"do not show this result in output"
   def tcping(address, options \\ []) do
-    run_or_enter(fn -> repeat_tcping(address, options) end)
+    count = options[:count] || 3
+    run_or_enter(fn -> repeat_tcping(address, options, 0, count) end)
 
     IEx.dont_display_result()
   end
 
-  defp repeat_tcping(address, options) do
+  defp repeat_tcping(_address, _options, count, max_count)
+       when count >= max_count,
+       do: :ok
+
+  defp repeat_tcping(address, options, count, max_count) do
+    if count > 0, do: Process.sleep(1000)
+
     do_tcping(address, options)
     Process.sleep(1000)
-    repeat_tcping(address, options)
+    repeat_tcping(address, options, count + 1, max_count)
   end
 
   defp do_tcping(address, options) do

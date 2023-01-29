@@ -4,7 +4,7 @@ defmodule Toolshed.TcpingTest do
 
   test "can ping an IPv4 address" do
     assert capture_io(fn ->
-             Toolshed.tcping("127.0.0.1")
+             Toolshed.tcping("127.0.0.1", count: 1)
            end) =~ "Response from 127.0.0.1 (127.0.0.1:80): time="
   end
 
@@ -13,19 +13,19 @@ defmodule Toolshed.TcpingTest do
   @tag :has_ipv6
   test "can ping an IPv6 address" do
     assert capture_io(fn ->
-             Toolshed.tcping("::1")
+             Toolshed.tcping("::1", count: 1)
            end) =~ "Response from ::1 ([::1]:80): time="
   end
 
   test "can ping by hostname" do
     assert capture_io(fn ->
-             Toolshed.tcping("localhost")
+             Toolshed.tcping("localhost", count: 1)
            end) =~ "Response from localhost (127.0.0.1:80): time="
   end
 
   test "prints an error if host can't be resolved" do
     assert capture_io(fn ->
-             Toolshed.tcping("this.host.does.not.exist")
+             Toolshed.tcping("this.host.does.not.exist", count: 1)
            end) =~ "Error resolving this.host.does.not.exist"
   end
 end
