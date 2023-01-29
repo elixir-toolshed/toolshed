@@ -3,23 +3,20 @@
 [![CircleCI](https://circleci.com/gh/elixir-toolshed/toolshed.svg?style=svg)](https://circleci.com/gh/elixir-toolshed/toolshed)
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
 
-Toolshed aims to improve the Elixir shell experience by adding a number of
-helpers. This is really helpful when a normal Unix shell prompt is unavailable
-or inconvenient. Toolshed was originally written for
-[Nerves](https://nerves-project.org), but doesn't require it and the
-Nerves-specific helpers are compiled out for normal Elixir projects.
+Toolshed improves the Elixir shell experience by adding a number of IEx helpers.
+This helps when a normal Unix shell prompt isn't easily accessible like on
+[Nerves](https://nerves-project.org). It doesn't require Nerves, though, and all
+Nerves-specific commands aren't even compiled if you're not using it.
 
 Here's a sample list of helpers:
 
 * `cmd` - run a command and print out the output
+* `ping` and `tcping` - check if a remote host is using ICMP or TCP
+* `ifconfig` - list network interfaces
+* `weather` - get the current weather from [wttr.in](https://wttr.in/)
 * `top` - get a list of the top processes and their OTP applications based on
   CPU and memory
-* `exit` - exit an IEx session (useful over ssh)
 * `tree` - list directory contents as a tree
-* `save_term!`/`load_term!` - save and load Elixir terms to files
-* `ping` - check if a remote host is up (almost like ping, but uses TCP instead
-  of ICMP to avoid needing additional permissions)
-* `ifconfig` - list network interfaces
 * `lsusb` - list USB devices
 
 To get a complete list:
@@ -75,22 +72,20 @@ When you get tired of typing `use Toolshed`, add it to your
 
 ### I have some IEx helpers. Would you consider adding them?
 
-Yes! Absolutely. Please send a PR. At some point I may have to whittle down
-what's in the library, but for now, I'm open to adding almost anything.
+Based on using and maintaining Toolshed the past several years, here's what ends
+up working best:
 
-This includes:
+1. Wrappers for OTP functions that make them easier to remember or format their
+   output nicer for interactive use
+2. Simple implementations of shell commands that have strong muscle memory for
+   Linux users
+3. Shortcuts to Linux system features (e.g., things that read `/sys` or `/proc`)
 
-1. Pretty much anything that helps debugging or inspecting a running system
-2. Wrappers on OTP functions that are hard to remember or have output that's not
-   ideal for interactive use.
-3. Fun stuff - submit a text game if it's not too long if you'd like.
-
-I'd really like to stay away from adding anything that's not Elixir to this
-project. I.e., no port processes or NIFs. It would also be nice to keep Toolshed
-low on dependencies. Of course, maybe I'm just not thinking of something. Don't
-let that be a reason to not file an issue proposing the idea. If it doesn't seem
-to fit well, maybe a simplified version does and we add a link to the full
-featured one.
+This project is not a Busybox replacement project or an effort to replicate all
+of the functionality in shell commands. Erlang/OTP contains an awful lot of
+built-in functionality. It's not identical to that provided by shell commands,
+but if there's an easy way to get at it in an IEx helper, that's what we'd like
+to do.
 
 ### A lot of these look like Unix commands? Why not run a proper shell?
 
@@ -99,7 +94,27 @@ is easy on my laptop, but on Nerves devices, it's a pain. Getting a shell prompt
 on Nerves is possible, but it's limited due to Nerves not containing a full set
 of commands and it having to be run through Erlang's job control.
 
-### You can do so much more with some of these helpers!!!
+### Why is everything compiled to `toolshed.beam`?
+
+When using Toolshed, the helpers are all imported into the IEx shell context for
+ease of use. It looks like they're all defined in the `Toolshed` module. In
+fact, if you don't `import Toolshed` (or `use Toolshed`), you can still access
+the helpers by calling `Toolshed.helper()`. The problem defining all of the
+helpers in one module is that it makes `toolshed.ex` very hard to maintain.
+
+We've experimented with many ways of maintaining the helpers, like using
+`defdelegate` and importing all of the helpers into `toolshed.ex`. There were
+several problems with these ways including function docs not being in the
+expected place, code being duplicated, and manual steps. The most annoying issue
+was that keeping helpers in lots of `.beam` files had an impact on load time on
+Nerves devices. The load-time issue is being addressed in OTP 26 more
+generally.
+
+The end result is that we finally settled on merging all of the helpers at
+compile-time. The downside to this is that line numbers are wrong in stack
+traces. Given the history of this issue, this seemed like a good compromise.
+
+### You can do so much more with some of these helpers
 
 Definitely. There's so much that I'd like to explore, but time gets in the way.
 I'm not sold on many decisions that I made, but something was better than
@@ -108,11 +123,11 @@ quite happy to use it too or pull it in as a dependency.
 
 ### I want to use one of the functions in my program. Is the API stable?
 
-This really isn't a normal hex.pm library. Use it for the helpers. If you want
+This isn't a normal hex.pm library. Use it for the helpers. If you want
 some code, copy and paste it or incorporate it into a library. I'd like the
 flexibility to change the API to improve interactive use.
 
-### It would be better if you changed the colors.
+### It would be better if you changed the colors
 
 This also isn't a question, and you've now made me regret naming the project
 `toolshed`. Please file your grievances
