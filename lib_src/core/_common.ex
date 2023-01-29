@@ -53,6 +53,9 @@ defmodule Toolshed.Core.Common do
   defp family_to_tuple_size(:inet), do: 4
   defp family_to_tuple_size(:inet6), do: 6
 
+  defp ip_to_family({_, _, _, _}), do: :inet
+  defp ip_to_family({_, _, _, _, _, _}), do: :inet6
+
   defp run_or_enter(fun) do
     us = self()
 

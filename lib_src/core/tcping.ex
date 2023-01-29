@@ -72,8 +72,12 @@ defmodule Toolshed.Core.Tcping do
 
     connect_options =
       case Keyword.fetch(options, :ifname) do
-        {:ok, ifname} -> [ip: ifname_to_ip(ifname, :inet)]
-        :error -> []
+        {:ok, ifname} ->
+          family = ip_to_family(address)
+          [ip: ifname_to_ip(ifname, family)]
+
+        :error ->
+          []
       end
 
     case :gen_tcp.connect(address, port, connect_options) do
