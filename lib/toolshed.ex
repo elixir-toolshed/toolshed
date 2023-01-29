@@ -22,6 +22,7 @@ defmodule Toolshed do
     * `httpget/2`      - print or download the results of a HTTP GET request
     * `hostname/0`     - print our hostname
     * `ifconfig/0`     - print info on network interfaces
+    * `inspect_bits/1` - pretty print numbers in hex, octal, and binary
     * `load_term!/1`   - load a term that was saved by `save_term!/2`
     * `log_attach/1`   - send log messages to the current group leader
     * `log_detach/0`   - stop sending log messages to the current group leader
