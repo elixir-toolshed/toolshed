@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.3.0
+
+This is a major update in how the Toolshed source code gets compiled. If you are
+calling any Toolshed functions in your programs, you may need to update the
+calls. All enabled functions get compiled to be in the Toolshed module now.
+
+* Backwards-incompatible updates
+  * Removed file path completion. This was improved and added to Elixir 1.13.0
+    in December, 2021.
+  * Moved all helper functions to `Toolshed`. They are no longer accessible in
+    other modules. This should go unnoticed if you're using Toolshed at the IEx
+    prompt.
+
+* Improvements
+  * `ping` - Changed `ping` command to use Erlang's relatively new support for
+    sending ICMP echo requests. Previously `ping` made TCP connection requests.
+    The old way is now available via the `tcping` helper. Thanks to @amclain for
+    the ICMP update.
+  * `ping` - `ping` and `tcping` repeat 3 times by default instead of repeating
+    forever.  The new `:count` option can be used to repeat more.
+  * `inspect_bits` - Added `inspect_bits` helper to easily print a number in
+    multiple bases. It also handles negative numbers and gives hex and binary
+    representations that are more familiar to those coming from languages with
+    fixed size integers.
+  * (Nerves-only) `poweroff` -Added helper to gracefully power off Nerves
+    devices that support it.
+  * `httpget` - Increased the timeout for downloads and added `:timeout` option
+    to change it at runtime.
+  * Nerves helpers are completely compiled out when not using Nerves. This can
+    be extended to remove or selectively enable helpers in the future.
+
+Thanks to @mnishiguchi for making Toolshed significantly easier to maintain by
+improving the code organization and adding tests.
+
 ## v0.2.26
 
 * Improvements
