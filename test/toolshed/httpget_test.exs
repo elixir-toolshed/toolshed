@@ -7,6 +7,6 @@ defmodule Toolshed.HttpgetTest do
              Toolshed.httpget(
                "https://raw.githubusercontent.com/elixir-toolshed/toolshed/main/README.md"
              )
-           end) =~ "Toolshed aims to improve the Elixir shell"
+           end) =~ "Toolshed improves the Elixir shell"
   end
 end
