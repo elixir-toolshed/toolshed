@@ -53,7 +53,7 @@ workflows:
           matrix:
             parameters:
               tag: [
-                1.14.2-erlang-25.2-alpine-3.17.0,
+                1.14.3-erlang-25.2.1-alpine-3.17.0,
                 1.13.4-erlang-24.3.4-alpine-3.15.3,
                 1.12.3-erlang-24.3.4-alpine-3.15.3,
                 1.11.4-erlang-23.3.4.13-alpine-3.15.3,
