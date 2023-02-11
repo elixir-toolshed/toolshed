@@ -14,6 +14,7 @@ Here's a sample list of helpers:
 * `ping` and `tcping` - check if a remote host is using ICMP or TCP
 * `ifconfig` - list network interfaces
 * `weather` - get the current weather from [wttr.in](https://wttr.in/)
+* `speed_test` - run a simple speed test to guage network throughput
 * `top` - get a list of the top processes and their OTP applications based on
   CPU and memory
 * `tree` - list directory contents as a tree

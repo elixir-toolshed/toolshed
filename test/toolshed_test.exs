@@ -29,6 +29,8 @@ defmodule ToolshedTest do
     save_term!: 2,
     save_value: 2,
     save_value: 3,
+    speed_test: 0,
+    speed_test: 1,
     top: 0,
     top: 1,
     tcping: 1,

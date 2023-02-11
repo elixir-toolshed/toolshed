@@ -26,7 +26,10 @@ defmodule Toolshed.MixProject do
   end
 
   def application do
-    [extra_applications: [:iex, :logger]]
+    [
+      env: [speed_test_url: "http://dl.nerves-project.org/speed_test/10MB.bin"],
+      extra_applications: [:iex, :logger]
+    ]
   end
 
   defp deps do
