@@ -144,7 +144,7 @@ defmodule Toolshed.Core.SpeedTest do
   end
 
   defp update_status(state, received, now, next_status_us) do
-    delta_us = now - state.start_us
+    delta_us = max(now - state.start_us, 1)
     bps = received * 8 * 1.0e6 / delta_us
     ["\r-->  ", format(bps), "  "] |> IO.write()
 
