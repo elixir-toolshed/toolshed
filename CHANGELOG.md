@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.1
+
+* Updates
+  * `speed_test` - Added new helper for running a quick network speed test by
+    downloading a large file from a CDN. It automatically stops after a timeout
+    or max number of bytes so that it can be used on metered connections.
+
 ## v0.3.0
 
 This is a major update in how the Toolshed source code gets compiled. If you are
