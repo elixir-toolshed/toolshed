@@ -78,7 +78,7 @@ defmodule Toolshed.Core.SpeedTest do
         loop(state, 0, start_us)
 
       other ->
-        IO.inspect(other)
+        IO.puts("Unexpected message: #{inspect(other)}")
     after
       5000 ->
         IO.puts("Can't connect to download site")
@@ -121,7 +121,7 @@ defmodule Toolshed.Core.SpeedTest do
         print_report(state, received, now)
 
       other ->
-        IO.inspect(other)
+        IO.puts("Unexpected message: #{inspect(other)}")
     after
       5000 ->
         IO.puts("Timed out waiting for a response")
