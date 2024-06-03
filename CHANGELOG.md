@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.2
+
+* Updates
+  * `log_attach` - Use the Erlang logger with OTP 26 and later.  This enables
+    more options and removes a dependency on the now deprecated Elixir console
+    logger. The Elixir logger is still used with OTP 25 and earlier.
+  * `log_attach` - Update config options when re-attaching rather than returning
+    an error.
+  * Fixed Elixir 1.17 warnings
+
 ## v0.3.1
 
 * Updates
