@@ -28,10 +28,18 @@ defmodule Toolshed.LogAttachTest do
     assert {:error, :not_attached} = Toolshed.log_detach()
   end
 
-  test "attaching twice returns an error" do
-    assert :ok = Toolshed.log_attach()
-    assert {:error, :detach_first} == Toolshed.log_attach()
-    assert :ok == Toolshed.log_detach()
+  test "attaching twice updates logging options" do
+    output =
+      capture_io_and_not_log(fn ->
+        :ok = Toolshed.log_attach(@default_options ++ [level: :error])
+        Logger.info("hello info1")
+        :ok = Toolshed.log_attach(@default_options)
+        Logger.info("hello info2")
+        Toolshed.log_detach()
+        Logger.error("shouldn't log")
+      end)
+
+    assert output == "unittest[info] hello info2\n"
   end
 
   test "filtering by log level" do

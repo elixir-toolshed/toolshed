@@ -46,17 +46,19 @@ defmodule Toolshed.Core.LogAttach do
     to only see warnings and errors.
   * `:metadata` - a list of metadata keys to show or `:all`
   """
-  @spec log_attach(keyword()) :: {:error, any} | :ok
+  @spec log_attach(keyword()) :: :ok
   def log_attach(options \\ []) do
-    if Process.get(@process_name) == nil do
-      detach_fn = do_attach(options)
+    watcher_pid = Process.get(@process_name)
 
-      {:ok, pid} = GenServer.start(Watcher, {Process.group_leader(), detach_fn})
-      Process.put(@process_name, pid)
-      :ok
-    else
-      {:error, :detach_first}
+    if is_pid(watcher_pid) do
+      _ = GenServer.stop(watcher_pid)
     end
+
+    detach_fn = do_attach(options)
+
+    {:ok, pid} = GenServer.start(Watcher, {Process.group_leader(), detach_fn})
+    Process.put(@process_name, pid)
+    :ok
   end
 
   if String.to_integer(System.otp_release()) >= 26 do
