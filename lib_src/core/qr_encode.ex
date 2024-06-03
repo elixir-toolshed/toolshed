@@ -14,8 +14,8 @@ defmodule Toolshed.Core.QrEncode do
     {:ok, {_status, _headers, body}} =
       :httpc.request(
         :post,
-        {'http://qrenco.de/', [{'User-Agent', 'curl'}], 'application/x-www-form-urlencoded',
-         form_data},
+        {~c"http://qrenco.de/", [{~c"User-Agent", ~c"curl"}],
+         ~c"application/x-www-form-urlencoded", form_data},
         [],
         []
       )

@@ -28,7 +28,7 @@ defmodule Toolshed.Core.Httpget do
         :self
       end
 
-    request_headers = [{'User-Agent', 'curl'}]
+    request_headers = [{~c"User-Agent", ~c"curl"}]
 
     if verbose do
       display_headers(request_headers, ">")

@@ -1,5 +1,5 @@
 defmodule Toolshed.Core.Weather do
-  @weather_url 'https://v2.wttr.in/?An0'
+  @weather_url ~c"https://v2.wttr.in/?An0"
 
   @doc """
   Display the local weather

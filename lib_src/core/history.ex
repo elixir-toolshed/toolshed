@@ -27,6 +27,6 @@ defmodule Toolshed.Core.History do
 
   defp format_spec(highest_number) do
     number_size = :math.log10(highest_number + 1) |> ceil()
-    '~#{number_size}B  ~ts'
+    ~c"~#{number_size}B  ~ts"
   end
 end

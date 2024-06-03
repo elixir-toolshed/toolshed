@@ -22,7 +22,7 @@ defmodule Toolshed.Core.Ifconfig do
       addr
       |> Enum.map_join(":", &:io_lib.format("~2.16.0b", [&1]))
 
-    :io.format('    hwaddr ~s~n', [string_address])
+    :io.format(~c"    hwaddr ~s~n", [string_address])
     print_if_info(rest)
   end
 

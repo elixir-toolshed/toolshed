@@ -6,7 +6,7 @@ defmodule Toolshed.HistoryTest do
     # Use this process as a fake group leader
     Process.put(
       :line_buffer,
-      ['Fourth command\n', 'Third command\n', 'Second command\n', 'First command\n']
+      [~c"Fourth command\n", ~c"Third command\n", ~c"Second command\n", ~c"First command\n"]
     )
 
     fake_gl = self()
