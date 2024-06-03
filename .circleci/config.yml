@@ -57,7 +57,6 @@ workflows:
                 1.14.4-erlang-25.3.2-alpine-3.17.3,
                 1.13.4-erlang-24.3.4-alpine-3.15.3,
                 1.12.3-erlang-24.3.4-alpine-3.15.3,
-                1.11.4-erlang-23.3.4.13-alpine-3.15.3,
-                1.10.4-erlang-23.3.4-alpine-3.13.3
+                1.11.4-erlang-23.3.4.13-alpine-3.15.3
               ]
 
