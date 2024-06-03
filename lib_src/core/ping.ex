@@ -1,10 +1,6 @@
 defmodule Toolshed.Core.Ping do
   import Bitwise
 
-  @otp_version :erlang.system_info(:otp_release)
-               |> to_string()
-               |> String.to_integer()
-
   @doc """
   Ping an IP address using ICMP.
 
@@ -127,7 +123,7 @@ defmodule Toolshed.Core.Ping do
   # accounted for at compile time or else dialyzer will raise an error for
   # the branch that will never match the code required for backwards
   # compatibility.
-  if @otp_version >= 24 do
+  if String.to_integer(System.otp_release()) >= 24 do
     defp socket_bind(socket, addr), do: :socket.bind(socket, addr)
   else
     defp socket_bind(socket, addr) do
