@@ -9,55 +9,85 @@ defmodule Toolshed.Core.LogAttach do
 
   defmodule Watcher do
     @moduledoc false
-
     use GenServer
 
     @impl GenServer
-    def init({watch_pid, backend}) do
+    def init({watch_pid, detach_fn}) do
       Process.monitor(watch_pid)
-      {:ok, backend}
+      {:ok, detach_fn}
     end
 
     @impl GenServer
-    def handle_info({:DOWN, _ref, :process, _pid, _reason}, backend) do
-      _ = Logger.remove_backend(backend)
-      {:stop, :normal, backend}
+    def handle_info({:DOWN, _ref, :process, _pid, _reason}, detach_fn) do
+      detach_fn.()
+      {:stop, :normal, detach_fn}
+    end
+
+    @impl GenServer
+    def terminate(_reason, detach_fn) do
+      detach_fn.()
     end
   end
 
   @doc """
   Attach the current session to the Elixir logger
 
-  This forwards incoming log messages to the terminal. Call `detach/0` to stop
-  the messages.
+  This forwards incoming log messages to the terminal. Call `log_detach/0` to
+  stop the messages.
 
-  Behind the scenes, this uses Elixir's built-in console logger and can be
-  configured similarly. See the [Logger console backend
-  documentation](https://hexdocs.pm/logger/Logger.html#module-console-backend)
-  for details. The following are useful options:
+  Behind the scenes, this uses Erlang's `logger_std_h` and Elixir's log
+  formatter. Options include all of the ones from
+  [Logger.Formatter](https://hexdocs.pm/logger/main/Logger.Formatter.html#new/1)
+  and the ability to set the level.
+
+  For ease of use, here are the common options:
 
   * `:level` - the minimum log level to report. E.g., specify `level: :warning`
     to only see warnings and errors.
   * `:metadata` - a list of metadata keys to show or `:all`
-
-  Unspecified options use either the console backend's default or those found
-  in the application environment for the `:console` Logger backend.
   """
-  @spec log_attach(keyword()) :: {:error, any} | {:ok, :undefined | pid}
+  @spec log_attach(keyword()) :: {:error, any} | :ok
   def log_attach(options \\ []) do
-    case Process.get(@process_name) do
-      nil ->
-        all_options = Keyword.put(options, :device, Process.group_leader())
-        backend = {Logger.Backends.Console, all_options}
+    if Process.get(@process_name) == nil do
+      detach_fn = do_attach(options)
 
-        {:ok, pid} = GenServer.start(Watcher, {Process.group_leader(), backend})
+      {:ok, pid} = GenServer.start(Watcher, {Process.group_leader(), detach_fn})
+      Process.put(@process_name, pid)
+      :ok
+    else
+      {:error, :detach_first}
+    end
+  end
 
-        Process.put(@process_name, {pid, backend})
+  if String.to_integer(System.otp_release()) >= 26 do
+    # Use the Erlang logger in OTP 26+
+    defp do_attach(options) do
+      formatter_options =
+        Keyword.take(options, [:colors, :format, :metadata, :truncate, :utc_log])
 
-        Logger.add_backend({Logger.Backends.Console, all_options})
+      default_options = %{
+        config: %{type: {:device, Process.group_leader()}},
+        formatter: Logger.default_formatter(formatter_options)
+      }
 
-      _other ->
-        {:error, :detach_first}
+      all_options = Enum.reduce(options, default_options, &add_option/2)
+      id = Module.concat(@process_name, inspect(self()))
+      :ok = :logger.add_handler(id, :logger_std_h, all_options)
+
+      fn -> :logger.remove_handler(id) end
+    end
+
+    defp add_option({:level, level}, acc), do: Map.put(acc, :level, level)
+    defp add_option(_, acc), do: acc
+  else
+    # Use the Elixir logger for OTP 25 and earlier
+    defp do_attach(options) do
+      all_options = Keyword.put(options, :device, Process.group_leader())
+      backend = {Logger.Backends.Console, all_options}
+
+      Logger.add_backend(backend)
+
+      fn -> Logger.remove_backend(backend) end
     end
   end
 end

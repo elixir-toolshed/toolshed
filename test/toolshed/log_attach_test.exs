@@ -29,7 +29,7 @@ defmodule Toolshed.LogAttachTest do
   end
 
   test "attaching twice returns an error" do
-    assert {:ok, _pid} = Toolshed.log_attach()
+    assert :ok = Toolshed.log_attach()
     assert {:error, :detach_first} == Toolshed.log_attach()
     assert :ok == Toolshed.log_detach()
   end
@@ -37,7 +37,7 @@ defmodule Toolshed.LogAttachTest do
   test "filtering by log level" do
     output =
       capture_io_and_not_log(fn ->
-        {:ok, _pid} = Toolshed.log_attach(@default_options ++ [level: :error])
+        Toolshed.log_attach(@default_options ++ [level: :error])
         Logger.error("hello1")
         Logger.info("shouldn't log")
       end)
@@ -45,10 +45,17 @@ defmodule Toolshed.LogAttachTest do
     assert output == "unittest[error] hello1\n"
   end
 
-  defp backend_count() do
-    Logger.BackendSupervisor
-    |> Supervisor.count_children()
-    |> Map.get(:workers, 0)
+  if String.to_integer(System.otp_release()) >= 26 do
+    defp handler_count() do
+      :logger.get_handler_ids() |> Enum.count()
+    end
+  else
+    # Check Elixir logger for OTP 25 and earlier
+    defp handler_count() do
+      Logger.BackendSupervisor
+      |> Supervisor.count_children()
+      |> Map.get(:workers, 0)
+    end
   end
 
   test "detaches when group leader dies" do
@@ -57,11 +64,11 @@ defmodule Toolshed.LogAttachTest do
 
     Process.group_leader(self(), new_gl)
 
-    original_count = backend_count()
+    original_count = handler_count()
 
     # Attach -> this should cause there to be a new backend
-    {:ok, _pid} = Toolshed.log_attach(@default_options)
-    assert backend_count() == original_count + 1
+    _ = Toolshed.log_attach(@default_options)
+    assert handler_count() == original_count + 1
 
     # Set the group leader back and exit the new one we made
     Process.group_leader(self(), old_gl)
@@ -69,6 +76,6 @@ defmodule Toolshed.LogAttachTest do
 
     # Should be back to the original backend count
     Process.sleep(10)
-    assert backend_count() == original_count
+    assert handler_count() == original_count
   end
 end

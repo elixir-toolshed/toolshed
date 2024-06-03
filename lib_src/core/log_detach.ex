@@ -4,16 +4,16 @@ defmodule Toolshed.Core.LogDetach do
   @doc """
   Detach the current session from the Elixir logger
   """
-  @spec log_detach :: :ok | {:error, :not_attached | :not_found}
+  @spec log_detach :: :ok | {:error, :not_attached}
   def log_detach() do
     case Process.get(@process_name) do
-      nil ->
-        {:error, :not_attached}
-
-      {pid, backend} ->
+      pid when is_pid(pid) ->
+        _ = GenServer.stop(pid)
         Process.delete(@process_name)
-        GenServer.stop(pid)
-        Logger.remove_backend(backend)
+        :ok
+
+      _ ->
+        {:error, :not_attached}
     end
   end
 end
