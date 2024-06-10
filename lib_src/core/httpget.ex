@@ -8,8 +8,9 @@ defmodule Toolshed.Core.Httpget do
   Options:
 
   * `:dest` - File path to write the response to. Defaults to printing to the terminal.
-  * `:verbose` - Display request and response headers. Disabled by default.
+  * `:ifname` - Network interface to use (e.g., `"eth0"`). Defaults
   * `:timeout` - Download timeout. Defaults to 30_000 ms
+  * `:verbose` - Display request and response headers. Disabled by default.
   """
   @spec httpget(String.t(), dest: Path.t(), verbose: boolean()) ::
           :"do not show this result in output"
@@ -41,7 +42,8 @@ defmodule Toolshed.Core.Httpget do
           {to_charlist(url), request_headers},
           [],
           sync: false,
-          stream: stream
+          stream: stream,
+          socket_opts: socket_opts(options)
         )
 
       handle_stream(verbose)
@@ -86,6 +88,27 @@ defmodule Toolshed.Core.Httpget do
 
       other ->
         IO.puts("other message: #{inspect(other)}")
+    end
+  end
+
+  defp socket_opts(options) do
+    case Keyword.fetch(options, :ifname) do
+      {:ok, ifname} -> [ip: ifname_to_ip(ifname)]
+      :error -> []
+    end
+  end
+
+  # It doesn't seem to matter whether this returns an IPv4 or IPv6 address
+  defp ifname_to_ip(ifname) do
+    ifname_cl = to_charlist(ifname)
+
+    with {:ok, ifaddrs} <- :inet.getifaddrs(),
+         {_, params} <- Enum.find(ifaddrs, fn {k, _v} -> k == ifname_cl end),
+         addr when is_tuple(addr) <- Keyword.get(params, :addr) do
+      addr
+    else
+      _ ->
+        raise ArgumentError, "Can't find network interface: #{ifname}"
     end
   end
 end
