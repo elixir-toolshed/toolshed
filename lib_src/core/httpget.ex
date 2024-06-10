@@ -93,22 +93,8 @@ defmodule Toolshed.Core.Httpget do
 
   defp socket_opts(options) do
     case Keyword.fetch(options, :ifname) do
-      {:ok, ifname} -> [ip: ifname_to_ip(ifname)]
-      :error -> []
-    end
-  end
-
-  # It doesn't seem to matter whether this returns an IPv4 or IPv6 address
-  defp ifname_to_ip(ifname) do
-    ifname_cl = to_charlist(ifname)
-
-    with {:ok, ifaddrs} <- :inet.getifaddrs(),
-         {_, params} <- Enum.find(ifaddrs, fn {k, _v} -> k == ifname_cl end),
-         addr when is_tuple(addr) <- Keyword.get(params, :addr) do
-      addr
-    else
-      _ ->
-        raise ArgumentError, "Can't find network interface: #{ifname}"
+      {:ok, ifname} -> [ipfamily: :inet6fb4] ++ bind_to_device_option(ifname)
+      :error -> [ipfamily: :inet6fb4]
     end
   end
 end

@@ -28,6 +28,13 @@ defmodule Toolshed.Core.Common do
     get_hosts_by_name(address, family) |> List.first()
   end
 
+  defp bind_to_device_option(ifname, family_hint \\ :inet) do
+    case :os.type() do
+      {:unix, :linux} -> [bind_to_device: ifname]
+      _ -> [ip: ifname_to_ip(ifname, family_hint)]
+    end
+  end
+
   defp ifname_to_ip(nil, _family), do: :any
 
   defp ifname_to_ip(ifname, family) do

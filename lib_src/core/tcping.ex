@@ -74,7 +74,7 @@ defmodule Toolshed.Core.Tcping do
       case Keyword.fetch(options, :ifname) do
         {:ok, ifname} ->
           family = ip_to_family(address)
-          [ip: ifname_to_ip(ifname, family)]
+          bind_to_device_option(ifname, family)
 
         :error ->
           []

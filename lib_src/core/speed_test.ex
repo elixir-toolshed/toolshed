@@ -46,11 +46,8 @@ defmodule Toolshed.Core.SpeedTest do
 
     connect_options =
       case Keyword.fetch(options, :ifname) do
-        {:ok, ifname} ->
-          [ip: ifname_to_ip(ifname, :inet)]
-
-        :error ->
-          []
+        {:ok, ifname} -> bind_to_device_option(ifname)
+        :error -> []
       end
 
     case :gen_tcp.connect(
