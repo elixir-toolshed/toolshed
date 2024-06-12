@@ -16,6 +16,7 @@ defmodule Toolshed do
     * `dmesg/0`        - print kernel messages (Nerves-only)
     * `exit/0`         - exit out of an IEx session
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
+    * `geo/0`          - print out a rough physical location
     * `grep/2`         - print out lines that match a regular expression
     * `hex/1`          - print a number as hex
     * `history/0`      - print out the IEx shell history
@@ -37,6 +38,7 @@ defmodule Toolshed do
     * `reboot!/0`      - reboots immediately  (Nerves-only)
     * `save_value/3`   - save a value to a file as Elixir terms (uses inspect)
     * `save_term!/2`   - save a term as a binary
+    * `speed_test/1`   - run a simple network speed test
     * `top/2`          - list out the top processes
     * `tcping/2`       - check if a host can be reached (like ping, but uses TCP)
     * `tree/1`         - pretty print a directory tree
