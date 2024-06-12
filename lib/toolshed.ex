@@ -16,7 +16,7 @@ defmodule Toolshed do
     * `dmesg/0`        - print kernel messages (Nerves-only)
     * `exit/0`         - exit out of an IEx session
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
-    * `geo/0`          - print out a rough physical location
+    * `geo/1`          - print out a rough physical location
     * `grep/2`         - print out lines that match a regular expression
     * `hex/1`          - print a number as hex
     * `history/0`      - print out the IEx shell history

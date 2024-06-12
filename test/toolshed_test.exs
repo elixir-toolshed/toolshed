@@ -6,6 +6,8 @@ defmodule ToolshedTest do
     cat: 1,
     cmd: 1,
     date: 0,
+    geo: 0,
+    geo: 1,
     grep: 2,
     hex: 1,
     history: 0,
