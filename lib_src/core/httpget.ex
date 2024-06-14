@@ -8,7 +8,7 @@ defmodule Toolshed.Core.Httpget do
   Options:
 
   * `:dest` - File path to write the response to. Defaults to printing to the terminal.
-  * `:ifname` - Network interface to use (e.g., `"eth0"`). Defaults
+  * `:ifname` - Network interface to use (e.g., `"eth0"`)
   * `:timeout` - Download timeout. Defaults to 30_000 ms
   * `:verbose` - Display request and response headers. Disabled by default.
   """
