@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.4.0
+
+This release officially adds support for Elixir 1.17 and OTP 27. It removes
+support for Elixir 1.11 and 1.12 due to new warnings from dependent libraries.
+
+* Updates
+  * `geo` - Print geo-location results and more.
+  * `httpget` - Support binding to an `:ifname` when making requests. Works well
+    on Linux and approximated on other operating systems.
+  * `httpget` - Use IPv6 if available and fall back to IPv4.
+
 ## v0.3.2
 
 * Updates
