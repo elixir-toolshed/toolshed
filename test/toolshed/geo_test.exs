@@ -10,6 +10,10 @@ defmodule Toolshed.GeoTest do
   test "geo/1 supports overriding the server" do
     assert capture_io(fn ->
              Toolshed.geo(whenwhere_url: "http://not_a_server.nerves-project.org")
-           end) =~ "Something went wrong when making an HTTP request"
+           end) =~ "nxdomain"
+  end
+
+  test "geo/1 can time out" do
+    assert capture_io(fn -> Toolshed.geo(timeout: 1) end) =~ "timeout"
   end
 end

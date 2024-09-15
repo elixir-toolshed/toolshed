@@ -8,6 +8,8 @@ defmodule Toolshed.Core.Geo do
 
   * `:ifname` - Network interface to use (e.g., `"eth0"`)
   * `:whenwhere_url` - URL for the whenwhere server to query. Defaults to http://whenwhere.nerves-project.org
+  * `:timeout` - Milliseconds to wait for a response. Defaults to 10_000.
+  * `:connect_timeout` - Milliseconds to wait for the connection. Defaults to `:timeout` value
   """
   @spec geo(keyword()) :: :"do not show this result in output"
   def geo(options \\ []) do
@@ -20,6 +22,8 @@ defmodule Toolshed.Core.Geo do
 
   defp do_geo(options) do
     url = Keyword.get(options, :whenwhere_url, @whenwhere_url)
+    timeout = Keyword.get(options, :timeout, 10_000)
+    connect_timeout = Keyword.get(options, :connect_timeout, timeout)
 
     request_headers = [
       {~c"user-agent", ~c"toolshed"},
@@ -29,7 +33,7 @@ defmodule Toolshed.Core.Geo do
     case :httpc.request(
            :get,
            {url, request_headers},
-           [ssl: [verify: :verify_none]],
+           [ssl: [verify: :verify_none], connect_timeout: connect_timeout, timeout: timeout],
            socket_opts: socket_opts(options)
          ) do
       {:ok, {_status, _headers, body}} ->
