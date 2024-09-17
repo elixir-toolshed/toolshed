@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.1
+
+* Updates
+  * `geo` - Limit time taken for network requests to get error messages a lot
+    more quickly
+
 ## v0.4.0
 
 This release officially adds support for Elixir 1.17 and OTP 27. It removes
