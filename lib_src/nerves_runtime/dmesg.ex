@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.NervesRuntime.Dmesg do
   @doc """
   Print out kernel log messages

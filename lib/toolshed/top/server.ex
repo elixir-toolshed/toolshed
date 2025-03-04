@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Frank Hunleth
+# SPDX-FileCopyrightText: 2021 Okoth Kongo
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Top.Server do
   @moduledoc false
   use GenServer

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Masatoshi Nishiguchi
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.SaveTerm do
   @doc """
   Save an Erlang term to the filesystem for easy loading later

@@ -1,7 +1,9 @@
 # Toolshed
 
-[![CircleCI](https://circleci.com/gh/elixir-toolshed/toolshed.svg?style=svg)](https://circleci.com/gh/elixir-toolshed/toolshed)
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
+[![API docs](https://img.shields.io/hexpm/v/toolshed.svg?label=hexdocs "API docs")](https://hexdocs.pm/toolshed/Toolshed.html)
+[![CircleCI](https://circleci.com/gh/elixir-toolshed/toolshed.svg?style=svg)](https://circleci.com/gh/elixir-toolshed/toolshed)
+[![REUSE status](https://api.reuse.software/badge/github.com/elixir-toolshed/toolshed)](https://api.reuse.software/info/github.com/elixir-toolshed/toolshed)
 
 Toolshed improves the Elixir shell experience by adding a number of IEx helpers.
 This helps when a normal Unix shell prompt isn't easily accessible like on

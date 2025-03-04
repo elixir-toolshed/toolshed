@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2018 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.Lsusb do
   @doc """
   Print out information on all of the connected USB devices.

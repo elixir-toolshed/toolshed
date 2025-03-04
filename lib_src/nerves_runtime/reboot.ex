@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.NervesRuntime.Reboot do
   @doc """
   Shortcut to reboot a board. This is a graceful reboot, so it takes some time

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.GeoTest do
   use ExUnit.Case
   import ExUnit.CaptureIO

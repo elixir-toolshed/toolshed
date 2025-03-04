@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Frank Hunleth
+# SPDX-FileCopyrightText: 2021 Okoth Kongo
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.Date do
   @doc """
   Return the date and time in UTC

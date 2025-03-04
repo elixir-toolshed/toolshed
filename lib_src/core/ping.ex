@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Alex McLain
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.Ping do
   import Bitwise
 

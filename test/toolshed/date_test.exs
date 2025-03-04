@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Okoth Kongo
+# SPDX-FileCopyrightText: 2022 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.DateTest do
   use ExUnit.Case
 

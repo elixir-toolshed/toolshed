@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.CmdTest do
   use ExUnit.Case
   import ExUnit.CaptureIO

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Masatoshi Nishiguchi
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.Weather do
   @weather_url ~c"https://v2.wttr.in/?An0"
 

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Masatoshi Nishiguchi
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.SaveValue do
   @doc """
   Save a value to a file as Elixir terms

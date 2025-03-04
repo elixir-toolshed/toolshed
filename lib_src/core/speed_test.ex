@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Frank Hunleth
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.SpeedTest do
   @typedoc "Options for speed_test/1"
   @type speed_test_options :: [

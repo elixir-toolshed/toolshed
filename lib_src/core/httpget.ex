@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2019 Frank Hunleth
+# SPDX-FileCopyrightText: 2021 Jon Thacker
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 defmodule Toolshed.Core.Httpget do
   @doc """
   Perform a HTTP GET request for the specified URL
