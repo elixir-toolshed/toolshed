@@ -15,13 +15,7 @@ defmodule Toolshed.MixProject do
       docs: docs(),
       package: package(),
       description: description(),
-      xref: [exclude: [:httpc]],
-      preferred_cli_env: %{
-        docs: :docs,
-        "hex.publish": :docs,
-        "hex.build": :docs,
-        credo: :test
-      }
+      xref: [exclude: [:httpc]]
     ]
   end
 
@@ -30,6 +24,10 @@ defmodule Toolshed.MixProject do
       env: [speed_test_url: "http://dl.nerves-project.org/speed_test/10MB.bin"],
       extra_applications: [:iex, :logger, {:inets, :optional}, {:ssl, :optional}]
     ]
+  end
+
+  def cli do
+    [preferred_envs: %{docs: :docs, "hex.publish": :docs, "hex.build": :docs, credo: :test}]
   end
 
   defp deps do

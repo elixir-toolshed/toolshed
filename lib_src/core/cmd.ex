@@ -12,6 +12,6 @@ defmodule Toolshed.Core.Cmd do
   end
 
   def cmd(str) when is_list(str) do
-    str |> to_string |> cmd
+    str |> to_string() |> cmd()
   end
 end
