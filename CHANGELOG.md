@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.2
+
+* Updates
+  * `cmd` - Fix issue with using `cmd` on ssh connections due to support for
+    non-UTF8 characters being removed. Elixir 1.16 and later make it easy to
+    replace those characters, so filter them before output. Previous Elixir
+    versions keep the old behavior.
+  * Update licensing and copyright for [REUSE](https://reuse.software/)
+    compliance
+
 ## v0.4.1
 
 * Updates
