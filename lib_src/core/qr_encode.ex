@@ -28,4 +28,20 @@ defmodule Toolshed.Core.QrEncode do
     body |> :binary.list_to_bin() |> IO.puts()
     IEx.dont_display_result()
   end
+
+  @doc """
+  Generate an ASCII art QR code for WiFi connections
+
+  See https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network
+  for string format
+  """
+  @type wifi_opt :: {:hidden, boolean()} | {:type, :WPA | :WEP | :nopass}
+  @spec qr_encode_wifi(String.t(), String.t(), [wifi_opt()]) ::
+          :"do not show this result in output"
+  def qr_encode_wifi(ssid, psk, opts \\ []) do
+    type = opts[:type] || "WPA"
+    hidden = opts[:hidden] || false
+    msg = "WIFI:S:#{ssid};T:#{type};P:#{psk};H:#{hidden};;"
+    qr_encode(msg)
+  end
 end

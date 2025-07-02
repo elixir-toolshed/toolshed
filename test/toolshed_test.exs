@@ -34,6 +34,8 @@ defmodule ToolshedTest do
     ping: 1,
     ping: 2,
     qr_encode: 1,
+    qr_encode_wifi: 2,
+    qr_encode_wifi: 3,
     save_term!: 2,
     save_value: 2,
     save_value: 3,
