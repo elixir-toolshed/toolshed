@@ -130,6 +130,13 @@ This isn't a normal hex.pm library. Use it for the helpers. If you want
 some code, copy and paste it or incorporate it into a library. I'd like the
 flexibility to change the API to improve interactive use.
 
+Please don't send PRs to make this library work better for programmatic use. I
+say that in the nicest way since I appreciate that you've found it useful. I
+really want to not worry about breaking people's programs if an opportunity
+comes up to improve the UX for human IEx prompt users (or LLMs, we'll see). I
+realize this hurts, but please copy/paste what you need. The code is open source
+and the license permits you to do this.
+
 ### It would be better if you changed the colors
 
 This also isn't a question, and you've now made me regret naming the project
