@@ -22,6 +22,7 @@ defmodule Toolshed.Core.Ping do
   * `:identifier` - the identifier to use in the ICMP packets (default is to generate one)
   * `:ifname`  - network interface to use (e.g., "eth0")
   * `:timeout` - time in seconds to wait for a host to respond (defaults to 10 seconds)
+  * `:callback` - a function that will be called with each ping result string
 
   ## Examples
 
@@ -58,7 +59,7 @@ defmodule Toolshed.Core.Ping do
       nil -> "Error resolving #{address}"
       ip -> icmp_ping_ip(address, ip, options, count)
     end
-    |> IO.puts()
+    |> handle_result(options)
 
     repeat_icmp_ping(address, options, count + 1, max_count)
   end
@@ -70,6 +71,15 @@ defmodule Toolshed.Core.Ping do
 
       {:error, reason} ->
         "#{address} (#{:inet.ntoa(ip)}): #{inspect(reason)}"
+    end
+  end
+
+  defp handle_result(result, options) do
+    IO.puts(result)
+
+    case Keyword.get(options, :callback) do
+      nil -> :ok
+      callback -> callback.(result)
     end
   end
 

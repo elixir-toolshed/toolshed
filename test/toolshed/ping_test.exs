@@ -51,6 +51,48 @@ defmodule Toolshed.ICMPPingTest do
            end) =~ "127.0.0.1 (127.0.0.1): :eaddrnotavail"
   end
 
+  @tag :icmp
+  test "calls callback function with ping results" do
+    test_pid = self()
+
+    callback = fn result ->
+      send(test_pid, {:callback_called, result})
+      result
+    end
+
+    output =
+      capture_io(fn ->
+        Toolshed.ping("127.0.0.1", count: 1, callback: callback)
+      end)
+
+    assert output =~ "Response from 127.0.0.1 (127.0.0.1): icmp_seq="
+
+    # Verify the callback was called with the expected result
+    assert_receive {:callback_called, callback_result}, 500
+    assert callback_result =~ "Response from 127.0.0.1 (127.0.0.1): icmp_seq="
+  end
+
+  test "calls callback function with error messages" do
+    test_pid = self()
+
+    callback = fn result ->
+      send(test_pid, {:callback_called, result})
+      result
+    end
+
+    # Test that both IO output and callback are triggered for errors
+    output =
+      capture_io(fn ->
+        Toolshed.ping("this.host.does.not.exist", count: 1, callback: callback)
+      end)
+
+    assert output =~ "Error resolving this.host.does.not.exist"
+
+    # Verify the callback was called with the expected error message
+    assert_receive {:callback_called, callback_result}, 500
+    assert callback_result =~ "Error resolving this.host.does.not.exist"
+  end
+
   defp local_ifname() do
     {:ok, ifaddrs} = :inet.getifaddrs()
 
