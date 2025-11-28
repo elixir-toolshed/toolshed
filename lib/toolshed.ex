@@ -22,6 +22,7 @@ defmodule Toolshed do
     * `date/0`         - print out the current date and time
     * `dmesg/0`        - print kernel messages (Nerves-only)
     * `exit/0`         - exit out of an IEx session
+    * `fake_shell/0`   - starts a sh like session that sends all lines to `cmd/1`
     * `fw_validate/0`  - marks the current image as valid (check Nerves system if supported)
     * `geo/1`          - print out a rough physical location
     * `grep/2`         - print out lines that match a regular expression

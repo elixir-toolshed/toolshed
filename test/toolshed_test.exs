@@ -12,6 +12,7 @@ defmodule ToolshedTest do
     cat: 1,
     cmd: 1,
     date: 0,
+    fake_shell: 0,
     geo: 0,
     geo: 1,
     grep: 2,
