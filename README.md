@@ -1,7 +1,7 @@
 # Toolshed
 
 [![Hex version](https://img.shields.io/hexpm/v/toolshed.svg "Hex version")](https://hex.pm/packages/toolshed)
-[![API docs](https://img.shields.io/hexpm/v/toolshed.svg?label=hexdocs "API docs")](https://hexdocs.pm/toolshed/Toolshed.html)
+[![API docs](https://img.shields.io/hexpm/v/toolshed.svg?label=hexdocs "API docs")](https://toolshed.hexdocs.pm/Toolshed.html)
 [![CircleCI](https://circleci.com/gh/elixir-toolshed/toolshed.svg?style=svg)](https://circleci.com/gh/elixir-toolshed/toolshed)
 [![REUSE status](https://api.reuse.software/badge/github.com/elixir-toolshed/toolshed)](https://api.reuse.software/info/github.com/elixir-toolshed/toolshed)
 
@@ -69,7 +69,7 @@ nerves_init_gadg #PID<0.1432.0>            213K/39K       0/0      192K/101K    
 ```
 
 When you get tired of typing `use Toolshed`, add it to your
-[`.iex.exs`](https://hexdocs.pm/iex/IEx.html#module-the-iex-exs-file).
+[`.iex.exs`](https://iex.hexdocs.pm/IEx.html#module-the-iex-exs-file).
 
 ## FAQ
 
