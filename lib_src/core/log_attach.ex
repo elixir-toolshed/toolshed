@@ -42,7 +42,7 @@ defmodule Toolshed.Core.LogAttach do
 
   Behind the scenes, this uses Erlang's `logger_std_h` and Elixir's log
   formatter. Options include all of the ones from
-  [Logger.Formatter](https://hexdocs.pm/logger/main/Logger.Formatter.html#new/1)
+  [Logger.Formatter](https://logger.hexdocs.pm/main/Logger.Formatter.html#new/1)
   and the ability to set the level.
 
   For ease of use, here are the common options:
