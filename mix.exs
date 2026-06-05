@@ -8,14 +8,14 @@ defmodule Toolshed.MixProject do
     [
       app: :toolshed,
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: dialyzer(),
       docs: docs(),
       package: package(),
       description: description(),
-      xref: [exclude: [:httpc]]
+      elixirc_options: [no_warn_undefined: [:httpc]]
     ]
   end
 
