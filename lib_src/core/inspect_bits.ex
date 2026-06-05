@@ -40,7 +40,7 @@ defmodule Toolshed.Core.InspectBits do
     digits_per_group = div(bits_per_group, bits_per_digit)
     total_digits = div(bits, bits_per_digit)
 
-    <<unsigned_x::unsigned-size(bits)>> = <<x::size(bits)>>
+    <<unsigned_x::unsigned-size(^bits)>> = <<x::size(bits)>>
 
     Integer.to_string(unsigned_x, base)
     |> String.pad_leading(total_digits, "0")
