@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.0
+
+This release adds support for Elixir 1.20 and drops support for Elixir 1.14 and
+earlier.
+
+* Updates
+  * `fake_shell` - Starts a fake shell that evaluates all lines with `cmd`. This
+    provides a limited, but handy shell-like experience. (@mlainez)
+
 ## v0.4.2
 
 * Updates
